@@ -1,11 +1,5 @@
-enum PaymentStatus {
-  Pending = "Pending",
-  Completed = "Completed",
-  Cancelled = "Cancelled",
-  Failed = "Failed",
-  Refunded = "Refunded",
-  OnHold = "On Hold",
-}
+PaymentStatus =
+  "Pending" | "Completed" | "Cancelled" | "Failed" | "Refunded" | "On Hold";
 
 interface Payment {
   invoice_id: number;
@@ -14,14 +8,8 @@ interface Payment {
   created_at: string;
 }
 
-enum InvoiceStatus {
-  Pending = "Pending",
-  PartiallyPaid = "Partially Paid",
-  Paid = "Paid",
-  Cancelled = "Cancelled",
-  Overdue = "Overdue",
-  Refunded = "Refunded",
-}
+InvoiceStatus =
+  "Pending" | "Partially Paid" | "Paid" | "Cancelled" | "Overdue" | "Refunded";
 
 interface Invoice {
   invoice_id: number;
@@ -34,30 +22,25 @@ interface Invoice {
   total_amount: number;
 }
 
-enum ShipmentType {
-  AirFreight = "Air Freight",
-  SeaFreight = "Sea Freight",
-  LandFreight = "Land Freight",
-}
+ShipmentType = "Air Freight" | "Sea Freight" | "Land Freight";
 
-enum ShipmentStatus {
-  Pending = "Pending",
-  DocumentVerification = "Document Verification",
-  CustomsClearancePending = "Customs Clearance Pending",
-  CustomsCleared = "Customs Cleared",
-  ProcessingAtOriginPort = "Processing at Origin Port",
-  LoadedOnVessel = "Loaded on Vessel",
-  InTransit = "In Transit",
-  ArriveAtDestinationPort = "Arrive at Destination Port",
-  CustomsClearanceAtDestination = "Customs Clearance at Destination",
-  ProcessingAtDestinationWarehouse = "Processing at Destination Warehouse",
-  Delivered = "Delivered",
-  OutForDelivery = "Out for Delivery",
-  FailedDeliveryAttempt = "Failed Delivery Attempt",
-  HeldAtCustoms = "Held at Customs",
-  ReturnedToSender = "Returned to Sender",
-  OnHold = "On Hold",
-}
+ShipmentStatus =
+  "Pending" |
+  "Document Verification" |
+  "Customs Clearance Pending" |
+  "Customs Cleared" |
+  "Processing at Origin Port" |
+  "Loaded on Vessel" |
+  "In Transit" |
+  "Arrive at Destination Port" |
+  "Customs Clearance at Destination" |
+  "Processing at Destination Warehouse" |
+  "Delivered" |
+  "Out for Delivery" |
+  "Failed Delivery Attempt" |
+  "Held at Customs" |
+  "Returned to Sender" |
+  "On Hold";
 
 interface Shipment {
   shipment_id: number;
@@ -72,12 +55,7 @@ interface ShipmentTracking {
   location: string;
 }
 
-enum ContractStatus {
-  Pending = "Pending",
-  Active = "Active",
-  Expired = "Expired",
-  Terminated = "Terminated",
-}
+ContractStatus = "Pending" | "Active" | "Expired" | "Terminated";
 
 interface Contract {
   contract_id: number;
@@ -91,14 +69,13 @@ interface Contract {
   update_at: string;
 }
 
-enum QuoteReqStatus {
-  Pending = "Pending",
-  Rejected = "Rejected",
-  InProgress = "In Progress",
-  Completed = "Completed",
-  Accepted = "Accepted",
-  Cancelled = "Cancelled",
-}
+QuoteReqStatus =
+  "Pending" |
+  "Rejected" |
+  "In Progress" |
+  "Completed" |
+  "Accepted" |
+  "Cancelled";
 
 interface QuoteRequest {
   quote_request_id: number;
@@ -109,10 +86,7 @@ interface QuoteRequest {
   update_at: string;
 }
 
-enum ProviderStatus {
-  Active = "Active",
-  Inactive = "Inactive",
-}
+ProviderStatus = "Active" | "Inactive";
 
 interface Provider {
   provider_id: number;
@@ -132,10 +106,7 @@ interface ContactRep {
   phone: string;
 }
 
-enum QuotationStatus {
-  Draft = "Draft",
-  Booked = "Booked",
-}
+QuotationStatus = "Draft" | "Booked";
 
 interface Quotation {
   quotation_id: number;

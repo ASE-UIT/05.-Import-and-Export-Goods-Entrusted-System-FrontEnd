@@ -1,4 +1,4 @@
-import { Payment, columns } from "./columns";
+import { columns } from "./columns";
 import { DataTable } from "../../components/data-table";
 
 async function getData(): Promise<Payment[]> {
@@ -7,50 +7,50 @@ async function getData(): Promise<Payment[]> {
     {
       invoice_id: 123,
       amount_paid: 100.2,
-      status: "Cancelled",
-      created_at: new Date("2024-10-09T12:34:56Z"),
+      status: "Completed",
+      created_at: new Date("2024-10-09T12:34:56Z").toDateString(),
     },
     {
       invoice_id: 123,
       amount_paid: 100.2,
       status: "Completed",
-      created_at: new Date("2024-10-09T12:34:56Z"),
+      created_at: new Date("2024-10-09T12:34:56Z").toDateString(),
     },
     {
       invoice_id: 123,
       amount_paid: 100.2,
       status: "Cancelled",
-      created_at: new Date("2024-10-09T12:34:56Z"),
+      created_at: new Date("2024-10-09T12:34:56Z").toDateString(),
     },
     {
       invoice_id: 123,
       amount_paid: 100.2,
       status: "Failed",
-      created_at: new Date("2024-10-09T12:34:56Z"),
+      created_at: new Date("2024-10-09T12:34:56Z").toDateString(),
     },
     {
       invoice_id: 123,
       amount_paid: 100.2,
       status: "Draft",
-      created_at: new Date("2024-10-09T12:34:56Z"),
+      created_at: new Date("2024-10-09T12:34:56Z").toDateString(),
     },
     {
       invoice_id: 123,
       amount_paid: 100.2,
       status: "Booked",
-      created_at: new Date("2024-10-09T12:34:56Z"),
+      created_at: new Date("2024-10-09T12:34:56Z").toDateString(),
     },
     {
       invoice_id: 123,
       amount_paid: 100.2,
       status: "Pending",
-      created_at: new Date("2024-10-09T12:34:56Z"),
+      created_at: new Date("2024-10-09T12:34:56Z").toDateString(),
     },
     {
       invoice_id: 123,
       amount_paid: 100.2,
       status: "Pending",
-      created_at: new Date("2024-10-09T12:34:56Z"),
+      created_at: new Date("2024-10-09T12:34:56Z").toDateString(),
     },
 
     // ...
