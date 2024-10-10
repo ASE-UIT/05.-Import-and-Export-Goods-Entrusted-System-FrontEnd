@@ -31,13 +31,13 @@ async function getData(): Promise<Payment[]> {
     {
       invoice_id: 123,
       amount_paid: 100.2,
-      status: "Failed",
+      status: "Draft",
       created_at: new Date("2024-10-09T12:34:56Z"),
     },
     {
       invoice_id: 123,
       amount_paid: 100.2,
-      status: "On Hold",
+      status: "Booked",
       created_at: new Date("2024-10-09T12:34:56Z"),
     },
     {

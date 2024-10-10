@@ -131,3 +131,21 @@ interface ContactRep {
   email: string;
   phone: string;
 }
+
+enum QuotationStatus {
+  Draft = "Draft",
+  Booked = "Booked",
+}
+
+interface Quotation {
+  quotation_id: number;
+  quote_request_id: number;
+  employee_id: number;
+  total_price: number;
+  pickup_date: string;
+  delivery_date: string;
+  quotation_date: string;
+  expired_date: string;
+  freight_id: number;
+  status: QuotationStatus;
+}

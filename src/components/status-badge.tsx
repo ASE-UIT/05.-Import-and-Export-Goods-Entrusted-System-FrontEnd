@@ -30,6 +30,8 @@ const statusColors: { [key in Status]: string } = {
   "In Progress": "#108080",
   Accepted: "#108080",
   Inactive: "#3C3C3C",
+  Draft: "#3C3C3C",
+  Booked: "#108080",
 };
 
 export type Status =
@@ -61,7 +63,9 @@ export type Status =
   | "Rejected"
   | "In Progress"
   | "Accepted"
-  | "Inactive";
+  | "Inactive"
+  | "Draft"
+  | "Booked";
 
 const StatusBadge = ({ status }: { status: Status }) => {
   const color = statusColors[status] || "#E0E0E0";
