@@ -1,18 +1,19 @@
+"use client";
 import { ModeToggle } from "@/components/mode-toggle";
-import { Button } from "@/components/ui/button";
+import * as React from "react";
+import { DatePickerDemo } from "@/components/date-picker";
 
 export default function Home() {
   return (
-    <div className="p-4 flex space-x-10">
-      <h1 className="text-4xl">EntrustExim</h1>
+    <div>
+      <div className="p-4 flex space-x-10">
+        <h1 className="text-4xl">EntrustExim</h1>
 
-      <div className="z-10">
-        <ModeToggle />
+        <div className="z-10">
+          <ModeToggle />
+        </div>
       </div>
-
-      <Button className="" variant={"default"}>
-        Click me
-      </Button>
+      <DatePickerDemo />
     </div>
   );
 }
