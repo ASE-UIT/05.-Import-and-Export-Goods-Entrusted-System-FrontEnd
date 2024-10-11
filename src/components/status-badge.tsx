@@ -1,5 +1,3 @@
-import React from "react";
-
 const statusColors: { [key in Status]: string } = {
   Pending: "#FF7700",
   Completed: "#108080",
@@ -79,8 +77,7 @@ const StatusBadge = ({ status }: { status: Status }) => {
         borderRadius: "0.5rem",
         fontSize: "0.8rem",
         fontWeight: "bold",
-        minWidth: "70px",
-        maxWidth: "150px",
+        maxWidth: "120px",
         textAlign: "center",
         whiteSpace: "nowrap",
         overflow: "hidden",

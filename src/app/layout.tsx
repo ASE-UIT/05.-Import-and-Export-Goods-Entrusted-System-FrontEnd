@@ -28,9 +28,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          <div className="flex flex-1 flex-row">
+          <div className="flex flex-1 flex-row mt-16">
             <Sidebar />
-            <div className=" flex flex-1 flex-col items-center">{children}</div>
+            <div className="ml-60 flex flex-1 flex-col items-center">
+              {children}
+            </div>
           </div>
         </ThemeProvider>
       </body>
