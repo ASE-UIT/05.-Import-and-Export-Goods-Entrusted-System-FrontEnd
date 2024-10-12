@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
-import Header from "@/components/header";
-import Sidebar from "@/components/sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,13 +25,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <div className="flex flex-1 flex-row mt-16">
-            <Sidebar />
-            <div className="ml-60 flex flex-1 flex-col items-center">
-              {children}
-            </div>
-          </div>
+          {children}
         </ThemeProvider>
       </body>
     </html>
