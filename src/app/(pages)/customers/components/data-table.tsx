@@ -25,6 +25,8 @@ import {
 
 import { Button } from "../../../../components/ui/button";
 import { Input } from "../../../../components/ui/input";
+import { DataTableFilter } from "./data-table-filter";
+import { CirclePlus } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -57,6 +59,13 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
+      <div className="flex w-full justify-between pb-[20px]">
+        <DataTableFilter table={table} />
+        <Button variant="default">
+          <CirclePlus className="mr-2" />
+          <span>Add Customer</span>
+        </Button>
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
