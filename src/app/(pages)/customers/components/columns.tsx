@@ -65,7 +65,7 @@ export const columns: ColumnDef<ICustomer>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => row.getValue("email"),
   },
   {
     accessorKey: "phone",
@@ -82,7 +82,7 @@ export const columns: ColumnDef<ICustomer>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("phone")}</div>,
+    cell: ({ row }) => row.getValue("phone"),
   },
   {
     accessorKey: "taxId",
@@ -99,7 +99,7 @@ export const columns: ColumnDef<ICustomer>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("taxId")}</div>,
+    cell: ({ row }) => row.getValue("taxId"),
   },
   {
     accessorKey: "address",
@@ -116,9 +116,7 @@ export const columns: ColumnDef<ICustomer>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("address")}</div>
-    ),
+    cell: ({ row }) => row.getValue("address"),
   },
   {
     accessorKey: "legalRepName",
@@ -135,8 +133,6 @@ export const columns: ColumnDef<ICustomer>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("legalRepName")}</div>
-    ),
+    cell: ({ row }) => row.getValue("legalRepName"),
   },
 ];
