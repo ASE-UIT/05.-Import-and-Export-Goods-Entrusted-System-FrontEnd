@@ -88,7 +88,7 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
-                 {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {cell.column.columnDef.accessorKey === "status" ? (
                         <StatusBadge status={cell.getValue() as Status} />
@@ -117,6 +117,5 @@ export function DataTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-    
   );
 }

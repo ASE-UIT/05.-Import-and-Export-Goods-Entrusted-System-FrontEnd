@@ -40,14 +40,14 @@ export function DataTableFilter<TData>({
       </div>
       <Select onValueChange={(value) => setCurrentFilter(value)}>
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Filter"/>
+          <SelectValue placeholder="Filter" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             {columnsTitle.map((title) => (
               <SelectItem value={title} key={title}>
                 {title
-                .replace(/_/g, " ")
+                  .replace(/_/g, " ")
                   .replace(/([A-Z])/g, " $1")
                   .toLowerCase()
                   .replace(/\b\w/g, (char) => char.toUpperCase())

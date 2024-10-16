@@ -42,7 +42,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-   const router = useRouter();
+  const router = useRouter();
 
   const table = useReactTable({
     data,
@@ -64,23 +64,22 @@ export function DataTable<TData, TValue>({
       <div className="flex w-full justify-between pb-[10px]">
         <DataTableFilter table={table} />
         <div className="flex space-x-[10px]">
-            <Button
-          variant="default"
-          onClick={() => router.push(`${PATH_NAME.QUOTE_REQUEST}/add`)}
-            >
-          <CirclePlus className="mr-2" />
-          <span>Create quote request</span>
-        </Button>
-        <Button
-          variant="default"
-          onClick={() => router.push(`${PATH_NAME.QUOTE_REQUEST}/send`)}
-          className="bg-accent hover:bg-accent"
-        >
-          <CirclePlus className="mr-2" />
-          <span>Send quote request</span>
-        </Button>
+          <Button
+            variant="default"
+            onClick={() => router.push(`${PATH_NAME.QUOTE_REQUEST}/add`)}
+          >
+            <CirclePlus className="mr-2" />
+            <span>Create quote request</span>
+          </Button>
+          <Button
+            variant="default"
+            onClick={() => router.push(`${PATH_NAME.QUOTE_REQUEST}/send`)}
+            className="bg-accent hover:bg-accent"
+          >
+            <CirclePlus className="mr-2" />
+            <span>Send quote request</span>
+          </Button>
         </div>
-        
       </div>
       <div className="rounded-md">
         <Table>
@@ -109,7 +108,7 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
-                 {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {cell.column.columnDef.accessorKey === "status" ? (
                         <StatusBadge status={cell.getValue() as Status} />
@@ -138,6 +137,5 @@ export function DataTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-    
   );
 }
