@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
-
 export const columns: ColumnDef<ShipmentTracking>[] = [
   {
     accessorKey: "shipment_id",
