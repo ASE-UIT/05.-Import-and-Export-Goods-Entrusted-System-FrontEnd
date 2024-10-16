@@ -5,9 +5,9 @@ import {
 } from "@/app/(pages)/dashboard/_components/columns";
 import GroupButton from "@/app/(pages)/dashboard/_components/group-button";
 import GroupCard from "@/app/(pages)/dashboard/_components/group-card";
-import { DataTable } from "@/components/data-table";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { DataTable } from "@/app/(pages)/dashboard/_components/data-table";
 
 async function getData(): Promise<TableShipmentTracking[]> {
   return [
