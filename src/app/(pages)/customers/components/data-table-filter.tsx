@@ -49,7 +49,7 @@ export function DataTableFilter<TData>({
             {columnsTitle.map((title) => (
               <SelectItem value={title}>
                 {title
-                  .replace(/([A-Z])/g, " $1")
+                  .replace(/_/g, " ")
                   .toLowerCase()
                   .replace(/\b\w/g, (char) => char.toUpperCase())}
               </SelectItem>

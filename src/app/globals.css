@@ -39,8 +39,10 @@ body {
     --chart-4: 0 0% 2.4%;
     --chart-5: 0 0% 98.8%;
     --radius: 0.5rem;
+    --header-height: 4rem;
+    --sidebar-width: 15rem;
   }
-  
+
   .dark {
     --background: 0 0% 2.4%;
     --foreground: 0 0% 98.8%;
