@@ -33,7 +33,7 @@ export const columns: ColumnDef<ShipmentTracking>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Shipment Status
+          Shipment Type
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
