@@ -61,7 +61,7 @@ export function DataTable<TData, TValue>({
       <div className="flex w-full justify-between pb-[10px]">
         <DataTableFilter table={table} />
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
