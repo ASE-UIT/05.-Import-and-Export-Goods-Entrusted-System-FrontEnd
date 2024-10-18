@@ -22,7 +22,7 @@ export default function CustomerManagementPage() {
   const [currentFilter, setCurrentFilter] = useState<string | null>(null);
 
   return (
-    <div className="flex flex-col p-[28px] w-full h-[calc(100vh-60px)] flex-grow">
+    <div className="flex flex-col p-[24px] w-full h-[calc(100vh-64px)]">
       <div className="flex flex-col w-full gap-[20px]">
         <div className="flex justify-between items-center">
           <span className="text-3xl font-bold">Customer</span>
