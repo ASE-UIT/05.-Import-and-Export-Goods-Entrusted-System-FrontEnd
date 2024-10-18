@@ -10,15 +10,15 @@ export default function Page() {
   return (
     <div className="h-full w-full p-[28px] flex-col justify-start items-start gap-2.5 inline-flex">
       <div className="justify-start items-start gap-2.5 inline-flex">
-        <div className="text-black text-3xl font-bold font-['Inter']">Add Quotation</div>
+        <div className="text-black text-3xl font-bold font-['Inter']">Add Contract</div>
       </div>
       <div className="self-stretch h-full flex-col justify-start items-start gap-2.5 flex">
         <div className="self-stretch h-full py-8 flex-col justify-start items-center gap-[30px] flex">
           <div className="flex-col justify-start items-start gap-5 flex">
-            {/* Quotation Request ID*/}
+            {/* Quotation ID*/}
             <div className="self-stretch h-[90px] justify-center items-end gap-[100px] inline-flex">
               <div className="grow shrink basis-0 self-stretch flex-col justify-start items-start gap-1.5 inline-flex">
-                <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">Quotation Request ID:</div>
+                <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">Quotation ID:</div>
                 <Select>
                   <SelectTrigger className="h-[60px] w-[500px]">
                     <SelectValue placeholder="Select quotation ID" />
@@ -49,22 +49,22 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Pickup Date và Delivery Date */}
+            {/* Start Date và End Date */}
             <div className="h-[90px] w-[500px] justify-between items-end gap-[20px] flex">
-            {/* Pickup Date */}
+            {/* Start Date */}
             <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
             <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
-            Pickup Date:
+            Start Date:
              </div>
             <div className="relative">
             <DatePickerDemo /> {/* Sử dụng DatePicker */}
             </div>
             </div>
 
-            {/* Delivery Date */}
+            {/* End Date */}
             <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
             <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
-            Delivery Date:
+            End Date:
             </div>
             <div className="relative">
             <DatePickerDemo /> {/* Sử dụng DatePicker */}
@@ -73,12 +73,12 @@ export default function Page() {
             </div>
 
             
-            {/* Quotation Date và Expired Date */}
+            {/* Contract Date */}
             <div className="h-[90px] w-[500px] justify-between items-end gap-[20px] flex">
-            {/* Quotation Date */}
+            {/* Contract Date */}
             <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
             <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
-            Quotation Date:
+            Contract Date:
              </div>
             <div className="relative">
             <DatePickerDemo /> {/* Sử dụng DatePicker */}
@@ -126,12 +126,12 @@ export default function Page() {
           <div className="w-[500px] justify-center items-start gap-2.5 inline-flex">
             {/* Cancel Button */}
             <Button className="px-8 rounded-[5px] border border-[#424242] text-[#060606] text-sm font-normal tracking-wide bg-white">
-              <Link href={"/quotation/quotationmanagement"}>Cancel</Link>
+              <Link href={"/contract/contractmanagement"}>Cancel</Link>
             </Button>
             
             {/* Save Button */}
             <Button className="px-8 bg-[#108080] rounded-[5px] text-white text-sm font-normal tracking-wide">
-              <Link href={"/quotation/quotationmanagement"}>Save</Link>
+              <Link href={"/contract/contractmanagement"}>Save</Link>
             </Button>
           </div>
 

@@ -130,7 +130,7 @@ export default function Page() {
             </Button>
             
             {/* Save Button */}
-            <Button className="px-8 rounded-[5px] border border-[#424242] text-[#060606] text-sm font-normal tracking-wide bg-white">
+            <Button className="px-8 bg-[#108080] rounded-[5px] text-white text-sm font-normal tracking-wide">
               <Link href={"/quotation/quotationmanagement"}>Save</Link>
             </Button>
           </div>
