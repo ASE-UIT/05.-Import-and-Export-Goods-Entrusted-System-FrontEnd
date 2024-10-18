@@ -37,7 +37,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export default function ShipmentDetailSI() {
+export default function ShipmentDetailSE() {
   return (
     <div className="h-[946px] p-6 flex-col justify-start items-center gap-4 inline-flex">
       <div className="self-stretch justify-start items-center inline-flex">
@@ -66,7 +66,7 @@ export default function ShipmentDetailSI() {
           <div className="grow shrink basis-0 self-stretch bg-[#b9b9b9]/50 flex-col justify-start items-center inline-flex">
             <div className="self-stretch h-[52px] p-4 justify-start items-start inline-flex">
               <div className="text-[#202224] text-base font-semibold font-['Inter'] leading-tight">
-                Import
+                Export
               </div>
             </div>
           </div>
@@ -84,7 +84,7 @@ export default function ShipmentDetailSI() {
 
         {/* Button on the far right */}
         <Button className="p-2.5 bg-[#108080] rounded-[5px] justify-start items-center gap-2 flex">
-          <Link href="/ShipmentManagement/AddCompulsorySI">
+          <Link href="/ShipmentManagement/AddCompulsorySE">
             {/* Fixing the href here */}
             <div className="text-white text-sm font-normal font-['Inter'] gap-[15px] tracking-wide flex items-center">
               <CirclePlus />
@@ -111,7 +111,7 @@ export default function ShipmentDetailSI() {
         <TableBody>
           {/* Row 1 */}
           <TableRow>
-            <TableCell>Sale Contract</TableCell>
+            <TableCell>Expot Agency Contract</TableCell>
             <TableCell>124</TableCell>
             <TableCell>
               <a
@@ -201,7 +201,7 @@ export default function ShipmentDetailSI() {
 
           {/* Row 4 */}
           <TableRow>
-            <TableCell>Packing List</TableCell>
+            <TableCell>Ocean Bill of Landing</TableCell>
             <TableCell>124</TableCell>
             <TableCell>
               <a
@@ -231,7 +231,157 @@ export default function ShipmentDetailSI() {
 
           {/* Row 5 */}
           <TableRow>
-            <TableCell>Customs Declairation</TableCell>
+            <TableCell>Certificate of Origin (COD)</TableCell>
+            <TableCell>124</TableCell>
+            <TableCell>
+              <a
+                href="link-to-your-image.jpg"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View Image
+              </a>
+            </TableCell>
+            <TableCell>12/05/2024 - 12h30p28s </TableCell>
+            <TableCell>19/05/2024 - 12h30p28s</TableCell>
+            <TableCell>
+              <StatusBadge status="Active"></StatusBadge>
+            </TableCell>
+            <TableCell>
+              <a
+                className="text-blue-500"
+                href="link-to-your-page"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Edit
+              </a>
+            </TableCell>
+          </TableRow>
+
+          {/* Row 6 */}
+          <TableRow>
+            <TableCell>Insurance Certificate</TableCell>
+            <TableCell>124</TableCell>
+            <TableCell>
+              <a
+                href="link-to-your-image.jpg"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View Image
+              </a>
+            </TableCell>
+            <TableCell>12/05/2024 - 12h30p28s </TableCell>
+            <TableCell>19/05/2024 - 12h30p28s</TableCell>
+            <TableCell>
+              <StatusBadge status="Active"></StatusBadge>
+            </TableCell>
+            <TableCell>
+              <a
+                className="text-blue-500"
+                href="link-to-your-page"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Edit
+              </a>
+            </TableCell>
+          </TableRow>
+
+          {/* Row 7 */}
+          <TableRow>
+            <TableCell>Sale Contract</TableCell>
+            <TableCell>124</TableCell>
+            <TableCell>
+              <a
+                href="link-to-your-image.jpg"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View Image
+              </a>
+            </TableCell>
+            <TableCell>12/05/2024 - 12h30p28s </TableCell>
+            <TableCell>19/05/2024 - 12h30p28s</TableCell>
+            <TableCell>
+              <StatusBadge status="Active"></StatusBadge>
+            </TableCell>
+            <TableCell>
+              <a
+                className="text-blue-500"
+                href="link-to-your-page"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Edit
+              </a>
+            </TableCell>
+          </TableRow>
+
+          {/* Row 8 */}
+          <TableRow>
+            <TableCell>Import License</TableCell>
+            <TableCell>124</TableCell>
+            <TableCell>
+              <a
+                href="link-to-your-image.jpg"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View Image
+              </a>
+            </TableCell>
+            <TableCell>12/05/2024 - 12h30p28s </TableCell>
+            <TableCell>19/05/2024 - 12h30p28s</TableCell>
+            <TableCell>
+              <StatusBadge status="Active"></StatusBadge>
+            </TableCell>
+            <TableCell>
+              <a
+                className="text-blue-500"
+                href="link-to-your-page"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Edit
+              </a>
+            </TableCell>
+          </TableRow>
+
+          {/* Row 9 */}
+          <TableRow>
+            <TableCell>Export License</TableCell>
+            <TableCell>124</TableCell>
+            <TableCell>
+              <a
+                href="link-to-your-image.jpg"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View Image
+              </a>
+            </TableCell>
+            <TableCell>12/05/2024 - 12h30p28s </TableCell>
+            <TableCell>19/05/2024 - 12h30p28s</TableCell>
+            <TableCell>
+              <StatusBadge status="Active"></StatusBadge>
+            </TableCell>
+            <TableCell>
+              <a
+                className="text-blue-500"
+                href="link-to-your-page"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Edit
+              </a>
+            </TableCell>
+          </TableRow>
+
+          {/* Row 10 */}
+          <TableRow>
+            <TableCell>Tax Document</TableCell>
             <TableCell>124</TableCell>
             <TableCell>
               <a
@@ -272,7 +422,7 @@ export default function ShipmentDetailSI() {
 
         {/* Button on the far right */}
         <Button className="p-2.5 bg-[#108080] rounded-[5px] justify-start items-center gap-2 flex">
-          <Link href="/ShipmentManagement/AddOptionalSI">
+          <Link href="/ShipmentManagement/AddOptionalSE">
             {/* Fixing the href here */}
             <div className="text-white text-sm font-normal font-['Inter'] gap-[15px] tracking-wide flex items-center">
               <CirclePlus />

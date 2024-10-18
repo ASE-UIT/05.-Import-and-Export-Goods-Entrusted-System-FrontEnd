@@ -37,7 +37,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export default function Page() {
+export default function ShipmentScreen() {
   return (
     <div className="h-[946px] p-6 flex-col justify-start items-center gap-3 inline-flex">
       <div className="self-stretch justify-start items-center inline-flex">
@@ -80,7 +80,7 @@ export default function Page() {
 
         {/* Button on the far right */}
         <Button className="p-2.5 bg-[#108080] rounded-[5px] justify-start items-center gap-2 flex">
-          <Link href="/addShipment">
+          <Link href="/ShipmentManagement/AddShipment">
             {/* Fixing the href here */}
             <div className="text-white text-sm font-normal font-['Inter'] gap-[15px] tracking-wide flex items-center">
               <CirclePlus />
@@ -91,7 +91,6 @@ export default function Page() {
       </div>
 
       {/* Table */}
-
       <Table>
         <TableHeader>
           <TableRow>
