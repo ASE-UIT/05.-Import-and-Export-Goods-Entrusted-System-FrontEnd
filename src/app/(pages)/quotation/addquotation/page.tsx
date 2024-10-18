@@ -50,7 +50,7 @@ export default function Page() {
             </div>
 
             {/* Pickup Date và Delivery Date */}
-            <div className="h-[90px] w-[500px] justify-between items-end gap-[20px] flex">
+            <div className="h-[90px] w-[500px] justify-between items-end gap-[20px] flex mt-[-25px]">
             {/* Pickup Date */}
             <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
             <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
@@ -62,7 +62,7 @@ export default function Page() {
             </div>
 
             {/* Delivery Date */}
-            <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
+            <div className="flex-col justify-start items-start grow">
             <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
             Delivery Date:
             </div>
@@ -74,7 +74,7 @@ export default function Page() {
 
             
             {/* Quotation Date và Expired Date */}
-            <div className="h-[90px] w-[500px] justify-between items-end gap-[20px] flex">
+            <div className="h-[90px] w-[500px] justify-between items-end gap-[20px] flex mt-[-25px]">
             {/* Quotation Date */}
             <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
             <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
@@ -86,7 +86,7 @@ export default function Page() {
             </div>
 
             {/* Expired Date */}
-            <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
+            <div className="flex-col justify-start items-start grow">
             <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
             Expired Date:
             </div>

@@ -8,7 +8,7 @@ export default function Page() {
   return (
     <div className="h-full w-full p-[28px] flex-col justify-start items-start gap-5 inline-flex">
       <div className="justify-start items-start">
-        <div className="text-black text-3xl font-bold font-['Inter']">Add Contract</div>
+        <div className="text-black text-3xl font-bold font-['Inter']">Update Contract</div>
       </div>
       <div className="self-stretch h-full flex-col justify-start items-start gap-5 flex">
         <div className="self-stretch h-full py-8 flex-col justify-start items-center gap-5 flex">
@@ -60,24 +60,28 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Start Date and End Date */}
+          {/* Start Date và End Date */}
           <div className="h-[90px] w-[500px] justify-between items-end gap-[20px] flex mt-[-25px]">
             {/* Start Date */}
-            <div className="flex-col justify-start items-start grow">
-              <div className="text-black text-base font-bold leading-normal tracking-wide">Start Date:</div>
-              <div className="relative">
-                <DatePickerDemo />
-              </div>
+            <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
+            <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
+            Start Date:
+             </div>
+            <div className="relative">
+            <DatePickerDemo /> {/* Sử dụng DatePicker */}
             </div>
-        
+            </div>
+
             {/* End Date */}
-            <div className="flex-col justify-start items-start grow">
-              <div className="text-black text-base font-bold leading-normal tracking-wide">End Date:</div>
-              <div className="relative">
-                <DatePickerDemo />
-              </div>
+            <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
+            <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
+            End Date:
             </div>
-          </div>
+            <div className="relative">
+            <DatePickerDemo /> {/* Sử dụng DatePicker */}
+            </div>
+            </div>
+            </div>
           
           {/* Buttons */}
           <div className="w-[500px] justify-center items-start gap-5 flex">
