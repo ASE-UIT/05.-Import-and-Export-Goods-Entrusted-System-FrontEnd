@@ -15,9 +15,9 @@ import {
 import { Input } from "@/components/ui/input";
 
 const ChangePasswordBody = z.object({
-  oldPassword: z.string().min(6),
-  newPassword: z.string().min(6),
-  confirmPassword: z.string().min(6),
+  oldPassword: z.string().min(8),
+  newPassword: z.string().min(8),
+  confirmPassword: z.string().min(8),
 });
 type ChangePasswordBodyType = z.infer<typeof ChangePasswordBody>;
 
@@ -25,7 +25,7 @@ export default function ChangePasswordForm() {
   const form = useForm<ChangePasswordBodyType>({
     resolver: zodResolver(ChangePasswordBody),
     defaultValues: {
-      oldPassword: "khangbuoi",
+      oldPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
