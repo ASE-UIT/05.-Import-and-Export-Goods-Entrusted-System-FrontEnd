@@ -59,6 +59,7 @@ export default function QuoteRequestAddForm() {
       destination: "",
       delivery_end_date: "",
       delivery_start_date: "",
+      length: ""
     },
   })
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -77,9 +78,9 @@ export default function QuoteRequestAddForm() {
           name="customer_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Customer Name</FormLabel>
+              <FormLabel className="text-lg">Customer Name</FormLabel>
               <FormControl>
-                <Input placeholder="Input" {...field}  className="h-9 w-1/2 text-sm"
+                <Input placeholder="Input" {...field}  className="w-1/2 "
                 />
               </FormControl>
               <FormMessage />
@@ -96,9 +97,9 @@ export default function QuoteRequestAddForm() {
           name="origin"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Origin</FormLabel>
+              <FormLabel  className="text-lg">Origin</FormLabel>
               <FormControl>
-                <Input placeholder="Origin" {...field} className="h-9 w-full text-sm"/>
+                <Input placeholder="Origin" {...field} className="w-full"/>
               </FormControl>
               <FormDescription>
                 This is your public display name.
@@ -114,9 +115,9 @@ export default function QuoteRequestAddForm() {
                 name="destination"
                 render={({ field }) => (
                 <FormItem>
-                <FormLabel>Destination</FormLabel>
+                <FormLabel className="text-lg">Destination</FormLabel>
                 <FormControl>
-                    <Input placeholder="City, Port" {...field} className="h-9 w-full text-sm"/>
+                    <Input placeholder="City, Port" {...field} className="w-full"/>
                 </FormControl>
                 <FormDescription>
                     This is your public display name.
@@ -135,13 +136,13 @@ export default function QuoteRequestAddForm() {
           name="delivery_start_date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Delivery Start Date</FormLabel>
+              <FormLabel className="text-lg">Delivery Start Date</FormLabel>
               <FormControl>
                  <div className="relative">
-                        <Calendar className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Calendar className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             {...field} 
-                            className="h-9 w-full pl-8 text-sm"   
+                            className="w-full pl-8"   
                             placeholder="Date"
                         />
                 </div>
@@ -157,13 +158,13 @@ export default function QuoteRequestAddForm() {
                 name="delivery_end_date"
                 render={({ field }) => (
                 <FormItem>
-                <FormLabel>Delivery End Date</FormLabel>
+                <FormLabel className="text-lg">Delivery End Date</FormLabel>
                 <FormControl>
                     <div className="relative">
-                        <Calendar className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Calendar className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             {...field} 
-                            className="h-9 w-full pl-8 text-sm"   
+                            className="w-full pl-8"   
                             placeholder="Date"
                         />
                     </div>
@@ -175,10 +176,10 @@ export default function QuoteRequestAddForm() {
             </div>
         </div>
         <div className="flex items-center space-x-2">
-            <Checkbox id="terms" />
+            <Checkbox id="terms"  />
             <label
                 htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
                 Cargo Insurance
             </label>
@@ -195,9 +196,9 @@ export default function QuoteRequestAddForm() {
           name="weight"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Weight</FormLabel>
+              <FormLabel className="text-lg">Weight</FormLabel>
               <FormControl>
-                <Input placeholder="Weight" {...field} className="h-9 w-full text-sm"/>
+                <Input placeholder="Weight" {...field} className="w-full"/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -210,9 +211,9 @@ export default function QuoteRequestAddForm() {
                 name="height"
                 render={({ field }) => (
                 <FormItem>
-                <FormLabel>Height</FormLabel>
+                <FormLabel className="text-lg">Height</FormLabel>
                 <FormControl>
-                    <Input placeholder="Height" {...field} className="h-9 w-full text-sm"/>
+                    <Input placeholder="Height" {...field} className="w-full"/>
                 </FormControl>
                 <FormMessage />
                 </FormItem>
@@ -228,9 +229,9 @@ export default function QuoteRequestAddForm() {
           name="length"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Length</FormLabel>
+              <FormLabel className="text-lg">Length</FormLabel>
               <FormControl>
-                <Input placeholder="Length" {...field} className="h-9 w-full text-sm"/>
+                <Input placeholder="Length" {...field} className="w-full"/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -243,9 +244,9 @@ export default function QuoteRequestAddForm() {
                 name="width"
                 render={({ field }) => (
                 <FormItem>
-                <FormLabel>Width</FormLabel>
+                <FormLabel className="text-lg">Width</FormLabel>
                 <FormControl>
-                    <Input placeholder="Width" {...field} className="h-9 w-full text-sm"/>
+                    <Input placeholder="Width" {...field} className="w-full"/>
                 </FormControl>
                 <FormMessage />
                 </FormItem>
