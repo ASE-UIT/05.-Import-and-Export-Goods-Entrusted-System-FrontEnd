@@ -6,13 +6,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
 export interface ICustomer {
+  id: string;
   name: string;
-  shortName: string;
+  short_name: string;
   email: string;
   phone: string;
-  taxId: string;
+  tax_id: string;
   address: string;
-  legalRepName: string;
+  legal_rep_name: string;
 }
 
 export const columns: ColumnDef<ICustomer>[] = [
@@ -34,7 +35,7 @@ export const columns: ColumnDef<ICustomer>[] = [
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "shortName",
+    accessorKey: "short_name",
     header: ({ column }) => {
       return (
         <Button
@@ -48,7 +49,7 @@ export const columns: ColumnDef<ICustomer>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("shortName")}</div>,
+    cell: ({ row }) => <div>{row.getValue("short_name")}</div>,
   },
   {
     accessorKey: "email",
@@ -85,7 +86,7 @@ export const columns: ColumnDef<ICustomer>[] = [
     cell: ({ row }) => row.getValue("phone"),
   },
   {
-    accessorKey: "taxId",
+    accessorKey: "tax_id",
     header: ({ column }) => {
       return (
         <Button
@@ -99,7 +100,7 @@ export const columns: ColumnDef<ICustomer>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("taxId"),
+    cell: ({ row }) => row.getValue("tax_id"),
   },
   {
     accessorKey: "address",
@@ -119,7 +120,7 @@ export const columns: ColumnDef<ICustomer>[] = [
     cell: ({ row }) => row.getValue("address"),
   },
   {
-    accessorKey: "legalRepName",
+    accessorKey: "legal_rep_name",
     header: ({ column }) => {
       return (
         <Button
@@ -133,6 +134,6 @@ export const columns: ColumnDef<ICustomer>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("legalRepName"),
+    cell: ({ row }) => row.getValue("legal_rep_name"),
   },
 ];
