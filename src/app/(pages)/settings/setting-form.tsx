@@ -99,8 +99,6 @@ export default function SettingForm() {
     console.log(values);
   });
 
-  console.log(image);
-
   return (
     <>
       <div className="w-full flex flex-col justify-center items-center gap-3">
@@ -117,18 +115,20 @@ export default function SettingForm() {
             <AvatarImage src={displayImage} alt="KhangBuoi" />
             <AvatarFallback>KB</AvatarFallback>
           </Avatar>
-          <Button
-            variant={"outline"}
-            size={"icon"}
-            className="absolute top-0 right-0 z-10 rounded-full"
-            onClick={() => {
-              setDisplayImage("https://placehold.co/400");
-              setImage(null);
-              pressOnce.current = false;
-            }}
-          >
-            <X />
-          </Button>
+          {image && (
+            <Button
+              variant={"outline"}
+              size={"icon"}
+              className="absolute top-0 right-0 z-10 rounded-full"
+              onClick={() => {
+                setDisplayImage("https://placehold.co/400");
+                setImage(null);
+                pressOnce.current = false;
+              }}
+            >
+              <X />
+            </Button>
+          )}
         </div>
         <div>
           <Button
