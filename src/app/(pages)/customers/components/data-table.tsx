@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
           <span>Add {path.slice(1, path.length)}</span>
         </Button>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
