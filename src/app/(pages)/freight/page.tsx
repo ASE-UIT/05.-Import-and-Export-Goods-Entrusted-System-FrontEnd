@@ -6,7 +6,6 @@ import { landColumns } from "./components/columns/land-columns";
 import { landData } from "./data/land-data";
 import { seaColumns } from "./components/columns/sea-columns";
 import { seaData } from "./data/sea-data";
-import { columns } from "../test/columns";
 import { airColumns } from "./components/columns/air-columns";
 import { airData } from "./data/air-data";
 export default function FreightManagementPage() {
@@ -27,7 +26,7 @@ export default function FreightManagementPage() {
     },
   };
   return (
-    <div className="flex flex-col p-[24px] w-[calc(100vw-var(--sidebar-width))] h-[calc(100vh-var(--header-height))]">
+    <div className="flex flex-col p-[24px] w-[calc(100vw-var(--sidebar-width))]">
       <Tabs
         defaultValue={freightTypes[0]}
         className="flex flex-col w-full gap-[20px]"
