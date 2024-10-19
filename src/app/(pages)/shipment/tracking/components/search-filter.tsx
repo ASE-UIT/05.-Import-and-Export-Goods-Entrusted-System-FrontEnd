@@ -34,7 +34,7 @@ export function DataTableFilter<TData>({
             onChange={(event) =>
               table.getColumn(currentFilter)?.setFilterValue(event.target.value)
             }
-            className="pl-8"
+            className="pl-8 h-9"
           />
         </div>
       </div>
