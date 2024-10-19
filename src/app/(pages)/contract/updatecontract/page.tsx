@@ -87,12 +87,12 @@ export default function Page() {
           <div className="w-[500px] justify-center items-start gap-5 flex">
             {/* Cancel Button */}
             <Button className="px-8 rounded-[5px] border border-[#424242] text-[#060606] text-sm font-normal tracking-wide bg-white">
-              <Link href={"/contract/contractmanagement"}>Cancel</Link>
+              <Link href={"/contract"}>Cancel</Link>
             </Button>
             
             {/* Save Button */}
             <Button className="px-8 bg-[#108080] rounded-[5px] text-white text-sm font-normal tracking-wide">
-              <Link href={"/contract/contractmanagement"}>Save</Link>
+              <Link href={"/contract"}>Save</Link>
             </Button>
           </div>
         </div>

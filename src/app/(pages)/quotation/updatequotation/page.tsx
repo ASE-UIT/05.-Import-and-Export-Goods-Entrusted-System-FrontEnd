@@ -115,7 +115,7 @@ export default function Page() {
             <div className="self-stretch justify-center items-end gap-[100px] inline-flex">
               <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
                 <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">Total Price:</div>
-                <Input className="h-[60px] w-[500px]" placeholder="Enter name" defaultValue="75,000" />
+                <Input className="h-[60px] w-[500px]" placeholder="Enter price" />
               </div>
             </div>
             </div>
@@ -126,12 +126,12 @@ export default function Page() {
           <div className="w-[500px] justify-center items-start gap-2.5 inline-flex">
             {/* Cancel Button */}
             <Button className="px-8 rounded-[5px] border border-[#424242] text-[#060606] text-sm font-normal tracking-wide bg-white">
-              <Link href={"/quotation/quotationmanagement"}>Cancel</Link>
+              <Link href={"/quotation"}>Cancel</Link>
             </Button>
             
             {/* Save Button */}
             <Button className="px-8 bg-[#108080] rounded-[5px] text-white text-sm font-normal tracking-wide">
-              <Link href={"/quotation/quotationmanagement"}>Save</Link>
+              <Link href={"/quotation"}>Save</Link>
             </Button>
           </div>
 
