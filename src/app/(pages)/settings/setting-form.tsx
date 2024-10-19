@@ -26,6 +26,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { z } from "zod";
+import { Label } from "@/components/ui/label";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import ChangePasswordForm from "@/app/(pages)/settings/_components/change-password-form";
 
 const UserSettingBody = z.object({
   name: z.string().min(3),
@@ -143,7 +154,7 @@ export default function SettingForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[16px]">Name</FormLabel>
+                  <FormLabel className="text-[16px] font-bold">Name</FormLabel>
                   <FormControl>
                     <Input
                       className="h-[60px]"
@@ -161,7 +172,7 @@ export default function SettingForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[16px]">Email</FormLabel>
+                  <FormLabel className="text-[16px] font-bold">Email</FormLabel>
                   <FormControl>
                     <Input
                       className="h-[60px]"
@@ -180,7 +191,9 @@ export default function SettingForm() {
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[16px]">Address</FormLabel>
+                  <FormLabel className="text-[16px] font-bold">
+                    Address
+                  </FormLabel>
                   <FormControl>
                     <Input
                       className="h-[60px]"
@@ -200,7 +213,9 @@ export default function SettingForm() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-[16px]">Phone</FormLabel>
+                      <FormLabel className="text-[16px] font-bold">
+                        Phone
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="h-[60px]"
@@ -219,7 +234,9 @@ export default function SettingForm() {
                 name="dateOfBirth"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-[16px]">Date Of Birth</FormLabel>
+                    <FormLabel className="text-[16px] font-bold">
+                      Date Of Birth
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -261,11 +278,37 @@ export default function SettingForm() {
               />
             </div>
 
+            <div className="flex justify-between">
+              <div className="space-y-2">
+                <Label className="text-[16px] font-bold">Password</Label>
+                <p>Password must be at least 8 characters long</p>
+              </div>
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="mt-4" variant={"outline"} size={"lg"}>
+                    Change
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="text-center">
+                      Change Password
+                    </DialogTitle>
+                    <DialogDescription className="text-center">
+                      Password must be at least 8 characters long
+                    </DialogDescription>
+                  </DialogHeader>
+                  <ChangePasswordForm />
+                </DialogContent>
+              </Dialog>
+            </div>
+
             <div className="flex justify-end gap-3 !mt-8">
-              <Button variant={"outline"} size={"lg"}>
+              <Button className="" variant={"outline"} size={"lg"}>
                 Cancel
               </Button>
-              <Button type="submit" size={"lg"} className="">
+              <Button className="" type="submit" size={"lg"}>
                 Save
               </Button>
             </div>
