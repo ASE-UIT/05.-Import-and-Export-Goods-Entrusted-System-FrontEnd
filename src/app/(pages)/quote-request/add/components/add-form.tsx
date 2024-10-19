@@ -70,7 +70,8 @@ export default function QuoteRequestAddForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-2.5">
-        <div className="w-full">
+        <div className="flex w-full gap-2.5">
+          <div className="flex-1">
             <FormField
           control={form.control}
           name="customer_name"
@@ -78,13 +79,15 @@ export default function QuoteRequestAddForm() {
             <FormItem>
               <FormLabel>Customer Name</FormLabel>
               <FormControl>
-                <Input placeholder="Input" {...field}  className="h-9 w-1/2"
+                <Input placeholder="Input" {...field}  className="h-9 w-1/2 text-sm"
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+          </div>
+            
         </div>
         <div className="flex w-full gap-2.5">
             <div className="flex-1">
@@ -95,7 +98,7 @@ export default function QuoteRequestAddForm() {
             <FormItem>
               <FormLabel>Origin</FormLabel>
               <FormControl>
-                <Input placeholder="Origin" {...field} className="h-9 w-full"/>
+                <Input placeholder="Origin" {...field} className="h-9 w-full text-sm"/>
               </FormControl>
               <FormDescription>
                 This is your public display name.
@@ -113,7 +116,7 @@ export default function QuoteRequestAddForm() {
                 <FormItem>
                 <FormLabel>Destination</FormLabel>
                 <FormControl>
-                    <Input placeholder="City, Port" {...field} className="h-9 w-full"/>
+                    <Input placeholder="City, Port" {...field} className="h-9 w-full text-sm"/>
                 </FormControl>
                 <FormDescription>
                     This is your public display name.
@@ -138,7 +141,7 @@ export default function QuoteRequestAddForm() {
                         <Calendar className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                             {...field} 
-                            className="h-9 w-full pl-8"   
+                            className="h-9 w-full pl-8 text-sm"   
                             placeholder="Date"
                         />
                 </div>
@@ -160,7 +163,7 @@ export default function QuoteRequestAddForm() {
                         <Calendar className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                             {...field} 
-                            className="h-9 w-full pl-8"   
+                            className="h-9 w-full pl-8 text-sm"   
                             placeholder="Date"
                         />
                     </div>
@@ -194,7 +197,7 @@ export default function QuoteRequestAddForm() {
             <FormItem>
               <FormLabel>Weight</FormLabel>
               <FormControl>
-                <Input placeholder="Weight" {...field} className="h-9 w-full"/>
+                <Input placeholder="Weight" {...field} className="h-9 w-full text-sm"/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -209,7 +212,7 @@ export default function QuoteRequestAddForm() {
                 <FormItem>
                 <FormLabel>Height</FormLabel>
                 <FormControl>
-                    <Input placeholder="Height" {...field} className="h-9 w-full"/>
+                    <Input placeholder="Height" {...field} className="h-9 w-full text-sm"/>
                 </FormControl>
                 <FormMessage />
                 </FormItem>
@@ -227,7 +230,7 @@ export default function QuoteRequestAddForm() {
             <FormItem>
               <FormLabel>Length</FormLabel>
               <FormControl>
-                <Input placeholder="Length" {...field} className="h-9 w-full"/>
+                <Input placeholder="Length" {...field} className="h-9 w-full text-sm"/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -242,7 +245,7 @@ export default function QuoteRequestAddForm() {
                 <FormItem>
                 <FormLabel>Width</FormLabel>
                 <FormControl>
-                    <Input placeholder="Width" {...field} className="h-9 w-full"/>
+                    <Input placeholder="Width" {...field} className="h-9 w-full text-sm"/>
                 </FormControl>
                 <FormMessage />
                 </FormItem>
