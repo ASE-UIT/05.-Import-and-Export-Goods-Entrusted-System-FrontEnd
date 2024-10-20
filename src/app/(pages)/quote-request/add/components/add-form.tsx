@@ -70,7 +70,7 @@ export default function QuoteRequestAddForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2.5">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-2.5">
         <div className="flex w-full gap-2.5">
           <div className="flex-1">
             <FormField
