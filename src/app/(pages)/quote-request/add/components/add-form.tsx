@@ -15,9 +15,14 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Calendar } from "lucide-react"
+import { Calendar } from "@/components/ui/calendar"
+import { CalendarIcon } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import DropdownMenuCustom from "./dropdown-menu"
+import React from "react"
+import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover"
+import { cn } from "@/lib/utils"
+import { format } from "date-fns"
 
 const formSchema = z.object({
   customer_name: z.string().min(2, {
@@ -29,12 +34,8 @@ const formSchema = z.object({
   destination: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  delivery_end_date: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  delivery_start_date: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  delivery_end_date: z.date(),
+  delivery_start_date: z.date(),
   weight: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
@@ -57,8 +58,6 @@ export default function QuoteRequestAddForm() {
       customer_name: "",
       origin: "",
       destination: "",
-      delivery_end_date: "",
-      delivery_start_date: "",
       length: ""
     },
   })
@@ -135,18 +134,40 @@ export default function QuoteRequestAddForm() {
           control={form.control}
           name="delivery_start_date"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col">
               <FormLabel className="text-lg">Delivery Start Date</FormLabel>
-              <FormControl>
-                 <div className="relative">
-                        <Calendar className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                            {...field} 
-                            className="w-full pl-8"   
-                            placeholder="Date"
-                        />
-                </div>
-              </FormControl>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full h-[60px] pl-3 text-lg font-normal flex items-center justify-start hover:bg-primary",
+                        !field.value && "text-black"
+                      )}
+                    >
+                      <CalendarIcon className="h-4 w-4 mr-2" />
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 bg-white rounded-md border" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                    
+                  />
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
             )}
@@ -157,18 +178,46 @@ export default function QuoteRequestAddForm() {
                 control={form.control}
                 name="delivery_end_date"
                 render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                 <FormLabel className="text-lg">Delivery End Date</FormLabel>
-                <FormControl>
-                    <div className="relative">
-                        <Calendar className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                            {...field} 
-                            className="w-full pl-8"   
-                            placeholder="Date"
-                        />
-                    </div>
-                </FormControl>
+                <Popover>
+                <PopoverTrigger asChild >
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full h-[60px] pl-3 text-lg font-normal flex items-center justify-start hover:bg-primary",
+                        !field.value && "text-black"
+                      )}
+                    >
+                      <CalendarIcon className="h-4 w-4 mr-2" />
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 bg-white rounded-md border" 
+                      align="start"
+                      side="bottom"
+                >
+                    <Calendar
+                    mode="single"
+              
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                  
+                    
+                  />
+                  
+                </PopoverContent>
+              </Popover>
                 <FormMessage />
                 </FormItem>
                 )}
