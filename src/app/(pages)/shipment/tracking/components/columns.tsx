@@ -1,24 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
-export interface ICustomer {
-  id: string;
-  name: string;
-  short_name: string;
-  email: string;
-  phone: string;
-  tax_id: string;
-  address: string;
-  legal_rep_name: string;
-}
 
-export const columns: ColumnDef<ICustomer>[] = [
+export const columns: ColumnDef<ShipmentTracking>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "shipment_id",
     header: ({ column }) => {
       return (
         <Button
@@ -27,15 +16,15 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Shipment ID
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    cell: ({ row }) => <div>{row.getValue("shipment_id")}</div>,
   },
   {
-    accessorKey: "short_name",
+    accessorKey: "shipment_type",
     header: ({ column }) => {
       return (
         <Button
@@ -44,15 +33,15 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Short Name
+          Shipment Type
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("short_name")}</div>,
+    cell: ({ row }) => <div>{row.getValue("shipment_type")}</div>,
   },
   {
-    accessorKey: "email",
+    accessorKey: "client",
     header: ({ column }) => {
       return (
         <Button
@@ -61,15 +50,15 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Client
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("email"),
+    cell: ({ row }) => row.getValue("client"),
   },
   {
-    accessorKey: "phone",
+    accessorKey: "location",
     header: ({ column }) => {
       return (
         <Button
@@ -78,15 +67,15 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Phone
+          Location
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("phone"),
+    cell: ({ row }) => row.getValue("location"),
   },
   {
-    accessorKey: "tax_id",
+    accessorKey: "status",
     header: ({ column }) => {
       return (
         <Button
@@ -95,15 +84,15 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Tax ID
+          Status
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("tax_id"),
+    cell: ({ row }) => row.getValue("status"),
   },
   {
-    accessorKey: "address",
+    accessorKey: "tracking_id",
     header: ({ column }) => {
       return (
         <Button
@@ -112,28 +101,11 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Address
+          Tracking ID
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("address"),
-  },
-  {
-    accessorKey: "legal_rep_name",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Legal Rep Name
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("legal_rep_name"),
+    cell: ({ row }) => row.getValue("tracking_id"),
   },
 ];
