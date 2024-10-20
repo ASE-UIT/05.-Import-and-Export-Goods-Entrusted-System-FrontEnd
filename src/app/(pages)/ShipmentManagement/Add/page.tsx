@@ -11,11 +11,11 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 
-export default function AddShipment() {
+export default function Add() {
   return (
     <div className="h-full w-full p-[28px] flex-col justify-start items-start gap-2.5 inline-flex">
       <div className="w-full justify-center items-start gap-2.5 inline-flex">
-        <div className="text-black text-3xl font-bold font-['Inter']">
+        <div className="text-black text-3xl font-bold ">
           Shipment Information
         </div>
       </div>
@@ -65,7 +65,7 @@ export default function AddShipment() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <div className="absolute right-0 top-0 h-[60px] w-[140px] bg-[#ece9e9] rounded-tr-[5px] rounded-br-[5px] border-l border-neutral-300 flex items-center justify-center cursor-pointer">
-                        <div className="opacity-50 text-[#202224] text-sm font-normal font-['Nunito Sans']">
+                        <div className="opacity-50 text-[#202224] text-sm font-normal">
                           Type
                         </div>
                       </div>

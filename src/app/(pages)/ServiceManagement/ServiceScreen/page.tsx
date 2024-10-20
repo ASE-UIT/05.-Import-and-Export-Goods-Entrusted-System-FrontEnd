@@ -40,7 +40,7 @@ export default function ServiceScreen() {
       <div className="flex flex-row justify-end py-[28px] pl-0 pr-0 w-[1115px]">
         {/* Button on the far right */}
         <Button className="p-2.5 bg-[#108080] rounded-[5px] justify-start items-center gap-2 flex">
-          <Link href="/ServiceManagement/AddService">
+          <Link href="/ServiceManagement/Add">
             {/* Fixing the href here */}
             <div className="text-white text-sm font-normal font-['Inter'] gap-[15px] tracking-wide flex items-center">
               <CirclePlus />
@@ -71,7 +71,7 @@ export default function ServiceScreen() {
             <TableCell>2$ </TableCell>
             <TableCell>
               <Link
-                href="/ServiceManagement/EditService"
+                href="/ServiceManagement/Edit"
                 className="text-blue-500"
                 target="_blank"
                 rel="noopener noreferrer"

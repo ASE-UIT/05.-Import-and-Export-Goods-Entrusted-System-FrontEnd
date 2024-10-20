@@ -41,9 +41,7 @@ export default function ShipmentScreen() {
   return (
     <div className="h-[946px] p-6 flex-col justify-start items-center gap-3 inline-flex">
       <div className="self-stretch justify-start items-center inline-flex">
-        <div className="text-black text-3xl font-bold font-['Inter']">
-          Shipment
-        </div>
+        <div className="text-black text-3xl font-bold">Shipment</div>
       </div>
       <div className="flex flex-row justify-between py-[28px] pl-0 pr-0 w-[1115px]">
         <div className="justify-start items-center inline-flex">
@@ -80,9 +78,9 @@ export default function ShipmentScreen() {
 
         {/* Button on the far right */}
         <Button className="p-2.5 bg-[#108080] rounded-[5px] justify-start items-center gap-2 flex">
-          <Link href="/ShipmentManagement/AddShipment">
+          <Link href="/ShipmentManagement/Add">
             {/* Fixing the href here */}
-            <div className="text-white text-sm font-normal font-['Inter'] gap-[15px] tracking-wide flex items-center">
+            <div className="text-white text-sm font-normal gap-[15px] tracking-wide flex items-center">
               <CirclePlus />
               Add New
             </div>
@@ -262,9 +260,7 @@ export default function ShipmentScreen() {
       {/* pagination */}
       <div className="flex justify-between items-center w-full mt-4">
         <Pagination className="justify-between">
-          <div className="text-black text-xl font-medium font-['Inter']">
-            Total: 1000
-          </div>
+          <div className="text-black text-xl font-medium ">Total: 1000</div>
 
           <PaginationContent>
             <PaginationPrevious />

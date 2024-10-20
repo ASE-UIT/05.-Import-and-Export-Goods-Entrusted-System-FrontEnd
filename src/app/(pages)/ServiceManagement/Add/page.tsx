@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FileUp, Upload } from "lucide-react";
 
-export default function AddService() {
+export default function Add() {
   return (
     <div className="h-full w-full p-[28px] flex-col justify-start items-start gap-2.5 inline-flex">
       <div className="w-full justify-center items-start gap-2.5 inline-flex">
@@ -18,13 +18,15 @@ export default function AddService() {
           <div className="flex-col justify-start items-start gap-5 flex">
             {/* Service ID */}
             <div className="self-stretch justify-center items-end gap-[100px] inline-flex">
-              <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 flex">
+              <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
                 <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
                   Service ID:
                 </div>
-                <div className="h-[60px] w-[500px] border border-gray-300 flex items-center justify-start">
-                  Default
-                </div>
+                <Input
+                  className="h-[60px] w-[500px]"
+                  placeholder="Enter Service ID"
+                  defaultValue="01"
+                />
               </div>
             </div>
             {/* Service Name */}
@@ -33,9 +35,11 @@ export default function AddService() {
                 <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
                   Service Name:
                 </div>
-                <div className="h-[60px] w-[500px] border border-gray-300 flex items-center justify-start">
-                  Default
-                </div>
+                <Input
+                  className="h-[60px] w-[500px]"
+                  placeholder="Enter Service Name"
+                  defaultValue="Customs procedures"
+                />
               </div>
             </div>
             {/* Short Name */}
@@ -44,9 +48,11 @@ export default function AddService() {
                 <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
                   Short Name:
                 </div>
-                <div className="h-[60px] w-[500px] border border-gray-300 flex items-center justify-start">
-                  Default
-                </div>
+                <Input
+                  className="h-[60px] w-[500px]"
+                  placeholder="Enter Short Name"
+                  defaultValue="CP"
+                />
               </div>
             </div>
             {/* Fee */}

@@ -37,16 +37,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export default function ShipmentDetailSE() {
+export default function DetailSE() {
   return (
     <div className="h-[946px] p-6 flex-col justify-start items-center gap-4 inline-flex">
       <div className="self-stretch justify-start items-center inline-flex">
-        <div className="text-black text-3xl font-bold font-['Inter']">
-          Shipment Detail
-        </div>
+        <div className="text-black text-3xl font-bold">Shipment Detail</div>
       </div>
       <div className="self-stretch justify-start items-center inline-flex">
-        <div className="text-black text-xl font-medium font-['Inter'] pr-2">
+        <div className="text-black text-xl font-medium pr-2">
           Shipment Type{" "}
         </div>
         <div className="h-[52px] bg-white/0 justify-start items-start inline-flex border border-[#B9B9B980]">
@@ -65,7 +63,7 @@ export default function ShipmentDetailSE() {
           </div>
           <div className="grow shrink basis-0 self-stretch bg-[#b9b9b9]/50 flex-col justify-start items-center inline-flex">
             <div className="self-stretch h-[52px] p-4 justify-start items-start inline-flex">
-              <div className="text-[#202224] text-base font-semibold font-['Inter'] leading-tight">
+              <div className="text-[#202224] text-base font-semibold leading-tight">
                 Export
               </div>
             </div>
@@ -76,7 +74,7 @@ export default function ShipmentDetailSE() {
       <div className="flex flex-row justify-between py-[28px] pl-0 pr-0 w-[1115px]">
         <div className="justify-start items-center inline-flex">
           <div className="w-[272px] h-[29px] justify-center items-center gap-2.5 inline-flex">
-            <div className="text-black text-2xl font-bold font-['Inter']">
+            <div className="text-black text-2xl font-bold">
               Compulsory Document{" "}
             </div>
           </div>
@@ -84,9 +82,9 @@ export default function ShipmentDetailSE() {
 
         {/* Button on the far right */}
         <Button className="p-2.5 bg-[#108080] rounded-[5px] justify-start items-center gap-2 flex">
-          <Link href="/ShipmentManagement/AddCompulsorySE">
+          <Link href="/ShipmentManagement/Compulsory/AddSE">
             {/* Fixing the href here */}
-            <div className="text-white text-sm font-normal font-['Inter'] gap-[15px] tracking-wide flex items-center">
+            <div className="text-white text-sm font-normal gap-[15px] tracking-wide flex items-center">
               <CirclePlus />
               Add New
             </div>
@@ -414,7 +412,7 @@ export default function ShipmentDetailSE() {
       <div className="flex flex-row justify-between py-[28px] pl-0 pr-0 w-[1115px]">
         <div className="justify-start items-center inline-flex">
           <div className="w-[272px] h-[29px] justify-start items-center gap-2.5 inline-flex">
-            <div className="text-black text-2xl font-bold font-['Inter']">
+            <div className="text-black text-2xl font-bold">
               Optional Document{" "}
             </div>
           </div>
@@ -422,9 +420,9 @@ export default function ShipmentDetailSE() {
 
         {/* Button on the far right */}
         <Button className="p-2.5 bg-[#108080] rounded-[5px] justify-start items-center gap-2 flex">
-          <Link href="/ShipmentManagement/AddOptionalSE">
+          <Link href="/ShipmentManagement/Optional/AddSE">
             {/* Fixing the href here */}
-            <div className="text-white text-sm font-normal font-['Inter'] gap-[15px] tracking-wide flex items-center">
+            <div className="text-white text-sm font-normal gap-[15px] tracking-wide flex items-center">
               <CirclePlus />
               Add New
             </div>
