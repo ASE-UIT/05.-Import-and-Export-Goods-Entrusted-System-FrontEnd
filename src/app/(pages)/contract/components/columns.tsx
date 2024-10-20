@@ -18,7 +18,6 @@ export interface IContract {
   createAt: string;
   updateAt: string;
   status: string;
-  
 }
 
 export const columns: ColumnDef<IContract>[] = [

@@ -27,11 +27,10 @@ import { Button } from "../../../../components/ui/button";
 import { Input } from "../../../../components/ui/input";
 import { DataTableFilter } from "./data-table-filter";
 import { CirclePlus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { PATH_NAME } from "@/configs";
 import { Pagination } from "@/components/ui/pagination";
 import { DataTablePagination } from "./data-table-pagination";
-
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,6 +46,7 @@ export function DataTable<TData, TValue>({
     []
   );
   const router = useRouter();
+  const path = usePathname();
 
   const table = useReactTable({
     data,
@@ -67,15 +67,12 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex w-full justify-between pb-[10px]">
         <DataTableFilter table={table} />
-        <Button
-          variant="default"
-          onClick={() => router.push(`${PATH_NAME.QUOTATION}/addquotation`)}
-        >
+        <Button variant="default" onClick={() => router.push(`${path}/addquotation`)}>
           <CirclePlus className="mr-2" />
-          <span>Add Quotation</span>
+          <span>Add {path.slice(1, path.length)}</span>
         </Button>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

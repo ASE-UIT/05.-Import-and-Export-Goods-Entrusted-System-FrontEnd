@@ -6,9 +6,11 @@ import { DatePickerDemo } from '@/components/date-picker';
 
 export default function Page() {
   return (
-    <div className="h-full w-full p-[28px] flex-col justify-start items-start gap-5 inline-flex">
-      <div className="justify-start items-start">
-        <div className="text-black text-3xl font-bold font-['Inter']">Add Contract</div>
+    <div className="h-full w-full p-[28px] flex-col justify-start items-start gap-2.5 inline-flex">
+      <div className="w-full justify-center items-start gap-2.5 inline-flex">
+        <div className="text-black text-3xl font-bold font-['Inter']">
+          Add Contract
+        </div>
       </div>
       <div className="self-stretch h-full flex-col justify-start items-start gap-5 flex">
         <div className="self-stretch h-full py-8 flex-col justify-start items-center gap-5 flex">
@@ -43,23 +45,6 @@ export default function Page() {
               </Select>
             </div>
 
-            {/* Status */}
-            <div className="self-stretch h-[90px] flex flex-col justify-center">
-              <div className="text-black text-base font-bold leading-normal tracking-wide">Status:</div>
-              <Select>
-                <SelectTrigger className="h-[60px] w-[500px]">
-                  <SelectValue placeholder="Select a status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="status1">Pending</SelectItem>
-                  <SelectItem value="status2">Active</SelectItem>
-                  <SelectItem value="status3">Expired</SelectItem>
-                  <SelectItem value="status4">Terminated</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
           {/* Start Date and End Date */}
           <div className="h-[90px] w-[500px] justify-between items-end gap-[20px] flex mt-[-25px]">
             {/* Start Date */}
@@ -76,6 +61,23 @@ export default function Page() {
               <div className="relative">
                 <DatePickerDemo />
               </div>
+            </div>
+          </div>
+          
+          {/* Status */}
+          <div className="self-stretch h-[90px] flex flex-col justify-center">
+              <div className="text-black text-base font-bold leading-normal tracking-wide">Status:</div>
+              <Select>
+                <SelectTrigger className="h-[60px] w-[500px]">
+                  <SelectValue placeholder="Select a status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="status1">Pending</SelectItem>
+                  <SelectItem value="status2">Active</SelectItem>
+                  <SelectItem value="status3">Expired</SelectItem>
+                  <SelectItem value="status4">Terminated</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           

@@ -9,8 +9,10 @@ import { DatePickerDemo } from '@/components/date-picker';
 export default function Page() {
   return (
     <div className="h-full w-full p-[28px] flex-col justify-start items-start gap-2.5 inline-flex">
-      <div className="justify-start items-start gap-2.5 inline-flex">
-        <div className="text-black text-3xl font-bold font-['Inter']">Add Quotation</div>
+      <div className="w-full justify-center items-start gap-2.5 inline-flex">
+        <div className="text-black text-3xl font-bold font-['Inter']">
+          Add Quotation
+        </div>
       </div>
       <div className="self-stretch h-full flex-col justify-start items-start gap-2.5 flex">
         <div className="self-stretch h-full py-8 flex-col justify-start items-center gap-[30px] flex">
