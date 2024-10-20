@@ -58,24 +58,17 @@ export default function Add() {
                   Document Type:
                 </div>
                 <div className="relative w-[500px]">
-                  <Input
-                    className="h-[60px] w-full pl-4 pr-[140px]" // Adds padding-right to make space for the dropdown
-                    placeholder="Choose Document Type"
-                  />
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <div className="absolute right-0 top-0 h-[60px] w-[140px] bg-[#ece9e9] rounded-tr-[5px] rounded-br-[5px] border-l border-neutral-300 flex items-center justify-center cursor-pointer">
-                        <div className="opacity-50 text-[#202224] text-sm font-normal">
-                          Type
-                        </div>
-                      </div>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="mt-2">
-                      <DropdownMenuItem>Air Freight</DropdownMenuItem>
-                      <DropdownMenuItem>Sea Freight</DropdownMenuItem>
-                      <DropdownMenuItem>Land Freight</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <select
+                    className="h-[60px] w-full pl-4 pr-[140px] bg-white border border-neutral-300 rounded-lg text-sm font-normal text-[#202224]"
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      Choose Document Type
+                    </option>
+                    <option value="air-freight">Air Freight</option>
+                    <option value="sea-freight">Sea Freight</option>
+                    <option value="land-freight">Land Freight</option>
+                  </select>
                 </div>
               </div>
             </div>

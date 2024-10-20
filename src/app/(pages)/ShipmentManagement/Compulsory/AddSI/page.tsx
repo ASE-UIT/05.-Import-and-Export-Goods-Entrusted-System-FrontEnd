@@ -8,7 +8,7 @@ export default function AddCompulsorySI() {
   return (
     <div className="h-full w-full p-[28px] flex-col justify-start items-start gap-2.5 inline-flex">
       <div className="w-full justify-center items-start gap-2.5 inline-flex">
-        <div className="text-black text-3xl font-bold font-['Inter']">
+        <div className="text-black text-3xl font-bold">
           Compulsory Document Sea Import
         </div>
       </div>
@@ -43,17 +43,23 @@ export default function AddCompulsorySI() {
               </div>
             </div>
 
-            {/* Add Image*/}
+            {/* Add Image */}
             <div className="self-stretch justify-center items-end gap-[100px] inline-flex">
               <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
                 <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
                   Image:
                 </div>
                 <div className="relative w-[500px]">
-                  <Input
-                    className="h-[60px] w-full pl-12" // padding-left to make space for the icon
-                    placeholder="Upload an Image"
-                  />
+                  <div className="flex items-center justify-center h-[60px] w-full pl-12 pr-4 border border-neutral-300 rounded-lg">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="opacity-0 absolute inset-0 cursor-pointer" // Hide input and make clickable
+                    />
+                    <span className="text-gray-500 text-sm">
+                      Choose an image
+                    </span>
+                  </div>
                   <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                     <Upload />
                   </div>
@@ -86,17 +92,20 @@ export default function AddCompulsorySI() {
                 defaultValue="20/05/2024 - 12h30p28s"
               />
             </div>
-            {/* Add Folder*/}
+            {/* Add File */}
             <div className="self-stretch justify-center items-end gap-[100px] inline-flex">
               <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
                 <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
-                  Image:
+                  File:
                 </div>
                 <div className="relative w-[500px]">
-                  <Input
-                    className="h-[60px] w-full pl-12" // padding-left to make space for the icon
-                    placeholder="Upload a folder"
-                  />
+                  <div className="flex items-center justify-center h-[60px] w-full pl-12 pr-4 border border-neutral-300 rounded-lg">
+                    <input
+                      type="file"
+                      className="opacity-0 absolute inset-0 cursor-pointer" // Hide input but keep it clickable
+                    />
+                    <span className="text-gray-500 text-sm">Choose a file</span>
+                  </div>
                   <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                     <FileUp />
                   </div>
