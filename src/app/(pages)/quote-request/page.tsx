@@ -3,7 +3,7 @@ import { columns } from "./components/columns";
 import { quoteRequestMocking } from "./data/quote-request-data";
 import { DataTable } from "./components/table";
 
-export default function CustomerManagementPage() {
+export default function QuoteRequestManagementPage() {
   
 
   return (
