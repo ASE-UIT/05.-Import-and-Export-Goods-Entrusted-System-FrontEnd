@@ -1,144 +1,275 @@
-import React from 'react';
-import { Input } from '@/components/ui/input'; 
-import { Button } from '@/components/ui/button'; 
-import Link from 'next/link';
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'; // Adjust the import path as necessary
-import { DatePickerDemo } from '@/components/date-picker';
+"use client";
 
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css"; 
+import { useState } from "react";
 
-export default function Page() {
+const schema = z.object({
+  quoteID: z.string().nonempty({ message: "Please select an ID" }),
+  employeeID: z.string().nonempty({ message: "Please select an ID" }),
+  pickupDate: z.coerce.date().nullable(),
+  deliveryDate: z.coerce.date().nullable(),
+  quotationDate: z.coerce.date().nullable(),
+  expiredDate: z.coerce.date().nullable(),
+  status: z.string().nonempty({ message: "Please select a status" }),
+  price: z.string().nonempty({ message: "Price is required" }),
+});
+
+export default function AddQuotationtPage() {
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      quoteID: "",
+      employeeID: "",
+      pickupDate: null,
+      deliveryDate: null,
+      quotationDate: null,
+      expiredDate: null,
+      status: "",
+      price: "",
+    },
+  });
+
+  const router = useRouter();
+  
+  // Separate states for each date
+  const [pickupDate, setPickupDate] = useState<Date | null>(null);
+  const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
+  const [quotationDate, setQuotationDate] = useState<Date | null>(null);
+  const [expiredDate, setExpiredDate] = useState<Date | null>(null);
+
+  const onSubmit = (values: any) => {
+    console.log(values);
+    router.push("/quotation");
+  };
+
   return (
-    <div className="h-full w-full p-[28px] flex-col justify-start items-start gap-2.5 inline-flex">
-      <div className="w-full justify-center items-start gap-2.5 inline-flex">
-        <div className="text-black text-3xl font-bold font-['Inter']">
-          Add Quotation
-        </div>
-      </div>
-      <div className="self-stretch h-full flex-col justify-start items-start gap-2.5 flex">
-        <div className="self-stretch h-full py-8 flex-col justify-start items-center gap-[30px] flex">
-          <div className="flex-col justify-start items-start gap-5 flex">
-            {/* Quotation Request ID*/}
-            <div className="self-stretch h-[90px] justify-center items-end gap-[100px] inline-flex">
-              <div className="grow shrink basis-0 self-stretch flex-col justify-start items-start gap-1.5 inline-flex">
-                <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">Quotation Request ID:</div>
-                <Select>
-                  <SelectTrigger className="h-[60px] w-[500px]">
-                    <SelectValue placeholder="Select quotation ID" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ID1">ID 1</SelectItem>
-                    <SelectItem value="ID2">ID 2</SelectItem>
-                    <SelectItem value="ID3">ID 3</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Add Quotation</h1>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {/* Quotation ID */}
+          <FormField
+            control={form.control}
+            name="quoteID"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Quotation ID</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-[500px] h-[60px]">
+                      <SelectValue placeholder="Select an ID" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="01">01</SelectItem>
+                      <SelectItem value="02">02</SelectItem>
+                      <SelectItem value="03">03</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            {/* Employee ID */}
-            <div className="self-stretch h-[90px] justify-center items-end gap-[100px] inline-flex">
-              <div className="grow shrink basis-0 self-stretch flex-col justify-start items-start gap-1.5 inline-flex">
-                <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">Employee ID:</div>
-                <Select>
-                  <SelectTrigger className="h-[60px] w-[500px]">
-                    <SelectValue placeholder="Select employee ID" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ID1">ID 1</SelectItem>
-                    <SelectItem value="ID2">ID 2</SelectItem>
-                    <SelectItem value="ID3">ID 3</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+          {/* Employee ID */}
+          <FormField
+            control={form.control}
+            name="employeeID"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Employee ID</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-[500px] h-[60px]">
+                      <SelectValue placeholder="Select an ID" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="01">01</SelectItem>
+                      <SelectItem value="02">02</SelectItem>
+                      <SelectItem value="03">03</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            {/* Pickup Date và Delivery Date */}
-            <div className="h-[90px] w-[500px] justify-between items-end gap-[20px] flex mt-[-25px]">
-            {/* Pickup Date */}
-            <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
-            <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
-            Pickup Date:
-             </div>
-            <div className="relative">
-            <DatePickerDemo /> {/* Sử dụng DatePicker */}
-            </div>
-            </div>
+          {/* Pickup Date */}
+          <FormField
+            control={form.control}
+            name="pickupDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Pickup Date</FormLabel>
+                <FormControl>
+                  <DatePicker
+                    selected={pickupDate}
+                    onChange={(date) => {
+                      setPickupDate(date);
+                      field.onChange(date); 
+                    }}
+                    className="w-[500px] h-[60px] border rounded-md p-2"
+                    placeholderText="Select a date"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            {/* Delivery Date */}
-            <div className="flex-col justify-start items-start grow">
-            <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
-            Delivery Date:
-            </div>
-            <div className="relative">
-            <DatePickerDemo /> {/* Sử dụng DatePicker */}
-            </div>
-            </div>
-            </div>
+          {/* Delivery Date */}
+          <FormField
+            control={form.control}
+            name="deliveryDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Delivery Date</FormLabel>
+                <FormControl>
+                  <DatePicker
+                    selected={deliveryDate}
+                    onChange={(date) => {
+                      setDeliveryDate(date);
+                      field.onChange(date); 
+                    }}
+                    className="w-[500px] h-[60px] border rounded-md p-2"
+                    placeholderText="Select a date"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            
-            {/* Quotation Date và Expired Date */}
-            <div className="h-[90px] w-[500px] justify-between items-end gap-[20px] flex mt-[-25px]">
-            {/* Quotation Date */}
-            <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
-            <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
-            Quotation Date:
-             </div>
-            <div className="relative">
-            <DatePickerDemo /> {/* Sử dụng DatePicker */}
-            </div>
-            </div>
+          {/* Quotation Date */}
+          <FormField
+            control={form.control}
+            name="quotationDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Quotation Date</FormLabel>
+                <FormControl>
+                  <DatePicker
+                    selected={quotationDate}
+                    onChange={(date) => {
+                      setQuotationDate(date);
+                      field.onChange(date); 
+                    }}
+                    className="w-[500px] h-[60px] border rounded-md p-2"
+                    placeholderText="Select a date"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            {/* Expired Date */}
-            <div className="flex-col justify-start items-start grow">
-            <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">
-            Expired Date:
-            </div>
-            <div className="relative">
-            <DatePickerDemo /> {/* Sử dụng DatePicker */}
-            </div>
-            </div>
-            </div>
+          {/* Expired Date */}
+          <FormField
+            control={form.control}
+            name="expiredDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Expired Date</FormLabel>
+                <FormControl>
+                  <DatePicker
+                    selected={expiredDate}
+                    onChange={(date) => {
+                      setExpiredDate(date);
+                      field.onChange(date); 
+                    }}
+                    className="w-[500px] h-[60px] border rounded-md p-2"
+                    placeholderText="Select a date"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            {/* Status */}
-            <div className="self-stretch h-[90px] justify-center items-end gap-[100px] inline-flex">
-              <div className="grow shrink basis-0 self-stretch flex-col justify-start items-start gap-1.5 inline-flex">
-                <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">Status:</div>
-                <Select>
-                  <SelectTrigger className="h-[60px] w-[500px]">
-                    <SelectValue placeholder="Select a status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="status1">Draft</SelectItem>
-                    <SelectItem value="status2">Booked</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            {/* Total price */}
-            <div className="self-stretch justify-center items-end gap-[100px] inline-flex">
-              <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
-                <div className="self-stretch text-black text-base font-bold leading-normal tracking-wide">Total Price:</div>
-                <Input className="h-[60px] w-[500px]" placeholder="Enter price" />
-              </div>
-            </div>
-            </div>
+          {/* Status */}
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Status</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-[500px] h-[60px]">
+                      <SelectValue placeholder="Select a status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Pending">Pending</SelectItem>
+                      <SelectItem value="Active">Active</SelectItem>
+                      <SelectItem value="Terminated">Terminated</SelectItem>
+                      <SelectItem value="Expired">Expired</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Price */}
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Total Price"
+                    className="w-[500px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            
-            
-          {/* Buttons */}
-          <div className="w-[500px] justify-center items-start gap-2.5 inline-flex">
-            {/* Cancel Button */}
-            <Button className="px-8 rounded-[5px] border border-[#424242] text-[#060606] text-sm font-normal tracking-wide bg-white">
-              <Link href={"/quotation"}>Cancel</Link>
-            </Button>
-            
-            {/* Save Button */}
-            <Button className="px-8 bg-[#108080] rounded-[5px] text-white text-sm font-normal tracking-wide">
-              <Link href={"/quotation"}>Save</Link>
+          {/* Submit Button */}
+          <div className="h-[40px] flex justify-center mt-4">
+            <Button type="submit" className="h-[40px] w-auto">
+              Submit
             </Button>
           </div>
-
-        </div>
-      </div>
+        </form>
+      </Form>
     </div>
   );
 }
