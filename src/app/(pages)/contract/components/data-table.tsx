@@ -67,7 +67,7 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex w-full justify-between pb-[10px]">
         <DataTableFilter table={table} />
-        <Button variant="default" onClick={() => router.push(`${path}/addcontract`)}>
+        <Button variant="default" onClick={() => router.push(`${path}/add`)}>
           <CirclePlus className="mr-2" />
           <span>Add {path.slice(1, path.length)}</span>
         </Button>

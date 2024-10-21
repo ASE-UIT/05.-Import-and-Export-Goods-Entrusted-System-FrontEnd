@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import Link from "next/link";
+import { DatePickerDemo } from '@/components/date-picker';
 import {
   Form,
   FormField,
@@ -22,43 +24,38 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; 
 import { useState } from "react";
 
 const schema = z.object({
-  quoteID: z.string().nonempty({ message: "Please select an ID" }),
-  employeeID: z.string().nonempty({ message: "Please select an ID" }),
-  pickupDate: z.coerce.date().nullable(),
-  deliveryDate: z.coerce.date().nullable(),
-  quotationDate: z.coerce.date().nullable(),
-  expiredDate: z.coerce.date().nullable(),
+  quote_request_id: z.string().nonempty({ message: "Please select an ID" }),
+  employee_id: z.string().nonempty({ message: "Please select an ID" }),
+  freight_id: z.string().nonempty({ message: "Please select an ID" }),
+  pickup_date: z.coerce.date().nullable(),
+  delivery_date: z.coerce.date().nullable(),
+  quotation_date: z.coerce.date().nullable(),
+  expired_date: z.coerce.date().nullable(),
   status: z.string().nonempty({ message: "Please select a status" }),
-  price: z.string().nonempty({ message: "Price is required" }),
+  total_price: z.string().nonempty({ message: "Price is required" }),
 });
 
 export default function AddQuotationtPage() {
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      quoteID: "",
-      employeeID: "",
-      pickupDate: null,
-      deliveryDate: null,
-      quotationDate: null,
-      expiredDate: null,
+      quote_request_id: "",
+      employee_id: "",
+      freight_id: "",
+      pickup_date: null,
+      delivery_date: null,
+      quotation_date: null,
+      expired_date: null,
       status: "",
-      price: "",
+      total_price: "",
     },
   });
 
   const router = useRouter();
-  
-  // Separate states for each date
-  const [pickupDate, setPickupDate] = useState<Date | null>(null);
-  const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
-  const [quotationDate, setQuotationDate] = useState<Date | null>(null);
-  const [expiredDate, setExpiredDate] = useState<Date | null>(null);
 
   const onSubmit = (values: any) => {
     console.log(values);
@@ -66,17 +63,19 @@ export default function AddQuotationtPage() {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Add Quotation</h1>
+    <div className="flex flex-col items-center p-[24px] w-[calc(100vw-var(--sidebar-width))]">
+    <div className="flex w-full justify-between">
+      <span className="text-3xl font-bold">Update Quotation</span>
+    </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Quotation ID */}
           <FormField
             control={form.control}
-            name="quoteID"
+            name="quote_request_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Quotation ID</FormLabel>
+                <FormLabel>Quotation Request ID</FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
@@ -100,7 +99,7 @@ export default function AddQuotationtPage() {
           {/* Employee ID */}
           <FormField
             control={form.control}
-            name="employeeID"
+            name="employee_id"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Employee ID</FormLabel>
@@ -124,23 +123,43 @@ export default function AddQuotationtPage() {
             )}
           />
 
+          {/* Freight ID */}
+          <FormField
+            control={form.control}
+            name="freight_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Freight ID</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-[500px] h-[60px]">
+                      <SelectValue placeholder="Select an ID" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="01">01</SelectItem>
+                      <SelectItem value="02">02</SelectItem>
+                      <SelectItem value="03">03</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex space-x-4"> 
           {/* Pickup Date */}
           <FormField
             control={form.control}
-            name="pickupDate"
+            name="pickup_date"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem className="flex flex-col w-full"> 
                 <FormLabel>Pickup Date</FormLabel>
                 <FormControl>
-                  <DatePicker
-                    selected={pickupDate}
-                    onChange={(date) => {
-                      setPickupDate(date);
-                      field.onChange(date); 
-                    }}
-                    className="w-[500px] h-[60px] border rounded-md p-2"
-                    placeholderText="Select a date"
-                  />
+                <DatePickerDemo />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -150,43 +169,29 @@ export default function AddQuotationtPage() {
           {/* Delivery Date */}
           <FormField
             control={form.control}
-            name="deliveryDate"
+            name="delivery_date"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem className="flex flex-col w-full"> 
                 <FormLabel>Delivery Date</FormLabel>
                 <FormControl>
-                  <DatePicker
-                    selected={deliveryDate}
-                    onChange={(date) => {
-                      setDeliveryDate(date);
-                      field.onChange(date); 
-                    }}
-                    className="w-[500px] h-[60px] border rounded-md p-2"
-                    placeholderText="Select a date"
-                  />
+                <DatePickerDemo />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+        </div>
 
+        <div className="flex space-x-4"> 
           {/* Quotation Date */}
           <FormField
             control={form.control}
-            name="quotationDate"
+            name="quotation_date"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem className="flex flex-col w-full"> 
                 <FormLabel>Quotation Date</FormLabel>
                 <FormControl>
-                  <DatePicker
-                    selected={quotationDate}
-                    onChange={(date) => {
-                      setQuotationDate(date);
-                      field.onChange(date); 
-                    }}
-                    className="w-[500px] h-[60px] border rounded-md p-2"
-                    placeholderText="Select a date"
-                  />
+                <DatePickerDemo />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -196,25 +201,18 @@ export default function AddQuotationtPage() {
           {/* Expired Date */}
           <FormField
             control={form.control}
-            name="expiredDate"
+            name="expired_date"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem className="flex flex-col w-full"> 
                 <FormLabel>Expired Date</FormLabel>
                 <FormControl>
-                  <DatePicker
-                    selected={expiredDate}
-                    onChange={(date) => {
-                      setExpiredDate(date);
-                      field.onChange(date); 
-                    }}
-                    className="w-[500px] h-[60px] border rounded-md p-2"
-                    placeholderText="Select a date"
-                  />
+                <DatePickerDemo />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+        </div>
 
           {/* Status */}
           <FormField
@@ -232,10 +230,8 @@ export default function AddQuotationtPage() {
                       <SelectValue placeholder="Select a status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Pending">Pending</SelectItem>
-                      <SelectItem value="Active">Active</SelectItem>
-                      <SelectItem value="Terminated">Terminated</SelectItem>
-                      <SelectItem value="Expired">Expired</SelectItem>
+                      <SelectItem value="Pending">Draft</SelectItem>
+                      <SelectItem value="Active">Booked</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -246,7 +242,7 @@ export default function AddQuotationtPage() {
           {/* Price */}
           <FormField
             control={form.control}
-            name="price"
+            name="total_price"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Price</FormLabel>
@@ -262,11 +258,18 @@ export default function AddQuotationtPage() {
             )}
           />
 
-          {/* Submit Button */}
-          <div className="h-[40px] flex justify-center mt-4">
-            <Button type="submit" className="h-[40px] w-auto">
-              Submit
-            </Button>
+           {/* Button */}
+           <div className="flex justify-center mt-6">
+            <div className="flex gap-2 w-[300px]">
+            <Link href="/quotation" className="w-1/2">
+              <Button className="w-full h-10 text-md bg-white text-black" type="button">
+                Cancel
+              </Button>
+            </Link>
+              <Button className="w-1/2 h-10 text-md" type="submit">
+                  Save
+              </Button>
+            </div>
           </div>
         </form>
       </Form>

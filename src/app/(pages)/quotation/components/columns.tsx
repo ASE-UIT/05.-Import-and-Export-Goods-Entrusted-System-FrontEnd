@@ -10,20 +10,21 @@ import {TableCell} from '@/components/ui/table'
 
 
 export interface IQuotation {
-  quoteId: string;
-  employeeId: string;
-  price: string;
-  pickupDate: string;
-  deliveryDate: string;
-  quoteDate: string;
-  expiredDate: string;
+  quotation_id: string;
+  quote_request_id:string
+  employee_id: string;
+  freight_id: string;
+  total_price: string;
+  pickup_date: string;
+  delivery_date: string;
+  quotation_date: string;
+  expired_date: string;
   status: string;
-  
 }
 
 export const columns: ColumnDef<IQuotation>[] = [
   {
-    accessorKey: "quoteId",
+    accessorKey: "quotation_id",
     header: ({ column }) => {
       return (
         <Button
@@ -32,15 +33,15 @@ export const columns: ColumnDef<IQuotation>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Quote Id
+          Quotation ID
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("quoteId")}</div>,
+    cell: ({ row }) => <div>{row.getValue("quotation_id")}</div>,
   },
   {
-    accessorKey: "employeeId",
+    accessorKey: "quote_request_id",
     header: ({ column }) => {
       return (
         <Button
@@ -49,15 +50,49 @@ export const columns: ColumnDef<IQuotation>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Employee Id
+          Quote Request ID
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("employeeId")}</div>,
+    cell: ({ row }) => <div>{row.getValue("quote_request_id")}</div>,
   },
   {
-    accessorKey: "price",
+    accessorKey: "employee_id",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Employee ID
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{row.getValue("employee_id")}</div>,
+  },
+  {
+    accessorKey: "freight_id",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Freight ID
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{row.getValue("freight_id")}</div>,
+  },
+  {
+    accessorKey: "total_price",
     header: ({ column }) => {
       return (
         <Button
@@ -71,10 +106,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price"),
+    cell: ({ row }) => row.getValue("total_price"),
   },
   {
-    accessorKey: "pickupDate",
+    accessorKey: "pickup_date",
     header: ({ column }) => {
       return (
         <Button
@@ -88,10 +123,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("pickupDate"),
+    cell: ({ row }) => row.getValue("pickup_date"),
   },
   {
-    accessorKey: "deliveryDate",
+    accessorKey: "delivery_date",
     header: ({ column }) => {
       return (
         <Button
@@ -105,10 +140,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("deliveryDate"),
+    cell: ({ row }) => row.getValue("delivery_date"),
   },
   {
-    accessorKey: "quoteDate",
+    accessorKey: "quotation_date",
     header: ({ column }) => {
       return (
         <Button
@@ -122,10 +157,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("quoteDate"),
+    cell: ({ row }) => row.getValue("quotation_date"),
   },
   {
-    accessorKey: "expiredDate",
+    accessorKey: "expired_date",
     header: ({ column }) => {
       return (
         <Button
@@ -139,7 +174,7 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("expiredDate"),
+    cell: ({ row }) => row.getValue("expired_date"),
   },
   {
     accessorKey: "status",
@@ -151,7 +186,7 @@ export const columns: ColumnDef<IQuotation>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div>  
-        <Link href={`/quotation/updatequotation?id=${row.getValue("quoteId")}`}>
+        <Link href={`/quotation/update?id=${row.getValue("quotation_id")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
       </div>

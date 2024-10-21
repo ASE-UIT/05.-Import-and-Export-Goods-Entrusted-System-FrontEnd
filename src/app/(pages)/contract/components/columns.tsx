@@ -10,19 +10,20 @@ import {TableCell} from '@/components/ui/table'
 
 
 export interface IContract {
-  quoteId: string;
-  employeeId: string;
-  startDate: string;
-  contractDate: string;
-  endDate: string;
-  createAt: string;
-  updateAt: string;
+  contract_id: string;
+  quotation_id: string;
+  employee_id: string;
+  start_date: string;
+  contract_date: string;
+  end_date: string;
+  create_at: string;
+  update_at: string;
   status: string;
 }
 
 export const columns: ColumnDef<IContract>[] = [
   {
-    accessorKey: "quoteId",
+    accessorKey: "contract_id",
     header: ({ column }) => {
       return (
         <Button
@@ -31,15 +32,15 @@ export const columns: ColumnDef<IContract>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Quote Id
+          Contract ID
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("quoteId")}</div>,
+    cell: ({ row }) => <div>{row.getValue("contract_id")}</div>,
   },
   {
-    accessorKey: "employeeId",
+    accessorKey: "quotation_id",
     header: ({ column }) => {
       return (
         <Button
@@ -48,15 +49,32 @@ export const columns: ColumnDef<IContract>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Employee Id
+          Quotation ID
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("employeeId")}</div>,
+    cell: ({ row }) => <div>{row.getValue("quotation_id")}</div>,
   },
   {
-    accessorKey: "startDate",
+    accessorKey: "employee_id",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Employee ID
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{row.getValue("employee_id")}</div>,
+  },
+  {
+    accessorKey: "start_date",
     header: ({ column }) => {
       return (
         <Button
@@ -70,11 +88,11 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("startDate"),
-    sortingFn: (a, b) => new Date(a.original.startDate).getTime() - new Date(b.original.startDate).getTime(),
+    cell: ({ row }) => row.getValue("start_date"),
+    sortingFn: (a, b) => new Date(a.original.start_date).getTime() - new Date(b.original.start_date).getTime(),
   },
   {
-    accessorKey: "contractDate",
+    accessorKey: "contract_date",
     header: ({ column }) => {
       return (
         <Button
@@ -88,11 +106,11 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("contractDate"),
-    sortingFn: (a, b) => new Date(a.original.contractDate).getTime() - new Date(b.original.contractDate).getTime(),
+    cell: ({ row }) => row.getValue("contract_date"),
+    sortingFn: (a, b) => new Date(a.original.contract_date).getTime() - new Date(b.original.contract_date).getTime(),
   },
   {
-    accessorKey: "endDate",
+    accessorKey: "end_date",
     header: ({ column }) => {
       return (
         <Button
@@ -106,11 +124,11 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("endDate"),
-    sortingFn: (a, b) => new Date(a.original.endDate).getTime() - new Date(b.original.endDate).getTime(),
+    cell: ({ row }) => row.getValue("end_date"),
+    sortingFn: (a, b) => new Date(a.original.end_date).getTime() - new Date(b.original.end_date).getTime(),
   },
   {
-    accessorKey: "createAt",
+    accessorKey: "create_at",
     header: ({ column }) => {
       return (
         <Button
@@ -124,10 +142,10 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("createAt")}</div>,
+    cell: ({ row }) => <div>{row.getValue("create_at")}</div>,
   },
   {
-    accessorKey: "updateAt",
+    accessorKey: "update_at",
     header: ({ column }) => {
       return (
         <Button
@@ -141,7 +159,7 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("updateAt")}</div>,
+    cell: ({ row }) => <div>{row.getValue("update_at")}</div>,
   },
   {
     accessorKey: "status",
@@ -153,11 +171,10 @@ export const columns: ColumnDef<IContract>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div> 
-        <Link href={`/contract/updatecontract?id=${row.getValue("quoteId")}`}>
+        <Link href={`/contract/update?id=${row.getValue("contract_id")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
       </div>
     ),
-  },
-  
+  }, 
 ];
