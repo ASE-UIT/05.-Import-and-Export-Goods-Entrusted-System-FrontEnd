@@ -1,14 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import { ICustomer } from ".";
 
-export const columns: ColumnDef<ICustomer>[] = [
+
+export const columns: ColumnDef<QuoteRequest>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "customer_id",
     header: ({ column }) => {
       return (
         <Button
@@ -17,15 +16,15 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Customer ID
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    cell: ({ row }) => <div>{row.getValue("customer_id")}</div>,
   },
   {
-    accessorKey: "short_name",
+    accessorKey: "request_date",
     header: ({ column }) => {
       return (
         <Button
@@ -34,15 +33,15 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Short Name
+          Request Date
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("short_name")}</div>,
+    cell: ({ row }) => row.getValue("request_date"),
   },
   {
-    accessorKey: "email",
+    accessorKey: "status",
     header: ({ column }) => {
       return (
         <Button
@@ -51,15 +50,15 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Status
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("email"),
+    cell: ({ row }) => row.getValue("status"),
   },
   {
-    accessorKey: "phone",
+    accessorKey: "create_at",
     header: ({ column }) => {
       return (
         <Button
@@ -68,15 +67,15 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Phone
+          Created At
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("phone"),
+    cell: ({ row }) => row.getValue("create_at"),
   },
   {
-    accessorKey: "tax_id",
+    accessorKey: "update_at",
     header: ({ column }) => {
       return (
         <Button
@@ -85,45 +84,11 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Tax ID
+          Updated At
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("tax_id"),
-  },
-  {
-    accessorKey: "address",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Address
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("address"),
-  },
-  {
-    accessorKey: "legal_rep_name",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Legal Rep Name
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("legal_rep_name"),
+    cell: ({ row }) => row.getValue("update_at"),
   },
 ];

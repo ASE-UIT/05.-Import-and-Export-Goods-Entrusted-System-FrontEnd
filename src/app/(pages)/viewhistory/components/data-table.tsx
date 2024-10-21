@@ -25,12 +25,12 @@ import {
 
 import { Button } from "../../../../components/ui/button";
 import { Input } from "../../../../components/ui/input";
-import { DataTableFilter } from "./data-table-filter";
+import * as dataTableFilter from "./data-filter";
 import { CirclePlus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { PATH_NAME } from "@/configs";
 import { Pagination } from "@/components/ui/pagination";
-import { DataTablePagination } from "./data-table-pagination";
+import { DataTablePagination } from "./data-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -64,13 +64,18 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      <div className="flex w-full justify-between pb-[10px]">
-        <DataTableFilter table={table} />
-        <Button variant="default" onClick={() => router.push(`${path}/add`)}>
-          <CirclePlus className="mr-2" />
-          <span>Add {path.slice(1, path.length)}</span>
-        </Button>
+    <div className="w-full">
+      <div className="flex w-full justify-between pb-[10px] mb-[20px]">
+        <dataTableFilter.DataTableFilter table={table} />
+        <div className="flex gap-3">
+          <Button
+            variant="default"
+            className="bg-white text-black border border-black"
+            onClick={() => router.push(`/payment`)}
+          >
+            View Payment
+          </Button>
+        </div>
       </div>
       <div className="rounded-md">
         <Table>

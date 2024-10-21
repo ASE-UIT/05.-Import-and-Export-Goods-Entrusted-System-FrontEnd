@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera } from "lucide-react";
+import { useParams } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string(),
@@ -34,7 +35,8 @@ const formSchema = z.object({
     .optional(),
 });
 
-export default function AddCustomerPage() {
+export default function UpdateCustomerPage() {
+  const { id: customerId } = useParams<{ id: string }>();
   const [preview, setPreview] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -63,8 +65,9 @@ export default function AddCustomerPage() {
 
   return (
     <div className="flex flex-col items-center p-[24px] w-[calc(100vw-var(--sidebar-width))]">
-      <div className="flex w-full justify-between">
-        <span className="text-3xl font-bold">Add Customer</span>
+      <div className="flex w-full justify-between items-end">
+        <span className="text-3xl font-bold">Update Customer</span>
+        <span className="text-sm font-bold">ID: {customerId}</span>
       </div>
       <Form {...form}>
         <form

@@ -1,14 +1,25 @@
 "use client";
 
+import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
-import { ICustomer } from ".";
+import Link from 'next/link';
 
-export const columns: ColumnDef<ICustomer>[] = [
-  {
-    accessorKey: "name",
+export interface IPayment {
+  id: string;
+  contract_id: string;
+  employee_id: string;
+  invoice_date: string;
+  paid_date: string;
+  status: string;
+  tax: string;
+  total: string;
+}
+
+export const columns: ColumnDef<IPayment>[] = [
+    {
+    accessorKey: "id",
     header: ({ column }) => {
       return (
         <Button
@@ -17,15 +28,14 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
-          <ArrowUpDown className="ml-2 size-4" />
+          ID
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    cell: ({ row }) => <div>{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "short_name",
+    accessorKey: "contract_id",
     header: ({ column }) => {
       return (
         <Button
@@ -34,15 +44,14 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Short Name
-          <ArrowUpDown className="ml-2 size-4" />
+          Contract ID
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("short_name")}</div>,
+    cell: ({ row }) => <div>{row.getValue("contract_id")}</div>,
   },
   {
-    accessorKey: "email",
+    accessorKey: "employee_id",
     header: ({ column }) => {
       return (
         <Button
@@ -51,15 +60,31 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
-          <ArrowUpDown className="ml-2 size-4" />
+          Employee ID
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("email"),
+    cell: ({ row }) => <div>{row.getValue("employee_id")}</div>,
+  },
+  
+  {
+    accessorKey: "invoice_date",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Invoice Date
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("invoice_date"),
   },
   {
-    accessorKey: "phone",
+    accessorKey: "paid_date",
     header: ({ column }) => {
       return (
         <Button
@@ -68,32 +93,19 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Phone
-          <ArrowUpDown className="ml-2 size-4" />
+          Paid Date
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("phone"),
+    cell: ({ row }) => row.getValue("paid_date"),
   },
   {
-    accessorKey: "tax_id",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Tax ID
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("tax_id"),
+    accessorKey: "status",
+    header: "Status",  
+    cell: ({ row }) => <StatusBadge status={row.getValue("status")} />
   },
   {
-    accessorKey: "address",
+    accessorKey: "tax",
     header: ({ column }) => {
       return (
         <Button
@@ -102,15 +114,14 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Address
-          <ArrowUpDown className="ml-2 size-4" />
+          Tax Amount
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("address"),
+    cell: ({ row }) => row.getValue("tax"),
   },
   {
-    accessorKey: "legal_rep_name",
+    accessorKey: "total",
     header: ({ column }) => {
       return (
         <Button
@@ -119,11 +130,10 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Legal Rep Name
-          <ArrowUpDown className="ml-2 size-4" />
+          Total
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("legal_rep_name"),
+    cell: ({ row }) => row.getValue("total"),
   },
 ];

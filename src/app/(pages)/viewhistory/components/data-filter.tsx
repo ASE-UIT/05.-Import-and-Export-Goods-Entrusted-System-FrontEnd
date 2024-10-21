@@ -22,9 +22,12 @@ interface DataTableToolbarProps<TData> {
 export function DataTableFilter<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
-  const columnsTitle = table.getAllColumns().map((column) => column.id);
-  const [currentFilter, setCurrentFilter] = useState<string>(columnsTitle[0]);
-  console.log(columnsTitle);
+  const filterableColumns = table.getAllColumns().filter(
+    (column) => column.id !== 'action' 
+  ).map((column) => column.id);
+
+  const [currentFilter, setCurrentFilter] = useState<string>(filterableColumns[0]);
+  console.log(filterableColumns);
   return (
     <div className="flex gap-[5px] items-center">
       <div className="w-[300px] ">
@@ -46,10 +49,10 @@ export function DataTableFilter<TData>({
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {columnsTitle.map((title) => (
-              <SelectItem value={title}>
+             {filterableColumns.map((title) => (
+              <SelectItem value={title} key={title}>
                 {title
-                  .replace(/_/g, " ")
+                  .replace(/([A-Z])/g, " $1")
                   .toLowerCase()
                   .replace(/\b\w/g, (char) => char.toUpperCase())}
               </SelectItem>
