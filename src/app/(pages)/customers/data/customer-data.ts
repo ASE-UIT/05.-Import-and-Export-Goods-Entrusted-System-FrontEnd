@@ -1,4 +1,4 @@
-import { ICustomer } from "../components/columns";
+import { ICustomer } from "../components";
 
 export const customerData: ICustomer[] = [
   {

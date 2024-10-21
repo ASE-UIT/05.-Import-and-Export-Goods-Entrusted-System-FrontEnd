@@ -4,17 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-
-export interface ICustomer {
-  id: string;
-  name: string;
-  short_name: string;
-  email: string;
-  phone: string;
-  tax_id: string;
-  address: string;
-  legal_rep_name: string;
-}
+import { ICustomer } from ".";
 
 export const columns: ColumnDef<ICustomer>[] = [
   {
