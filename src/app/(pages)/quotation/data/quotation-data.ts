@@ -5,8 +5,8 @@ import Link from 'next/link'
 export const quotationData: IQuotation[] = [
   {
     quotation_id: "01",
-    employee_id: "01",
     quote_request_id: "01",
+    employee_id: "01",
     freight_id: "01",
     total_price: "$75,000",
     pickup_date: "2024-04-15",
@@ -17,8 +17,8 @@ export const quotationData: IQuotation[] = [
   },
   {
     quotation_id: "02",
-    employee_id: "02",
     quote_request_id: "02",
+    employee_id: "02",
     freight_id: "02",
     total_price: "$80,000",
     pickup_date: "2024-02-20",
@@ -29,8 +29,8 @@ export const quotationData: IQuotation[] = [
   },
   {
     quotation_id: "03",
-    employee_id: "03",
     quote_request_id: "03",
+    employee_id: "03",
     freight_id: "03",
     total_price: "$70,000",
     pickup_date: "2024-02-05",
@@ -41,8 +41,8 @@ export const quotationData: IQuotation[] = [
   },
   {
     quotation_id: "04",
-    employee_id: "04",
     quote_request_id: "04",
+    employee_id: "04",
     freight_id: "04",
     total_price: "$50,000",
     pickup_date: "2024-12-15",
@@ -53,8 +53,8 @@ export const quotationData: IQuotation[] = [
   },
   {
     quotation_id: "05",
-    employee_id: "05",
     quote_request_id: "05",
+    employee_id: "05",
     freight_id: "05",
     total_price: "$55,000",
     pickup_date: "2024-04-25",
@@ -65,8 +65,8 @@ export const quotationData: IQuotation[] = [
   },
   {
     quotation_id: "06",
-    employee_id: "06",
     quote_request_id: "06",
+    employee_id: "06",
     freight_id: "06",
     total_price: "$45,000",
     pickup_date: "2024-06-15",
@@ -77,8 +77,8 @@ export const quotationData: IQuotation[] = [
   },
   {
     quotation_id: "07",
-    employee_id: "07",
     quote_request_id: "07",
+    employee_id: "07",
     freight_id: "07",
     total_price: "$40,000",
     pickup_date: "2024-02-17",
@@ -89,8 +89,8 @@ export const quotationData: IQuotation[] = [
   },
   {
     quotation_id: "08",
-    employee_id: "08",
     quote_request_id: "08",
+    employee_id: "08",
     freight_id: "08",
     total_price: "$35,000",
     pickup_date: "2024-02-20",
@@ -101,8 +101,8 @@ export const quotationData: IQuotation[] = [
   },
   {
     quotation_id: "09",
-    employee_id: "09",
     quote_request_id: "09",
+    employee_id: "09",
     freight_id: "09",
     total_price: "$30,000",
     pickup_date: "2024-07-15",
@@ -113,8 +113,8 @@ export const quotationData: IQuotation[] = [
   },
   {
     quotation_id: "10",
-    employee_id: "10",
     quote_request_id: "10",
+    employee_id: "10",
     freight_id: "10",
     total_price: "$25,000",
     pickup_date: "2024-12-23",
