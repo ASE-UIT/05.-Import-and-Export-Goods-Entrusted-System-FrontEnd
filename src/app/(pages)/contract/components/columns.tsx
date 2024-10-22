@@ -171,7 +171,7 @@ export const columns: ColumnDef<IContract>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div> 
-        <Link href={`/contract/update?id=${row.getValue("contract_id")}`}>
+        <Link href={`/contract/update/${row.getValue("contract_id")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
       </div>
