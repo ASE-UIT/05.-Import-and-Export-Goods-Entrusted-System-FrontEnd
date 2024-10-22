@@ -7,6 +7,7 @@ import Link from "next/link";
 import { DatePickerDemo } from '@/components/date-picker';
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { format } from "date-fns"; 
 
 import {
   Form,
@@ -28,15 +29,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import "react-datepicker/dist/react-datepicker.css"; 
 import React from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+
 
 const formSchema = z.object({
   quote_request_id: z.string(),
   employee_id: z.string(),
   freight_id: z.string(),
-  pickup_date: z.date().optional(),
-  delivery_date: z.date().optional(),
-  quotation_date: z.date().optional(),
-  expired_date: z.date().optional(),
+  pickup_date: z.date(),
+  delivery_date: z.date(),
+  quotation_date: z.date(),
+  expired_date: z.date(),
   status: z.string(),
   total_price: z.string(),
 });
@@ -70,9 +75,16 @@ export default function UpdateQuotationtPage() {
   }, [expiredDate]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    console.log({
+      ...values,
+      pickup_date: values.pickup_date
+        ? format(values.pickup_date, "d-M-yyyy")
+        : undefined,
+      delivery_date: values.delivery_date ? format(values.delivery_date, "d-M-yyyy") : undefined,
+      quotation_date: values.quotation_date ? format(values.quotation_date, "d-M-yyyy") : undefined,
+      expired_date: values.expired_date ? format(values.expired_date, "d-M-yyyy") : undefined,
+    });
   }
-
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
     <div className="flex w-full justify-between items-end">
@@ -162,43 +174,160 @@ export default function UpdateQuotationtPage() {
             )}
           />
 
-            <div className="w-[500px] grid grid-cols-2 gap-4">
+            <div className="w-[500px] flex space-x-[12px]">
             {/* Pickup Date */}
-            <FormItem>
-              <FormLabel className="font-bold">Pickup Date</FormLabel>
-              <FormControl>
-                <DatePickerDemo />
-              </FormControl>
-               <FormMessage />
-            </FormItem>
-
+            <FormField
+                control={form.control}
+                name="pickup_date"
+                render={({ field }) => (
+                  <FormItem className="w-1/2">
+                    <FormLabel className="text-[16px] font-bold">Pickup Date</FormLabel>
+                    <FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={`w-full h-[60px] justify-start text-left font-normal ${
+                              !pickupDate ? "text-muted-foreground" : ""
+                            }`}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {pickupDate ? (
+                              format(pickupDate, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={pickupDate}
+                            onSelect={(date) => setPickupDate(date)}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             {/* Delivery Date */}
-            <FormItem>
-              <FormLabel className="font-bold">Delivery Date</FormLabel>
-              <FormControl>
-                <DatePickerDemo />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <FormField
+                control={form.control}
+                name="delivery_date"
+                render={({ field }) => (
+                  <FormItem className="w-1/2">
+                    <FormLabel className="text-[16px] font-bold">Delivery Date</FormLabel>
+                    <FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={`w-full h-[60px] justify-start text-left font-normal ${
+                              !deliveryDate ? "text-muted-foreground" : ""
+                            }`}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {deliveryDate ? (
+                              format(deliveryDate, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={deliveryDate}
+                            onSelect={(date) => setDeliveryDate(date)}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
+            <div className="w-[500px] flex space-x-[12px]">
             {/* Quotation Date */} 
-            <FormItem>
-              <FormLabel className="font-bold">Quotation Date</FormLabel>
-              <FormControl>
-                <DatePickerDemo />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <FormField
+                control={form.control}
+                name="quotation_date"
+                render={({ field }) => (
+                  <FormItem className="w-1/2">
+                    <FormLabel className="text-[16px] font-bold">Quotation Date</FormLabel>
+                    <FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={`w-full h-[60px] justify-start text-left font-normal ${
+                              !quotationDate ? "text-muted-foreground" : ""
+                            }`}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {quotationDate ? (
+                              format(quotationDate, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={quotationDate}
+                            onSelect={(date) => setQuotationDate(date)}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
             {/* Expired Date */} 
-            <FormItem>
-              <FormLabel className="font-bold">Expired Date</FormLabel>
-              <FormControl>
-                <DatePickerDemo />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </div>
+            <FormField
+                control={form.control}
+                name="expired_date"
+                render={({ field }) => (
+                  <FormItem className="w-1/2">
+                    <FormLabel className="text-[16px] font-bold">Expired Date</FormLabel>
+                    <FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={`w-full h-[60px] justify-start text-left font-normal ${
+                              !expiredDate ? "text-muted-foreground" : ""
+                            }`}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {expiredDate ? (
+                              format(expiredDate, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={expiredDate}
+                            onSelect={(date) => setExpiredDate(date)}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
           {/* Price */}
           <FormField
