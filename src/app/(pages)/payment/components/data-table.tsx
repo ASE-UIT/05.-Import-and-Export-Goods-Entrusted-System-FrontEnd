@@ -69,9 +69,7 @@ export function DataTable<TData, TValue>({
         <dataTableFilter.DataTableFilter table={table} />
         <div className="flex gap-3">
           <Button
-            variant="default"
-            className="bg-white text-black border border-black"
-            onClick={() => router.push(`/viewhistory`)}
+            variant="outline" onClick={() => router.push(`/viewhistory`)}
           >
             View Payment History
           </Button>

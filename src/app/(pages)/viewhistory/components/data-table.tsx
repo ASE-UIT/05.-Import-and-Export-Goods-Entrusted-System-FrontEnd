@@ -69,9 +69,7 @@ export function DataTable<TData, TValue>({
         <dataTableFilter.DataTableFilter table={table} />
         <div className="flex gap-3">
           <Button
-            variant="default"
-            className="bg-white text-black border border-black"
-            onClick={() => router.push(`/payment`)}
+            variant="outline" onClick={() => router.push(`/payment`)}
           >
             View Payment
           </Button>
