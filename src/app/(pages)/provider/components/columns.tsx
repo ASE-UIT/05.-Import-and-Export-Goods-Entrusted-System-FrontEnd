@@ -1,12 +1,39 @@
 "use client";
 
+import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
-import { ICustomer } from ".";
+import Link from 'next/link';
 
-export const columns: ColumnDef<ICustomer>[] = [
+export interface IProvider {
+  id: string;
+  name: string;
+  contactrep: string;
+  email: string;
+  phone: string;
+  address: string;
+  country: string;
+  status: string;
+}
+
+export const columns: ColumnDef<IProvider>[] = [
+  {
+    accessorKey: "id",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          ID
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{row.getValue("id")}</div>,
+  },
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -18,14 +45,13 @@ export const columns: ColumnDef<ICustomer>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Name
-          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "short_name",
+    accessorKey: "contactrep",
     header: ({ column }) => {
       return (
         <Button
@@ -34,12 +60,11 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Short Name
-          <ArrowUpDown className="ml-2 size-4" />
+          ContactRep
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("short_name")}</div>,
+    cell: ({ row }) => <div>{row.getValue("contactrep")}</div>,
   },
   {
     accessorKey: "email",
@@ -52,7 +77,6 @@ export const columns: ColumnDef<ICustomer>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Email
-          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
@@ -69,28 +93,10 @@ export const columns: ColumnDef<ICustomer>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Phone
-          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
     cell: ({ row }) => row.getValue("phone"),
-  },
-  {
-    accessorKey: "tax_id",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Tax ID
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("tax_id"),
   },
   {
     accessorKey: "address",
@@ -103,14 +109,13 @@ export const columns: ColumnDef<ICustomer>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Address
-          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
     cell: ({ row }) => row.getValue("address"),
   },
   {
-    accessorKey: "legal_rep_name",
+    accessorKey: "country",
     header: ({ column }) => {
       return (
         <Button
@@ -119,11 +124,26 @@ export const columns: ColumnDef<ICustomer>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Legal Rep Name
-          <ArrowUpDown className="ml-2 size-4" />
+          Country
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("legal_rep_name"),
+    cell: ({ row }) => row.getValue("country"),
+  },
+  {
+    accessorKey: "status",
+    header: "Status",  
+    cell: ({ row }) => <StatusBadge status={row.getValue("status")} />
+  },
+  {
+    id: "action",
+    header: "Action",
+    cell: ({ row }) => (
+      <div>  
+      <Link href={`/provider/update/${row.getValue("id")}`}>
+      <button className="text-blue-500">Edit</button>
+        </Link>
+      </div>
+    ),
   },
 ];
