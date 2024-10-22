@@ -1,9 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { DatePickerDemo } from '@/components/date-picker';
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 
 import {
   Form,
@@ -22,54 +23,61 @@ import {
 } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { z } from "zod";
 import "react-datepicker/dist/react-datepicker.css"; 
 import React from "react";
 
-const schema = z.object({
-  quotation_id: z.string().nonempty({ message: "Please select an ID" }),
-  employee_id: z.string().nonempty({ message: "Please select an ID" }),
-  start_date: z.coerce.date().nullable(),
-  end_date: z.coerce.date().nullable(),
-  contract_date: z.coerce.date().nullable(),
-  status: z.string().nonempty({ message: "Please select a status" }),
+const formSchema = z.object({
+  quotation_id: z.string(),
+  employee_id: z.string(),
+  start_date: z.date().optional(),
+  end_date: z.date().optional(),
+  contract_date: z.date().optional(),
+  status: z.string(),
 });
 
 export default function AddContractPage() {
-  const form = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      quotation_id: "",
-      employee_id: "",
-      start_date: null,
-      end_date: null,
-      contract_date: null,
-      status: "",
-    },
+  const { id: contract_id } = useParams<{ id: string }>();
+  
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
   });
 
-  
-  const router = useRouter();
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [contractDate, setContractDate] = useState<Date | undefined>(undefined);
 
-  const onSubmit = (values: any) => {
+  useEffect(() => {
+    if (startDate) form.setValue("start_date", startDate);
+  }, [startDate]);
+
+  useEffect(() => {
+    if (endDate) form.setValue("end_date", endDate);
+  }, [endDate]);
+
+  useEffect(() => {
+    if (contractDate) form.setValue("contract_date", contractDate);
+  }, [contractDate]);
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    router.push("/contract");
-  };
+  }
 
   return (
-    <div className="flex flex-col items-center p-[24px] w-[calc(100vw-var(--sidebar-width))]">
-    <div className="flex w-full justify-between">
+    <div className="flex flex-col items-center p-[24px] w-full">
+    <div className="flex w-full justify-between items-end">
       <span className="text-3xl font-bold">Add Contract</span>
     </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} encType="multipart/form-data">
+        <div className="flex flex-col items-center w-[600px] gap-4 py-4">
           {/* Quotation ID */}
           <FormField
             control={form.control}
             name="quotation_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Quotation ID</FormLabel>
+                <FormLabel className="font-bold">Quotation ID</FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
@@ -96,7 +104,7 @@ export default function AddContractPage() {
             name="employee_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Employee ID</FormLabel>
+                <FormLabel className="font-bold">Employee ID</FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
@@ -117,52 +125,34 @@ export default function AddContractPage() {
             )}
           />
 
-          <div className="flex space-x-4"> 
-          {/* Start Date */}
-          <FormField
-            control={form.control}
-            name="start_date"
-            render={({ field }) => (
-              <FormItem className="flex flex-col w-full"> 
-                <FormLabel>Start Date</FormLabel>
-                <FormControl>
+            <div className="w-[500px] grid grid-cols-2 gap-4">
+            {/* Start Date */}
+            <FormItem>
+              <FormLabel className="font-bold">Start Date</FormLabel>
+              <FormControl>
                 <DatePickerDemo />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              </FormControl>
+               <FormMessage />
+            </FormItem>
 
-          {/* End Date */}
-          <FormField
-            control={form.control}
-            name="end_date"
-            render={({ field }) => (
-              <FormItem className="flex flex-col w-full"> 
-                <FormLabel>End Date</FormLabel>
-                <FormControl>
+            {/* End Date */}
+            <FormItem>
+              <FormLabel className="font-bold">End Date</FormLabel>
+              <FormControl>
                 <DatePickerDemo />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
 
-          {/* Contract Date */}
-          <FormField
-            control={form.control}
-            name="contract_date"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Contract Date</FormLabel>
-                <FormControl>
-                  <DatePickerDemo/>
-                  </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {/* Contract Date */} 
+            <FormItem>
+              <FormLabel className="font-bold">Contract Date</FormLabel>
+              <FormControl>
+                <DatePickerDemo />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </div>
 
           {/* Status */}
           <FormField
@@ -170,7 +160,7 @@ export default function AddContractPage() {
             name="status"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Status</FormLabel>
+                <FormLabel className="font-bold">Status</FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
@@ -191,17 +181,17 @@ export default function AddContractPage() {
               </FormItem>
             )}
           />
-
+        </div>
           {/* Button */}
           <div className="flex justify-center mt-6">
-            <div className="flex gap-2 w-[300px]">
-            <Link href="/contract" className="w-1/2">
-              <Button className="w-full h-10 text-md bg-white text-black" type="button">
-                Cancel
-              </Button>
-            </Link>
-              <Button className="w-1/2 h-10 text-md" type="submit">
-                  Save
+          <div className="w-1/2 flex gap-2.5">
+              <Link href="/contract" className="w-1/2 h-14">
+                <Button className="w-full h-10 text-lg" variant={"outline"} type="button">
+                  Cancel
+                </Button>
+              </Link>
+              <Button className="w-1/2 h-10 text-lg" type="submit">
+                Save
               </Button>
             </div>
           </div>
