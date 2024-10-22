@@ -29,7 +29,7 @@ const formSchema = z.object({
   country: z.string(),
 });
 
-export default function UpdateProvider() {
+export default function UpdateContactrep() {
   const { id: customerId } = useParams<{ id: string }>();
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -65,30 +65,6 @@ export default function UpdateProvider() {
                   </FormItem>
                 )}
               />
-
-              {/* Contact Representative as Select */}
-              <FormField
-                control={form.control}
-                name="contactrep"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="font-bold">ContactRep</FormLabel>
-                    <FormControl>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <SelectTrigger className="w-full h-[60px]">
-                          <SelectValue placeholder="Select a representative" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="01">Representative 01</SelectItem>
-                          <SelectItem value="02">Representative 02</SelectItem>
-                          <SelectItem value="03">Representative 03</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             <FormField
                 control={form.control}
                 name="email"
@@ -115,35 +91,10 @@ export default function UpdateProvider() {
                   </FormItem>
                 )}
               />
-            <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="font-bold">Address</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Address" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="country"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="font-bold">Country</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Country" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            
             <div className="w-1/2 flex gap-2.5">
-              <Link href="/provider" className="w-1/2 h-14 text-lg text-black">
-                <Button className="w-full h-10 text-lg bg-white text-black" type="button">
+              <Link href="/contactrep" className="w-1/2 h-14">
+                <Button variant={"outline"} type="button">
                   Cancel
                 </Button>
               </Link>

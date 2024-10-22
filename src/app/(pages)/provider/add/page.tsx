@@ -141,8 +141,8 @@ export default function AddProvider() {
                 )}
               />
             <div className="w-1/2 flex gap-2.5">
-              <Link href="/provider" className="w-1/2 h-14 text-lg bg-white text-black">
-                <Button className="w-full h-10 text-lg bg-white text-black" type="button">
+              <Link href="/provider" className="w-1/2 h-14" passHref>
+                <Button className="w-full h-10  text-lg" variant={"outline"} type="button">
                   Cancel
                 </Button>
               </Link>

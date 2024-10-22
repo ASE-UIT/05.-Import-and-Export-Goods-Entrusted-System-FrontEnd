@@ -93,11 +93,11 @@ export default function AddContactrep() {
             
             <div className="w-1/2 flex gap-2.5">
               <Link href="/contactrep" className="w-1/2 h-14 text-lg bg-white text-black">
-                <Button className="w-full h-10 text-lg bg-white text-black" type="button">
+                <Button className="w-full h-10  text-lg" variant={"outline"} type="button">
                   Cancel
                 </Button>
               </Link>
-                <Button className="w-1/2 h-10 text-lg" type="submit">
+                <Button className="w-1/2 h-10 text-lg" variant={"default"} type="submit">
                   Save
                 </Button>
             </div>

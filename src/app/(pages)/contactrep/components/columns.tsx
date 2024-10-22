@@ -83,7 +83,7 @@ export const columns: ColumnDef<IContactrep>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div>  
-        <Link href={`/contactrep/update?id=${row.getValue("id")}`}>
+      <Link href={`/provider/update/${row.getValue("id")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
       </div>

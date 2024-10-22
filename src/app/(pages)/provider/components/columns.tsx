@@ -140,8 +140,8 @@ export const columns: ColumnDef<IProvider>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div>  
-        <Link href={`/provider/update?id=${row.getValue("id")}`}>
-          <button className="text-blue-500">Edit</button>
+      <Link href={`/provider/update/${row.getValue("id")}`}>
+      <button className="text-blue-500">Edit</button>
         </Link>
       </div>
     ),
