@@ -33,7 +33,6 @@ const formSchema = z.object({
   start_date: z.date().optional(),
   end_date: z.date().optional(),
   contract_date: z.date().optional(),
-  status: z.string(),
 });
 
 export default function AddContractPage() {
