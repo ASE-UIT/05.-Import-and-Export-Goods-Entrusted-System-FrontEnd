@@ -39,7 +39,7 @@ const schema = z.object({
   total_price: z.string().nonempty({ message: "Price is required" }),
 });
 
-export default function AddQuotationtPage() {
+export default function UpdateQuotationtPage() {
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {

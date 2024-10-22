@@ -186,7 +186,7 @@ export const columns: ColumnDef<IQuotation>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div>  
-        <Link href={`/quotation/update?id=${row.getValue("quotation_id")}`}>
+        <Link href={`/quotation/update/${row.getValue("quotation_id")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
       </div>

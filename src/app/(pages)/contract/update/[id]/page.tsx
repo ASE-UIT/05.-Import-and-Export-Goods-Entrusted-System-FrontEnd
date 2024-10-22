@@ -35,7 +35,7 @@ const schema = z.object({
   status: z.string().nonempty({ message: "Please select a status" }),
 });
 
-export default function AddContractPage() {
+export default function UpdateContractPage() {
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
