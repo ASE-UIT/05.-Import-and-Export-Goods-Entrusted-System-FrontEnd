@@ -83,7 +83,7 @@ export const columns: ColumnDef<IService>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div>
-        <Link href={`/service/update?id=${row.getValue("id")}`}>
+        <Link href={`/service/update/${row.getValue("id")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
       </div>
