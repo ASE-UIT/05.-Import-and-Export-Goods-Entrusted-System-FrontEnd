@@ -153,34 +153,6 @@ export default function AddContractPage() {
               <FormMessage />
             </FormItem>
           </div>
-
-          {/* Status */}
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-bold">Status</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger className="w-[500px] h-[60px]">
-                      <SelectValue placeholder="Select a status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Pending">Pending</SelectItem>
-                      <SelectItem value="Active">Active</SelectItem>
-                      <SelectItem value="Terminated">Terminated</SelectItem>
-                      <SelectItem value="Expired">Expired</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
           {/* Button */}
           <div className="flex justify-center mt-6">

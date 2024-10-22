@@ -36,7 +36,6 @@ const formSchema = z.object({
   delivery_date: z.date().optional(),
   quotation_date: z.date().optional(),
   expired_date: z.date().optional(),
-  status: z.string(),
   total_price: z.string(),
 });
 
@@ -213,32 +212,6 @@ export default function AddQuotationtPage() {
                 </FormItem>
               )}
             />
-
-          {/* Status */}
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-bold">Status</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger className="w-[500px] h-[60px]">
-                      <SelectValue placeholder="Select a status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Pending">Draft</SelectItem>
-                      <SelectItem value="Active">Booked</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           
           </div>
            {/* Button */}
