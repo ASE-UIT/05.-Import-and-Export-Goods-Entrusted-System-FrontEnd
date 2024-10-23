@@ -54,9 +54,9 @@ export default function AddShipment() {
               name="id"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Name</FormLabel>
+                  <FormLabel className="font-bold">Shipmen ID</FormLabel>
                   <FormControl>
-                    <Input placeholder="Type an ID" {...field} />
+                    <Input placeholder="Type a shipment ID" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -96,7 +96,7 @@ export default function AddShipment() {
               name="contractID"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Fee</FormLabel>
+                  <FormLabel className="font-bold">Contract ID</FormLabel>
                   <FormControl>
                     <Input placeholder="Type a contract ID" {...field} />
                   </FormControl>
@@ -107,12 +107,12 @@ export default function AddShipment() {
 
             <div className="w-1/2 flex gap-2.5">
               <Link
-                href="/service"
+                href="/shipment"
                 className="w-1/2 h-14 text-lg bg-white text-black"
               >
                 <Button
                   variant={"outline"}
-                  className="w-full h-10 text-lg bg-white text-black"
+                  className="w-full h-10 text-lg"
                   type="button"
                 >
                   Cancel

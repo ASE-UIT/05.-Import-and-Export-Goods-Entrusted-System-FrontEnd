@@ -19,7 +19,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "03",
@@ -28,7 +28,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "04",
@@ -37,7 +37,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "05",
@@ -46,7 +46,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "06",
@@ -55,7 +55,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "07",
@@ -64,7 +64,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "08",
@@ -73,7 +73,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "09",
@@ -82,7 +82,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "10",
@@ -91,7 +91,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "11",
@@ -100,7 +100,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "12",
@@ -109,7 +109,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "13",
@@ -118,7 +118,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "14",
@@ -127,7 +127,7 @@ export const shipmentData: IShipment[] = [
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
-    status: "Active",
+    status: "Customs Clearance Pending",
   },
   {
     id: "15",

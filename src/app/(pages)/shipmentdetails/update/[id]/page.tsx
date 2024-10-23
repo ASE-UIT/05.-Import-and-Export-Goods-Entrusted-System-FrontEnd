@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { z } from "zod";
 import Link from "next/link";
 
@@ -16,25 +15,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select"; // Nhập Select
-import { useParams } from "next/navigation";
-
 const formSchema = z.object({
+  name: z.string(),
   type: z.string(),
   number: z.string(),
   image: z.string(),
 });
 
 export default function UpdateService() {
-  const { id: customerId } = useParams<{ id: string }>();
-  const [preview, setPreview] = useState<string | null>(null);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -56,10 +44,23 @@ export default function UpdateService() {
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
             <FormField
               control={form.control}
-              name="type"
+              name="name"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Document Type</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Input document type" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="font-bold">Document</FormLabel>
                   <FormControl>
                     <label className="block border border-gray-300 rounded-md p-2 cursor-pointer hover:bg-gray-100 transition">
                       {field.value && typeof field.value !== "string"
@@ -99,8 +100,10 @@ export default function UpdateService() {
                 </FormItem>
               )}
             />
+
             <FormField
-              name="image"
+              control={form.control}
+              name="type"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Image</FormLabel>
@@ -132,11 +135,12 @@ export default function UpdateService() {
 
             <div className="w-1/2 flex gap-2.5">
               <Link
-                href="/service"
+                href="/shipmentdetails"
                 className="w-1/2 h-14 text-lg bg-white text-black"
               >
                 <Button
-                  className="w-full h-10 text-lg bg-white text-black"
+                  variant={"outline"}
+                  className="w-full h-10 text-lg"
                   type="button"
                 >
                   Cancel
