@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { DatePickerDemo } from '@/components/date-picker';
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { format } from "date-fns";
@@ -43,7 +42,6 @@ const formSchema = z.object({
 });
 
 export default function UpdateContractPage() {
-  const { id: contract_id } = useParams<{ id: string }>();
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

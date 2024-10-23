@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
 import { format } from "date-fns"; 
 
 import {
@@ -43,7 +42,6 @@ const formSchema = z.object({
 });
 
 export default function AddQuotationtPage() {
-  const { id: quotation_id } = useParams<{ id: string }>();
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
