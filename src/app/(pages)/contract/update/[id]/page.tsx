@@ -43,7 +43,6 @@ const formSchema = z.object({
 });
 
 export default function UpdateContractPage() {
-  const { id: contract_id } = useParams<{ id: string }>();
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
