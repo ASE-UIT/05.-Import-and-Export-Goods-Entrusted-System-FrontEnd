@@ -4,17 +4,35 @@ import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
+import Link from 'next/link';
 
-export interface IContactrep {
+export interface IInvoice {
   id: string;
-  name: string;
-  email: string;
-  phone: string;
+  invoice_id: string;
+  amount: string;
+  status: string;
+  create_date: string;
 }
 
-export const columns: ColumnDef<IContactrep>[] = [
-  {
+export const columns: ColumnDef<IInvoice>[] = [
+    {
+        id: "select",
+        header: ({ table }) => (
+        <Checkbox
+            checked={table.getIsAllPageRowsSelected()}
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Select all"
+        />
+        ),
+        cell: ({ row }) => (
+        <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+        />
+        ),
+    },
+    {
     accessorKey: "id",
     header: ({ column }) => {
       return (
@@ -31,7 +49,7 @@ export const columns: ColumnDef<IContactrep>[] = [
     cell: ({ row }) => <div>{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "name",
+    accessorKey: "invoice_id",
     header: ({ column }) => {
       return (
         <Button
@@ -40,14 +58,14 @@ export const columns: ColumnDef<IContactrep>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Invoice ID
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    cell: ({ row }) => <div>{row.getValue("invoice_id")}</div>,
   },
   {
-    accessorKey: "email",
+    accessorKey: "amount",
     header: ({ column }) => {
       return (
         <Button
@@ -56,14 +74,19 @@ export const columns: ColumnDef<IContactrep>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Amount Paid
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("email"),
+    cell: ({ row }) => <div>{row.getValue("amount")}</div>,
   },
   {
-    accessorKey: "phone",
+    accessorKey: "status",
+    header: "Status",  
+    cell: ({ row }) => <StatusBadge status={row.getValue("status")} />
+  },
+  {
+    accessorKey: "create_date",
     header: ({ column }) => {
       return (
         <Button
@@ -72,21 +95,10 @@ export const columns: ColumnDef<IContactrep>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Phone
+          Create At
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("phone"),
-  },
-  {
-    id: "action",
-    header: "Action",
-    cell: ({ row }) => (
-      <div>
-        <Link href={`/contactrep/update/${row.getValue("id")}`}>
-          <button className="text-blue-500">Edit</button>
-        </Link>
-      </div>
-    ),
+    cell: ({ row }) => row.getValue("create_date"),
   },
 ];

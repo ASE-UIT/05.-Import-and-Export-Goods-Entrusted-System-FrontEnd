@@ -3,5 +3,7 @@ export const PATH_NAME = {
   CUSTOMERS: "/customers",
   EMPLOYEES: "/employees",
   PROVIDERS: "/providers",
-  QUOTE_REQUEST: "/quote-request"
+  QUOTE_REQUEST: "/quote-request",
+  QUOTATION: "/quotation",
+  CONTRACT: "/contract",
 };
