@@ -39,8 +39,6 @@ const formSchema = z.object({
 });
 
 export default function AddInvoice() {
-  const { id: customerId } = useParams<{ id: string }>();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
