@@ -4,7 +4,7 @@ import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from 'next/link';
+import Link from "next/link";
 
 export interface IContactrep {
   id: string;
@@ -82,8 +82,8 @@ export const columns: ColumnDef<IContactrep>[] = [
     id: "action",
     header: "Action",
     cell: ({ row }) => (
-      <div>  
-      <Link href={`/provider/update/${row.getValue("id")}`}>
+      <div>
+        <Link href={`/contactrep/update/${row.getValue("id")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
       </div>
