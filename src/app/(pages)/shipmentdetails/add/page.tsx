@@ -50,7 +50,7 @@ export default function AddShipmentDocument() {
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
             <FormField
               control={form.control}
-              name="type"
+              name="name"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Document Type</FormLabel>
