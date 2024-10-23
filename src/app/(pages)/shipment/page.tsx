@@ -9,7 +9,7 @@ export default function ShipmentManagement() {
     <div className="flex flex-col p-[24px] w-full">
       <div className="flex flex-col w-full gap-[20px]">
         <div className="flex justify-between items-center">
-          <span className="text-3xl font-bold">Service Management</span>
+          <span className="text-3xl font-bold">Shipment Management</span>
         </div>
         <DataTable columns={columns} data={shipmentData} />
       </div>

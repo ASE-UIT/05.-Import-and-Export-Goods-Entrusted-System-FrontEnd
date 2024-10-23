@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { z } from "zod";
 import Link from "next/link";
 
@@ -23,7 +22,6 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select"; // Nhập Select
-import { useParams } from "next/navigation";
 
 const formSchema = z.object({
   id: z.string(),
@@ -32,9 +30,6 @@ const formSchema = z.object({
 });
 
 export default function AddShipment() {
-  const { id: customerId } = useParams<{ id: string }>();
-  const [preview, setPreview] = useState<string | null>(null);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -46,7 +41,7 @@ export default function AddShipment() {
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
-        <span className="text-3xl font-bold">Add Service</span>
+        <span className="text-3xl font-bold">Add Shipment</span>
       </div>
       <Form {...form}>
         <form
