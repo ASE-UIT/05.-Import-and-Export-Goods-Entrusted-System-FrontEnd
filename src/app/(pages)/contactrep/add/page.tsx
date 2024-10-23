@@ -2,10 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { z } from "zod";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,8 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"; // Nhập Select
-import { useParams } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string(),
@@ -29,9 +25,6 @@ const formSchema = z.object({
 });
 
 export default function AddContactrep() {
-  const { id: customerId } = useParams<{ id: string }>();
-  const [preview, setPreview] = useState<string | null>(null);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -51,55 +44,66 @@ export default function AddContactrep() {
           encType="multipart/form-data"
         >
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
-          <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="font-bold">Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="font-bold">Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="Email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="font-bold">Phone</FormLabel>
-                    <FormControl>
-                      <Input type="tel" placeholder="Phone" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="font-bold">Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="font-bold">Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="font-bold">Phone</FormLabel>
+                  <FormControl>
+                    <Input type="tel" placeholder="Phone" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <div className="w-1/2 flex gap-2.5">
-              <Link href="/contactrep" className="w-1/2 h-14 text-lg bg-white text-black">
-                <Button className="w-full h-10  text-lg" variant={"outline"} type="button">
+              <Link
+                href="/contactrep"
+                className="w-1/2 h-14 text-lg bg-white text-black"
+              >
+                <Button
+                  className="w-full h-10  text-lg"
+                  variant={"outline"}
+                  type="button"
+                >
                   Cancel
                 </Button>
               </Link>
-                <Button className="w-1/2 h-10 text-lg" variant={"default"} type="submit">
-                  Save
-                </Button>
+              <Button
+                className="w-1/2 h-10 text-lg"
+                variant={"default"}
+                type="submit"
+              >
+                Save
+              </Button>
             </div>
           </div>
         </form>
