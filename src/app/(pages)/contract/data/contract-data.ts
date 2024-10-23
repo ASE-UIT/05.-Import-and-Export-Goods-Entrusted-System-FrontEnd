@@ -224,4 +224,8 @@ export const contractData: IContract[] = [
     update_at: "2024-04-15 15:15:05",
     status: "Terminated",
   },
+<<<<<<< HEAD
 ];
+=======
+];
+>>>>>>> f4e9e0ca176961372b3f0211213578301bbe742c

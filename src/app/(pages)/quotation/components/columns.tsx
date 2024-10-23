@@ -6,7 +6,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import StatusBadge from '@/components/status-badge';
 import Link from 'next/link'
-import {TableCell} from '@/components/ui/table'
 
 
 export interface IQuotation {
@@ -221,5 +220,6 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       </div>
     ),
-  },
+  }, 
 ];
+
