@@ -111,6 +111,7 @@ export default function AddShipment() {
                 className="w-1/2 h-14 text-lg bg-white text-black"
               >
                 <Button
+                  variant={"outline"}
                   className="w-full h-10 text-lg bg-white text-black"
                   type="button"
                 >
