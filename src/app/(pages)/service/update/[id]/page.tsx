@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { z } from "zod";
 import Link from "next/link";
 
@@ -23,7 +22,6 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select"; // Nhập Select
-import { useParams } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string(),
@@ -32,9 +30,6 @@ const formSchema = z.object({
 });
 
 export default function UpdateService() {
-  const { id: customerId } = useParams<{ id: string }>();
-  const [preview, setPreview] = useState<string | null>(null);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
