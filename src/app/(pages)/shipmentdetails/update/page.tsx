@@ -136,7 +136,8 @@ export default function UpdateDetail() {
                 className="w-1/2 h-14 text-lg bg-white text-black"
               >
                 <Button
-                  className="w-full h-10 text-lg bg-white text-black"
+                  variant={"outline"}
+                  className="w-full h-10 text-lg"
                   type="button"
                 >
                   Cancel
