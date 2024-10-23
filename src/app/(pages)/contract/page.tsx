@@ -16,8 +16,4 @@ export default function ContractManagementPage() {
       </div>
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> f4e9e0ca176961372b3f0211213578301bbe742c

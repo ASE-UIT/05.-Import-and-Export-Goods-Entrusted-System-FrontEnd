@@ -2,10 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-<<<<<<< HEAD
-=======
 import { DatePickerDemo } from '@/components/date-picker';
->>>>>>> f4e9e0ca176961372b3f0211213578301bbe742c
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { format } from "date-fns";

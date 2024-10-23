@@ -22,9 +22,9 @@ interface DataTableToolbarProps<TData> {
 export function DataTableFilter<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
-  const filterableColumns = table.getAllColumns().filter(
-    (column) => column.id !== 'action' 
-  ).map((column) => column.id);
+  const filterableColumns = table.getAllColumns()
+  .filter((column) => !['action', 'delete', 'checkbox'].includes(column.id))
+  .map((column) => column.id);
 
   const [currentFilter, setCurrentFilter] = useState<string>(filterableColumns[0]);
   console.log(filterableColumns);
@@ -62,8 +62,4 @@ export function DataTableFilter<TData>({
       </Select>
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> f4e9e0ca176961372b3f0211213578301bbe742c

@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> f4e9e0ca176961372b3f0211213578301bbe742c
 "use client";
 
 import { DataTable } from "@/app/(pages)/quotation/components/data-table";
