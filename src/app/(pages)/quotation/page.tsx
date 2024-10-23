@@ -1,4 +1,3 @@
-
 "use client";
 
 import { DataTable } from "@/app/(pages)/quotation/components/data-table";
