@@ -63,7 +63,7 @@ export default function UpdateService() {
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Document</FormLabel>
                   <FormControl>
-                    <label className="border border-gray-300 rounded-md p-2 cursor-pointer hover:bg-gray-100 transition h-[61px] flex items-center justify-between">
+                    <label className="border border-gray-300 rounded-md p-2 cursor-pointer h-[61px] flex items-center justify-between">
                       {" "}
                       {/* Sử dụng flexbox để căn chỉnh */}
                       <span className="flex items-center flex-1 text-left">
@@ -73,7 +73,7 @@ export default function UpdateService() {
                         {/* Thêm khoảng cách bên phải cho icon */}
                         {field.value && typeof field.value !== "string"
                           ? field.value
-                          : "Select an image"}
+                          : "Select a document"}
                       </span>
                       <input
                         type="file"
@@ -117,7 +117,7 @@ export default function UpdateService() {
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Image</FormLabel>
                   <FormControl>
-                    <label className="border border-gray-300 rounded-md p-2 cursor-pointer hover:bg-gray-100 transition h-[61px] flex items-center justify-between">
+                    <label className="border border-gray-300 rounded-md p-2 cursor-pointer h-[61px] flex items-center justify-between">
                       {" "}
                       {/* Sử dụng flexbox để căn chỉnh */}
                       <span className="flex items-center flex-1 text-left">
@@ -151,10 +151,7 @@ export default function UpdateService() {
             />
 
             <div className="w-1/2 flex gap-2.5">
-              <Link
-                href="/shipmentdetails"
-                className="w-1/2 h-14 text-lg bg-white text-black"
-              >
+              <Link href="/shipmentdetails" className="w-1/2 h-14 text-lg">
                 <Button
                   variant={"outline"}
                   className="w-full h-10 text-lg"
