@@ -24,6 +24,23 @@ export interface IQuotation {
 
 export const columns: ColumnDef<IQuotation>[] = [
   {
+    id: "checkbox",
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <Checkbox 
+          className="h-4 w-4"
+          onCheckedChange={(checked) => {
+            if (checked) {
+              console.log(`Selected row with ID: ${row.getValue("quotation_id")}`);
+            } else {
+              console.log(`Deselected row with ID: ${row.getValue("quotation_id")}`);
+            }
+          }} 
+        />
+      </div>
+    ),
+  },
+  {
     accessorKey: "quotation_id",
     header: ({ column }) => {
       return (
@@ -192,5 +209,16 @@ export const columns: ColumnDef<IQuotation>[] = [
       </div>
     ),
   },
-  
+  {
+    id: "delete",
+    cell: ({ row }) => (
+      <div>  
+        <Button 
+          variant="default"  
+          className="flex items-center gap-2 text-sm px-2 py-1">
+          <span>Delete</span>
+        </Button>
+      </div>
+    ),
+  },
 ];
