@@ -1,12 +1,26 @@
 "use client";
 
+import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import Link from "next/link";
 
-export const columns: ColumnDef<ShipmentTracking>[] = [
+import { ReactNode } from "react";
+
+export interface IShipment {
+  id: string;
+  type: string;
+  client: string;
+  price: string;
+  enddate: string;
+  location: string;
+  status: string;
+}
+
+export const columns: ColumnDef<IShipment>[] = [
   {
-    accessorKey: "shipment_id",
+    accessorKey: "id",
     header: ({ column }) => {
       return (
         <Button
@@ -16,14 +30,13 @@ export const columns: ColumnDef<ShipmentTracking>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Shipment ID
-          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("shipment_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "shipment_type",
+    accessorKey: "type",
     header: ({ column }) => {
       return (
         <Button
@@ -32,12 +45,11 @@ export const columns: ColumnDef<ShipmentTracking>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Shipment Type
-          <ArrowUpDown className="ml-2 size-4" />
+          Shipment type
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("shipment_type")}</div>,
+    cell: ({ row }) => <div>{row.getValue("type")}</div>,
   },
   {
     accessorKey: "client",
@@ -50,11 +62,42 @@ export const columns: ColumnDef<ShipmentTracking>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Client
-          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("client"),
+    cell: ({ row }) => <div>{row.getValue("client")}</div>,
+  },
+  {
+    accessorKey: "price",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Price
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("price"),
+  },
+  {
+    accessorKey: "enddate",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          End date
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("enddate"),
   },
   {
     accessorKey: "location",
@@ -67,7 +110,6 @@ export const columns: ColumnDef<ShipmentTracking>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Location
-          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
@@ -75,36 +117,7 @@ export const columns: ColumnDef<ShipmentTracking>[] = [
   },
   {
     accessorKey: "status",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Status
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("status"),
-  },
-  {
-    accessorKey: "tracking_id",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Tracking ID
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("tracking_id"),
+    header: "Status",
+    cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
   },
 ];

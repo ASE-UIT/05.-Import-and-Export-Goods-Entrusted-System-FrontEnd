@@ -4,8 +4,6 @@ import { quoteRequestMocking } from "./data/quote-request-data";
 import { DataTable } from "./components/table";
 
 export default function QuoteRequestManagementPage() {
-  
-
   return (
     <div className="flex flex-col p-[28px] w-full h-[calc(100vh-60px)] flex-grow">
       <div className="flex flex-col w-full gap-[20px]">
