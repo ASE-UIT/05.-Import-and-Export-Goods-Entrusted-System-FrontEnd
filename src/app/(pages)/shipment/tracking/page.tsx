@@ -2,11 +2,9 @@
 import { columns } from "./components/columns";
 import { shipmentMocking } from "../data/shipment-data";
 import { DataTable } from "./components/table";
-import React from 'react'
+import React from "react";
 
 export default function ShipmentTrackingPage() {
-  
-
   return (
     <div className="flex flex-col p-[28px] w-full h-[calc(100vh-60px)] flex-grow">
       <div className="flex flex-col w-full gap-[20px]">

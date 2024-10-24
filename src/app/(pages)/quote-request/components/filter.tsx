@@ -25,20 +25,22 @@ export function DataTableFilter<TData>({
   console.log(columnsTitle);
   return (
     <div className="flex gap-[5px]">
-        <div className="flex gap-[5px]">
-      <div className="w-[300px]">
-        <div className="relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search"
-            onChange={(event) =>
-              table.getColumn(currentFilter)?.setFilterValue(event.target.value)
-            }
-            className="pl-8 h-9 text-sm"
-          />
+      <div className="flex gap-[5px]">
+        <div className="w-[300px]">
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search"
+              onChange={(event) =>
+                table
+                  .getColumn(currentFilter)
+                  ?.setFilterValue(event.target.value)
+              }
+              className="pl-8 h-9 text-sm"
+            />
+          </div>
         </div>
-      </div>
       </div>
       <Select onValueChange={(value) => setCurrentFilter(value)}>
         <SelectTrigger>
@@ -49,7 +51,7 @@ export function DataTableFilter<TData>({
             {columnsTitle.map((title) => (
               <SelectItem value={title} key={title}>
                 {title
-                .replace(/_/g, " ")
+                  .replace(/_/g, " ")
                   .replace(/([A-Z])/g, " $1")
                   .toLowerCase()
                   .replace(/\b\w/g, (char) => char.toUpperCase())}
