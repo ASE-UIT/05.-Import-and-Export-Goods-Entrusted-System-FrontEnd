@@ -15,9 +15,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Upload } from "lucide-react";
 const formSchema = z.object({
-  name: z.string(),
   type: z.string(),
+  document: z.string(),
   number: z.string(),
   image: z.string(),
 });
@@ -44,7 +45,7 @@ export default function UpdateService() {
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
             <FormField
               control={form.control}
-              name="name"
+              name="type"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Document Type</FormLabel>
@@ -57,15 +58,23 @@ export default function UpdateService() {
             />
             <FormField
               control={form.control}
-              name="type"
+              name="document"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Document</FormLabel>
                   <FormControl>
-                    <label className="block border border-gray-300 rounded-md p-2 cursor-pointer hover:bg-gray-100 transition">
-                      {field.value && typeof field.value !== "string"
-                        ? field.value
-                        : "Select a document"}
+                    <label className="border border-gray-300 rounded-md p-2 cursor-pointer hover:bg-gray-100 transition h-[61px] flex items-center justify-between">
+                      {" "}
+                      {/* Sử dụng flexbox để căn chỉnh */}
+                      <span className="flex items-center flex-1 text-left">
+                        {" "}
+                        {/* Sử dụng flexbox để căn chỉnh icon và văn bản */}
+                        <Upload className="mr-2" />{" "}
+                        {/* Thêm khoảng cách bên phải cho icon */}
+                        {field.value && typeof field.value !== "string"
+                          ? field.value
+                          : "Select an image"}
+                      </span>
                       <input
                         type="file"
                         className="hidden"
@@ -103,15 +112,23 @@ export default function UpdateService() {
 
             <FormField
               control={form.control}
-              name="type"
+              name="image"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Image</FormLabel>
                   <FormControl>
-                    <label className="block border border-gray-300 rounded-md p-2 cursor-pointer hover:bg-gray-100 transition">
-                      {field.value && typeof field.value !== "string"
-                        ? field.value
-                        : "Select an image"}
+                    <label className="border border-gray-300 rounded-md p-2 cursor-pointer hover:bg-gray-100 transition h-[61px] flex items-center justify-between">
+                      {" "}
+                      {/* Sử dụng flexbox để căn chỉnh */}
+                      <span className="flex items-center flex-1 text-left">
+                        {" "}
+                        {/* Sử dụng flexbox để căn chỉnh icon và văn bản */}
+                        <Upload className="mr-2" />{" "}
+                        {/* Thêm khoảng cách bên phải cho icon */}
+                        {field.value && typeof field.value !== "string"
+                          ? field.value
+                          : "Select an image"}
+                      </span>
                       <input
                         type="file"
                         className="hidden"

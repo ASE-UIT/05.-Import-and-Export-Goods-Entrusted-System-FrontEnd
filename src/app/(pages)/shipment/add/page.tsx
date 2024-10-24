@@ -51,30 +51,17 @@ export default function AddShipment() {
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
             <FormField
               control={form.control}
-              name="id"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel className="font-bold">Shipmen ID</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Type a shipment ID" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="type"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Type</FormLabel>
+                  <FormLabel className="font-bold ">Type</FormLabel>
+
                   <FormControl>
                     <Select
                       onValueChange={field.onChange} // Handles changes in selected value
                       value={field.value} // Value from the form field
                     >
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className="w-full h-[61px]">
                         <SelectValue placeholder="Select type" />
                       </SelectTrigger>
                       <SelectContent>
