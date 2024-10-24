@@ -93,7 +93,7 @@ export default function AddShipment() {
             />
 
             <div className="w-1/2 flex gap-2.5">
-              <Link href="/shipment" className="w-1/2 h-14 text-lg">
+              <Link href="/shipment" className="w-1/2 h-14 text-lg ">
                 <Button
                   variant={"outline"}
                   className="w-full h-10 text-lg"

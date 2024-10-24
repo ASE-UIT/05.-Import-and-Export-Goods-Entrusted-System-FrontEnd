@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { z } from "zod";
 import Link from "next/link";
 
@@ -16,20 +15,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select"; // Nhập Select
 import { Upload } from "lucide-react";
 
 const formSchema = z.object({
-  type: z.string(),
-  document: z.string(),
-  number: z.string(),
-  image: z.string(),
+  type: z.string().nonempty("Document type is required"), // Thêm thông báo lỗi nếu cần
+  document: z.instanceof(File, { message: "Please upload a valid document" }),
+  number: z.string().nonempty("Document number is required"),
+  image: z.instanceof(File, { message: "Please upload a valid image" }),
 });
 
 export default function AddShipmentDocument() {
@@ -38,7 +30,11 @@ export default function AddShipmentDocument() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    if (!values.document || !values.image) {
+      alert("Both document and image are required");
+      return;
+    }
+    console.log(values); // In ra giá trị file đã được nạp
   }
 
   return (
@@ -72,29 +68,26 @@ export default function AddShipmentDocument() {
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Document</FormLabel>
                   <FormControl>
-                    <label className=" border border-gray-300 rounded-md p-2 cursor-pointer hover:bg-gray-100 transition h-[61px] flex items-center justify-between">
-                      {" "}
-                      {/* Sử dụng flexbox để căn chỉnh */}
+                    <label className="border border-gray-300 rounded-md p-2 cursor-pointer h-[61px] flex items-center justify-between">
                       <span className="flex items-center flex-1 text-left">
-                        {" "}
-                        {/* Sử dụng flexbox để căn chỉnh icon và văn bản */}
-                        <Upload className="mr-2" />{" "}
-                        {/* Thêm khoảng cách bên phải cho icon */}
-                        {field.value && typeof field.value !== "string"
-                          ? field.value
-                          : "Select a document"}
+                        <Upload className="mr-2" />
+                        {field.value ? field.value.name : "Select a document"}
                       </span>
                       <input
                         type="file"
                         className="hidden"
-                        {...field}
                         onChange={(e) => {
-                          const files = e.target.files; // Lấy files
+                          const files = e.target.files;
                           if (files && files.length > 0) {
-                            const file = files[0]; // Lấy file đầu tiên
-                            field.onChange(file); // Cập nhật giá trị cho field
+                            const file = files[0];
+                            // Kiểm tra kích thước tệp (giới hạn 5MB)
+                            if (file.size > 5 * 1024 * 1024) {
+                              alert("File size exceeds 5MB");
+                              return;
+                            }
+                            field.onChange(file);
                           } else {
-                            field.onChange(null); // Nếu không có file nào, có thể cập nhật giá trị thành null
+                            field.onChange(null);
                           }
                         }}
                       />
@@ -104,7 +97,6 @@ export default function AddShipmentDocument() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="number"
@@ -118,7 +110,6 @@ export default function AddShipmentDocument() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="image"
@@ -126,29 +117,26 @@ export default function AddShipmentDocument() {
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Image</FormLabel>
                   <FormControl>
-                    <label className="border border-gray-300 rounded-md p-2 cursor-pointer hover:bg-gray-100 transition h-[61px] flex items-center justify-between">
-                      {" "}
-                      {/* Sử dụng flexbox để căn chỉnh */}
+                    <label className="border border-gray-300 rounded-md p-2 cursor-pointer h-[61px] flex items-center justify-between">
                       <span className="flex items-center flex-1 text-left">
-                        {" "}
-                        {/* Sử dụng flexbox để căn chỉnh icon và văn bản */}
-                        <Upload className="mr-2" />{" "}
-                        {/* Thêm khoảng cách bên phải cho icon */}
-                        {field.value && typeof field.value !== "string"
-                          ? field.value
-                          : "Select an image"}
+                        <Upload className="mr-2" />
+                        {field.value ? field.value.name : "Select an image"}
                       </span>
                       <input
                         type="file"
                         className="hidden"
-                        {...field}
                         onChange={(e) => {
-                          const files = e.target.files; // Lấy files
+                          const files = e.target.files;
                           if (files && files.length > 0) {
-                            const file = files[0]; // Lấy file đầu tiên
-                            field.onChange(file); // Cập nhật giá trị cho field
+                            const file = files[0];
+                            // Kiểm tra kích thước tệp (giới hạn 5MB)
+                            if (file.size > 5 * 1024 * 1024) {
+                              alert("File size exceeds 5MB");
+                              return;
+                            }
+                            field.onChange(file);
                           } else {
-                            field.onChange(null); // Nếu không có file nào, có thể cập nhật giá trị thành null
+                            field.onChange(null);
                           }
                         }}
                       />
@@ -158,7 +146,6 @@ export default function AddShipmentDocument() {
                 </FormItem>
               )}
             />
-
             <div className="w-1/2 flex gap-2.5">
               <Link href="/shipmentdetails" className="w-1/2 h-14 text-lg">
                 <Button
