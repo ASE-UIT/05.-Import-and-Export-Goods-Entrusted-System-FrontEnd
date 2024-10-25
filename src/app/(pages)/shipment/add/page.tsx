@@ -51,17 +51,12 @@ export default function AddShipment() {
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
             <FormField
               control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel className="font-bold ">Type</FormLabel>
 
                   <FormControl>
                     <Select
                       onValueChange={field.onChange} // Handles changes in selected value
                       value={field.value} // Value from the form field
-                    >
-                      <SelectTrigger className="w-full h-[61px]">
+                    
                         <SelectValue placeholder="Select type" />
                       </SelectTrigger>
                       <SelectContent>
@@ -83,7 +78,6 @@ export default function AddShipment() {
               name="contractID"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Contract ID</FormLabel>
                   <FormControl>
                     <Input placeholder="Type a contract ID" {...field} />
                   </FormControl>
@@ -93,7 +87,6 @@ export default function AddShipment() {
             />
 
             <div className="w-1/2 flex gap-2.5">
-              <Link href="/shipment" className="w-1/2 h-14 text-lg ">
                 <Button
                   variant={"outline"}
                   className="w-full h-10 text-lg"
