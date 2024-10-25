@@ -23,10 +23,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { useRouter } from "next/navigation";
-import { DataTablePagination } from "./pagination";
-import { DataTableFilter } from "./search-filter";
-import StatusBadge, { Status } from "@/components/status-badge";
+import { Button } from "../../../../components/ui/button";
+import { Input } from "../../../../components/ui/input";
+import * as dataTableFilter from "./data-filter";
+import { CirclePlus } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { PATH_NAME } from "@/configs";
+import { Pagination } from "@/components/ui/pagination";
+import { DataTablePagination } from "./data-pagination";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -40,6 +45,8 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const router = useRouter();
+  const path = usePathname();
 
   const table = useReactTable({
     data,
@@ -57,9 +64,15 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      <div className="flex w-full justify-between pb-[10px]">
-        <DataTableFilter table={table} />
+    <div className="w-full">
+      <div className="flex w-full justify-between pb-[10px] mb-[20px]">
+        <dataTableFilter.DataTableFilter table={table} />
+        <div className="flex gap-3">
+          <Button variant="default" onClick={() => router.push(`${path}/add`)}>
+            <CirclePlus className="mr-2" />
+            <span>Add {path.slice(1, path.length)}</span>
+          </Button>
+        </div>
       </div>
       <div className="rounded-md">
         <Table>
@@ -90,13 +103,9 @@ export function DataTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {cell.column.columnDef.accessorKey === "status" ? (
-                        <StatusBadge status={cell.getValue() as Status} />
-                      ) : (
-                        flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
