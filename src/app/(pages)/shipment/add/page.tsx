@@ -60,7 +60,9 @@ export default function AddShipment() {
                       onValueChange={field.onChange} // Handles changes in selected value
                       value={field.value} // Value from the form field
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="h-[61px] flex items-center">
+                        {" "}
+                        {/* Đặt chiều cao và căn giữa */}
                         <SelectValue placeholder="Select type" />
                       </SelectTrigger>
                       <SelectContent>
@@ -92,7 +94,7 @@ export default function AddShipment() {
             />
 
             <div className="w-1/2 flex gap-2.5">
-              <Link href="/shipment">
+              <Link href="/shipment" className="w-1/2 h-14 text-lg">
                 <Button
                   variant={"outline"}
                   className="w-full h-10 text-lg"
