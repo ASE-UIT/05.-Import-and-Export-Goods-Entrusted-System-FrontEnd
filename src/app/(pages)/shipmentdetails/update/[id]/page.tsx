@@ -24,7 +24,7 @@ const formSchema = z.object({
   image: z.instanceof(File, { message: "Please upload a valid image" }),
 });
 
-export default function AddShipmentDocument() {
+export default function UpdateShipmentDocument() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -50,7 +50,7 @@ export default function AddShipmentDocument() {
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
             <FormField
               control={form.control}
-              name="name"
+              name="type"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Document Type</FormLabel>
