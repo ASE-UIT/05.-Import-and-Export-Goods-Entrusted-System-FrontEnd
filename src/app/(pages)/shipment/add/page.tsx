@@ -51,30 +51,18 @@ export default function AddShipment() {
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
             <FormField
               control={form.control}
-              name="id"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel className="font-bold">Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Type an ID" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="type"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Type</FormLabel>
+                  <FormLabel>Type</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange} // Handles changes in selected value
                       value={field.value} // Value from the form field
                     >
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className="h-[61px] flex items-center">
+                        {" "}
+                        {/* Đặt chiều cao và căn giữa */}
                         <SelectValue placeholder="Select type" />
                       </SelectTrigger>
                       <SelectContent>
@@ -96,7 +84,7 @@ export default function AddShipment() {
               name="contractID"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Fee</FormLabel>
+                  <FormLabel>Contract ID</FormLabel>
                   <FormControl>
                     <Input placeholder="Type a contract ID" {...field} />
                   </FormControl>
@@ -106,10 +94,7 @@ export default function AddShipment() {
             />
 
             <div className="w-1/2 flex gap-2.5">
-              <Link
-                href="/service"
-                className="w-1/2 h-14 text-lg bg-white text-black"
-              >
+              <Link href="/shipment" className="w-1/2 h-14 text-lg">
                 <Button
                   variant={"outline"}
                   className="w-full h-10 text-lg"
