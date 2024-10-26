@@ -4,7 +4,17 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Pencil, Trash2 } from "lucide-react";
 import { IEmployee } from ".";
-import { useRouter } from "next/router";
+import { useState } from "react";
+import { DialogFooter } from "@/components/ui/dialog";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export const columns: ColumnDef<IEmployee>[] = [
   {
@@ -125,6 +135,7 @@ export const columns: ColumnDef<IEmployee>[] = [
     id: "actions",
     cell: ({ row }) => {
       const id = row.original.id;
+      const [open, setOpen] = useState(false);
 
       const handleEdit = () => {
         window.location.href = `${window.location.pathname}/update/${id}`;
@@ -143,13 +154,29 @@ export const columns: ColumnDef<IEmployee>[] = [
           >
             <Pencil className=" aspect-square w-5 h-5"></Pencil>
           </Button>
-          <Button
-            className="aspect-square p-[6px] h-auto w-auto"
-            variant="destructive"
-            onClick={handleDelete}
-          >
-            <Trash2 className=" aspect-square w-5 h-5"></Trash2>
-          </Button>
+
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button
+                className="aspect-square p-[6px] h-auto w-auto"
+                variant="destructive"
+                onClick={handleDelete}
+              >
+                <Trash2 className=" aspect-square w-5 h-5"></Trash2>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <p>Are you sure you want to delete this employee?</p>
+              <DialogFooter>
+                <Button variant="ghost" onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
+                <Button variant="destructive" onClick={handleDelete}>
+                  Confirm Delete
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       );
     },
