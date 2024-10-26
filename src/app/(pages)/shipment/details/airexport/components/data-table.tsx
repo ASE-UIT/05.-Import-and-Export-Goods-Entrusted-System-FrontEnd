@@ -23,14 +23,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Button } from "../../../../components/ui/button";
-import { Input } from "../../../../components/ui/input";
-import * as dataTableFilter from "./data-filter";
+import { Button } from "../../../../../../components/ui/button";
+
 import { CirclePlus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { PATH_NAME } from "@/configs";
 import { Pagination } from "@/components/ui/pagination";
-import { DataTablePagination } from "./data-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -66,11 +64,13 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full">
       <div className="flex w-full justify-between pb-[10px] mb-[20px]">
-        <dataTableFilter.DataTableFilter table={table} />
         <div className="flex gap-3">
-          <Button variant="default" onClick={() => router.push(`${path}/add`)}>
+          <Button
+            variant="default"
+            onClick={() => router.push(`shipment/details/add`)}
+          >
             <CirclePlus className="mr-2" />
-            <span>Add </span>
+            <span>Add Air Export</span>
           </Button>
         </div>
       </div>
@@ -124,7 +124,6 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
     </div>
   );
 }

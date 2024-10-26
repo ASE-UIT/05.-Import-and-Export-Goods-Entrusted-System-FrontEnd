@@ -118,7 +118,7 @@ export const columns: ColumnDef<IShipmentDetails>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div>
-        <Link href={`/shipmentdetails/update/${row.getValue("id")}`}>
+        <Link href={`/shipment/details/seaimport/update/${row.getValue("id")}`}>
           <button
             className="text-blue-500"
             aria-label={`Edit ${row.getValue("id")}`}

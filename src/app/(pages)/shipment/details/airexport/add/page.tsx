@@ -40,7 +40,7 @@ export default function AddShipmentDocument() {
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
-        <span className="text-3xl font-bold">Add Document</span>
+        <span className="text-3xl font-bold">Add Air Export Document</span>
       </div>
       <Form {...form}>
         <form
@@ -148,7 +148,10 @@ export default function AddShipmentDocument() {
               )}
             />
             <div className="w-1/2 flex gap-2.5">
-              <Link href="/shipmentdetails" className="w-1/2 h-14 text-lg">
+              <Link
+                href="/shipment/details/airexport"
+                className="w-1/2 h-14 text-lg"
+              >
                 <Button
                   variant={"outline"}
                   className="w-full h-10 text-lg"

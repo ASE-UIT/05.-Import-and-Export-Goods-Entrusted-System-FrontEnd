@@ -1,8 +1,7 @@
-import { Plane } from "lucide-react";
 import { IShipment } from "../components/columns";
 
 export const shipmentData: IShipment[] = [
-    {
+  {
     id: "01",
     type: "Air Freight",
     client: "Anh Long",
@@ -10,8 +9,9 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "On Hold",
-    }
-      ,
+    origin: "123 Thủ Đức",
+    destination: "456 Bình Thạnh",
+  },
   {
     id: "02",
     type: "Air Freight",
@@ -20,15 +20,19 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "123 Thủ Đức",
+    destination: "789 Phú Nhuận",
   },
   {
     id: "03",
-    type: "Air Freight",
+    type: "Sea Freight",
     client: "Anh Long",
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "123 Thủ Đức",
+    destination: "123 Thủ Đức",
   },
   {
     id: "04",
@@ -38,15 +42,19 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "123 Thủ Đức",
+    destination: "456 Bình Thạnh",
   },
   {
     id: "05",
-    type: "Air Freight",
+    type: "Land Freight",
     client: "Anh Long",
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "456 Bình Thạnh",
+    destination: "789 Phú Nhuận",
   },
   {
     id: "06",
@@ -56,6 +64,8 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "789 Phú Nhuận",
+    destination: "123 Thủ Đức",
   },
   {
     id: "07",
@@ -65,6 +75,8 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "123 Thủ Đức",
+    destination: "456 Bình Thạnh",
   },
   {
     id: "08",
@@ -74,15 +86,19 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "456 Bình Thạnh",
+    destination: "456 Bình Thạnh",
   },
   {
     id: "09",
-    type: "Air Freight",
+    type: "Land Freight",
     client: "Anh Long",
     price: "23$",
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "789 Phú Nhuận",
+    destination: "789 Phú Nhuận",
   },
   {
     id: "10",
@@ -92,6 +108,8 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "123 Thủ Đức",
+    destination: "789 Phú Nhuận",
   },
   {
     id: "11",
@@ -101,6 +119,8 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "123 Thủ Đức",
+    destination: "456 Bình Thạnh",
   },
   {
     id: "12",
@@ -110,6 +130,8 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "456 Bình Thạnh",
+    destination: "123 Thủ Đức",
   },
   {
     id: "13",
@@ -119,6 +141,8 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "789 Phú Nhuận",
+    destination: "456 Bình Thạnh",
   },
   {
     id: "14",
@@ -128,6 +152,8 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Customs Clearance Pending",
+    origin: "123 Thủ Đức",
+    destination: "789 Phú Nhuận",
   },
   {
     id: "15",
@@ -137,6 +163,8 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Active",
+    origin: "123 Thủ Đức",
+    destination: "456 Bình Thạnh",
   },
   {
     id: "16",
@@ -146,6 +174,8 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Active",
+    origin: "456 Bình Thạnh",
+    destination: "123 Thủ Đức",
   },
   {
     id: "17",
@@ -155,6 +185,8 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "On Hold",
+    origin: "789 Phú Nhuận",
+    destination: "789 Phú Nhuận",
   },
   {
     id: "18",
@@ -164,6 +196,8 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Active",
+    origin: "123 Thủ Đức",
+    destination: "456 Bình Thạnh",
   },
   {
     id: "19",
@@ -173,6 +207,8 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Active",
+    origin: "456 Bình Thạnh",
+    destination: "789 Phú Nhuận",
   },
   {
     id: "20",
@@ -182,5 +218,7 @@ export const shipmentData: IShipment[] = [
     enddate: "12/06/2012",
     location: "123 Thủ Đức",
     status: "Active",
+    origin: "789 Phú Nhuận",
+    destination: "123 Thủ Đức",
   },
 ];

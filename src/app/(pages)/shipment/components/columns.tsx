@@ -16,6 +16,8 @@ export interface IShipment {
   enddate: string;
   location: string;
   status: string;
+  origin: string;
+  destination: string;
 }
 
 export const columns: ColumnDef<IShipment>[] = [
@@ -116,8 +118,81 @@ export const columns: ColumnDef<IShipment>[] = [
     cell: ({ row }) => row.getValue("location"),
   },
   {
+    accessorKey: "origin",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Origin
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("origin"),
+  },
+  {
+    accessorKey: "destination",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Destination
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("destination"),
+  },
+  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
+  },
+  {
+    id: "action",
+    header: "Action",
+    cell: ({ row }) => {
+      const shipment = row.original as IShipment; // Ép kiểu cho row.original
+
+      let linkTo: string;
+
+      if (shipment.type === "Sea Freight") {
+        linkTo =
+          shipment.origin === shipment.destination
+            ? `/shipment/details/seaimport/` // Đường dẫn cho sea import
+            : `/shipment/details/seaexport/`; // Đường dẫn cho sea export
+      } else if (shipment.type === "Air Freight") {
+        linkTo =
+          shipment.origin === shipment.destination
+            ? `/shipment/details/airimport/` // Đường dẫn cho air import
+            : `/shipment/details/airexport/`; // Đường dẫn cho air export
+      } else if (shipment.type === "Land Freight") {
+        linkTo =
+          shipment.origin === shipment.destination
+            ? `/shipment/details/landimport/` // Đường dẫn cho land import
+            : `/shipment/details/landexport/`; // Đường dẫn cho land export
+      } else {
+        linkTo = `/shipment/details/other/${shipment.id}`; // Đường dẫn mặc định nếu không thuộc các loại trên
+      }
+
+      return (
+        <div>
+          <Link href={linkTo}>
+            <button
+              className="text-blue-500"
+              aria-label={`Edit ${shipment.id}`}
+            >
+              View details
+            </button>
+          </Link>
+        </div>
+      );
+    },
   },
 ];

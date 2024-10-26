@@ -24,7 +24,7 @@ const formSchema = z.object({
   image: z.instanceof(File, { message: "Please upload a valid image" }),
 });
 
-export default function UpdateShipmentDocument() {
+export default function AddShipmentDocument() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -40,7 +40,7 @@ export default function UpdateShipmentDocument() {
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
-        <span className="text-3xl font-bold">Update Document</span>
+        <span className="text-3xl font-bold">Add Land Export Document</span>
       </div>
       <Form {...form}>
         <form
@@ -102,7 +102,9 @@ export default function UpdateShipmentDocument() {
               name="number"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Document Number</FormLabel>
+                  <FormLabel className="font-bold">
+                    Document Land Export Number
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Type Document Number" {...field} />
                   </FormControl>
@@ -148,7 +150,10 @@ export default function UpdateShipmentDocument() {
               )}
             />
             <div className="w-1/2 flex gap-2.5">
-              <Link href="/shipmentdetails" className="w-1/2 h-14 text-lg">
+              <Link
+                href="/shipment/details/landexport"
+                className="w-1/2 h-14 text-lg"
+              >
                 <Button
                   variant={"outline"}
                   className="w-full h-10 text-lg"

@@ -10,7 +10,9 @@ export default function ShipmentDetails() {
       <div className="flex flex-col w-full gap-[20px]">
         {/* Shipment Details Section */}
         <div className="flex flex-col">
-          <span className="text-3xl font-bold">Shipment Details</span>
+          <span className="text-3xl font-bold">
+            Shipment Land Import Details
+          </span>
           <span className="text-2xl font-bold pt-7">Compulsory</span>
         </div>
         <DataTable columns={columns} data={shipmentDetailsData} />
