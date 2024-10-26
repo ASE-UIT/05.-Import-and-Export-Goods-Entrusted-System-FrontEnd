@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Pencil, Trash2 } from "lucide-react";
 import { IEmployee } from ".";
+import { useRouter } from "next/router";
 
 export const columns: ColumnDef<IEmployee>[] = [
   {
@@ -127,7 +127,7 @@ export const columns: ColumnDef<IEmployee>[] = [
       const id = row.original.id;
 
       const handleEdit = () => {
-        console.log("Edit clicked for ID:", id);
+        window.location.href = `${window.location.pathname}/update/${id}`;
       };
 
       const handleDelete = () => {
