@@ -8,6 +8,7 @@ import GroupCard from "@/app/(pages)/dashboard/_components/group-card";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/app/(pages)/dashboard/_components/data-table";
+import Link from "next/link";
 
 async function getData(): Promise<TableShipmentTracking[]> {
   return [
@@ -84,9 +85,11 @@ export default async function Dashboard() {
       <div className="space-y-2 w-full">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl">RECENT SHIPMENTS</h2>
-          <Button className="mt-2 p-0" variant={"link"}>
-            View All
-          </Button>
+          <Link href="/shipment">
+            <Button className="mt-2 p-0" variant={"link"}>
+              View All
+            </Button>
+          </Link>
         </div>
         <div className="container mx-auto">
           <DataTable columns={columns} data={data} />

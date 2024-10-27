@@ -24,7 +24,7 @@ interface MenuItemProps {
 
 function MenuItem({ icon, title, path }: MenuItemProps) {
   const currentPath = usePathname();
-  const isActive = currentPath === path;
+  const isActive = currentPath.includes(path);
 
   if (isActive) {
     return (
@@ -38,7 +38,7 @@ function MenuItem({ icon, title, path }: MenuItemProps) {
   }
   return (
     <Link href={path}>
-      <div className="flex items-center p-[10px] space-x-[10px] text-white text-[14px] w-[200px] ">
+      <div className="flex items-center p-[10px] space-x-[10px] text-white text-[14px] w-[200px] hover:bg-foreground/20 hover:rounded-md ">
         <span>{icon}</span>
         <span className="leading-6">{title}</span>
       </div>
@@ -66,8 +66,8 @@ export default function Sidebar() {
       </div>
       <div className="p-5 gap-y-3 border-b border-[#FCFCFC]/[40]">
         <MenuItem icon={<UserCog />} title="Employees" path="/employees" />
-        <MenuItem icon={<Users />} title="Clients" path="/clients" />
-        <MenuItem icon={<UserCheck />} title="Providers" path="/providers" />
+        <MenuItem icon={<Users />} title="Customers" path="/customers" />
+        <MenuItem icon={<UserCheck />} title="Providers" path="/provider" />
       </div>
       <div className="p-5 gap-y-3 border-b border-[#FCFCFC]/[40]">
         <MenuItem
@@ -78,7 +78,7 @@ export default function Sidebar() {
         <MenuItem icon={<ClipboardMinus />} title="Report" path="/report" />
       </div>
       <div className="p-5 gap-y-3 ">
-        <MenuItem icon={<Settings />} title="Settings" path="/test" />
+        <MenuItem icon={<Settings />} title="Settings" path="/settings" />
       </div>
     </div>
   );
