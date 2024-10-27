@@ -136,12 +136,12 @@ export default function AddEmployeePage() {
             <div className="flex gap-2 w-full">
               <FormField
                 control={form.control}
-                name="name"
+                name="fixed_salary"
                 render={({ field }) => (
                   <FormItem className="w-1/2">
                     <FormLabel className="font-bold">Salary</FormLabel>
                     <FormControl>
-                      <Input placeholder="Salary" {...field} />
+                      <Input type="number" placeholder="Salary" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -196,7 +196,7 @@ export default function AddEmployeePage() {
               />
               <FormField
                 control={form.control}
-                name="email"
+                name="address"
                 render={({ field }) => (
                   <FormItem className="w-[66%]">
                     <FormLabel className="font-bold">Address</FormLabel>
@@ -211,12 +211,12 @@ export default function AddEmployeePage() {
             <div className="flex w-full gap-2">
               <FormField
                 control={form.control}
-                name="email"
+                name="username"
                 render={({ field }) => (
                   <FormItem className="w-[66%]">
                     <FormLabel className="font-bold">Username</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="UserName" {...field} />
+                      <Input placeholder="UserName" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
