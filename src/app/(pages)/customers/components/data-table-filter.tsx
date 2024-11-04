@@ -14,7 +14,6 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
-
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
