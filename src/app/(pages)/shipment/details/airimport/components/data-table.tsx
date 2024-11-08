@@ -65,7 +65,7 @@ export function DataTable<TData, TValue>({
     <div className="w-full">
       <div className="flex w-full justify-between pb-[10px] mb-[20px]">
         <div className="flex gap-3">
-          <Button variant="default" onClick={() => router.push(`${path}/add`)}>
+          <Button variant="default" onClick={() => router.push(`$shipment/details/add`)}>
             <CirclePlus className="mr-2" />
             <span>Add {path.slice(1, path.length)}</span>
           </Button>

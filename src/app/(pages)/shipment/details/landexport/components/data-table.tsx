@@ -23,8 +23,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Button } from "../../../../components/ui/button";
-import { Input } from "../../../../components/ui/input";
+import { Button } from "../../../../../../components/ui/button";
 
 import { CirclePlus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
