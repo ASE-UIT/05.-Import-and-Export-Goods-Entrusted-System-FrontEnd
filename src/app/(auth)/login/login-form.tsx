@@ -12,30 +12,54 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { z } from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-
-const LoginBody = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
-
-type LoginBodyType = z.infer<typeof LoginBody>;
+import { LoginBody, LoginBodyType } from "@/schema/auth.schema";
+import { useState } from "react";
+import useAuth from "@/hooks/use-auth";
+import { useRouter } from "next/navigation";
+import { ErrorType } from "@/types/error.type";
 
 const LoginForm = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const loginAction = useAuth.useLogin();
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
 
-  const onSubmit = form.handleSubmit((values) => {
-    console.log(values);
-  });
+  async function onSubmit(values: LoginBodyType) {
+    console.log({ values });
+    if (loading) return;
+    setLoading(true);
+    try {
+      const result = await loginAction.mutateAsync(values);
+      console.log({ result });
+      router.push("/dashboard");
+    } catch (error) {
+      console.error({ error });
+      switch ((error as ErrorType).statusCode) {
+        case 401:
+          form.setError("username", {
+            message: "Invalid username or password",
+          });
+          form.setError("password", {
+            message: "Invalid username or password",
+          });
+          break;
+        default:
+          console.error("Unknown error", error);
+          break;
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <Form {...form}>
@@ -46,15 +70,14 @@ const LoginForm = () => {
       >
         <FormField
           control={form.control}
-          name="email"
+          name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[16px]">Email</FormLabel>
+              <FormLabel className="text-[16px]">User Name</FormLabel>
               <FormControl>
                 <Input
                   className="h-[60px]"
-                  placeholder="Enter your email"
-                  type="email"
+                  placeholder="Enter your username"
                   {...field}
                 />
               </FormControl>
