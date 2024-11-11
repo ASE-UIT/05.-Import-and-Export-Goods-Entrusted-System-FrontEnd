@@ -80,8 +80,8 @@ QuoteReqStatus =
   "Cancelled";
 
 interface QuoteRequest {
-  quote_request_id: number;
-  customer_id: number;
+  quote_request_id: string;
+  customer_id: string;
   request_date: string;
   status: QuoteReqStatus;
   create_at: string;

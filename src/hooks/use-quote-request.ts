@@ -2,7 +2,6 @@ import quoteRequestAction from "@/apis/quote-request.api";
 import { CreateQuoteRequestType } from "@/schema/quote-request.schema";
 import { ErrorType } from "@/types/error.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Console } from "console";
 
 const useQuoteRequest ={
     useCreateQuoteRequest() {
@@ -29,6 +28,21 @@ const useQuoteRequest ={
             try {
             const result = await quoteRequestAction.getQuoteRequest();
             console.log("Hello");;
+            return result;
+            } catch (error) {
+            console.error("Error during get quote request:", error);
+            throw error;
+            }
+        },
+        retry: 0,
+        });
+    },
+    useGetQuoteRequestDetail(quoteRequestId: string, p0: { enabled: boolean; }) {
+        return useQuery({
+        queryKey: ["quote-request-detail", quoteRequestId],
+        queryFn: async () => {
+            try {
+            const result = await quoteRequestAction.getQuoteRequestDetails(quoteRequestId);
             return result;
             } catch (error) {
             console.error("Error during get quote request:", error);
