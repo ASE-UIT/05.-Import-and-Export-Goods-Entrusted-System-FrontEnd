@@ -13,7 +13,8 @@ export default function QuoteRequestManagementPage() {
   if (error) {
     return <div>Error loading quote requests: {error.message}</div>;
   }
-  const transformedData = data ? [mapToQuoteRequest(data)] : [];
+  console.log(data);
+  const transformedData = data ? mapToQuoteRequest(data) : [];
   return (
     <div className="flex flex-col p-[28px] w-full h-[calc(100vh-60px)] flex-grow">
       <div className="flex flex-col w-full gap-[20px]">
