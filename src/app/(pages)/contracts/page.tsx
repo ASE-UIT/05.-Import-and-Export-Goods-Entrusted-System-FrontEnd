@@ -4,25 +4,23 @@ import { DataTable } from "@/app/(pages)/contracts/components/data-table";
 import { columns, IContract } from "./components/columns";
 import useContract from "@/hooks/use-contract";
 import { useEffect, useState } from "react";
-import { ContractDetailsType } from "@/schema/contract.schema";
+import { format } from "date-fns";
 
 export default function ContractManagementPage() {
   const [contractData, setContractData] = useState<IContract[]>([]);
-  const { data, isLoading, error } = useContract.useGetContracts();
+  const { data, isLoading, error } = useContract.useGetQuoteRequest();
 
   useEffect(() => {
     if (data) {
       setContractData(
-        data.data.map((contract: ContractDetailsType) => ({
+        data.data.map((contract: IContract) => ({
           id: contract.id,
-          startDate: contract.startDate.toString(),
-          endDate: contract.endDate.toString(),
-          status: contract.status,
-          contractDate: contract.contractDate.toString(),
-          employeeId: contract.employeeId,
           quotationId: contract.quotationId,
-          createdAt: contract.createdAt,
-          updatedAt: contract.updatedAt,
+          employeeId: contract.employeeId,
+          startDate: format(contract.startDate, "yyyy-MM-dd"),
+          contractDate: format(contract.contractDate, "yyyy-MM-dd"),
+          endDate: format(contract.endDate, "yyyy-MM-dd"),
+          status: contract.status,
         }))
       );
     }
