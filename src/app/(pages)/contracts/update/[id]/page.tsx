@@ -2,9 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { DatePickerDemo } from "@/components/date-picker";
 import { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { format, isSameDay } from "date-fns";
+import { useParams, usePathname } from "next/navigation";
+import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 
 import {
@@ -34,396 +35,272 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import useContract from "@/hooks/use-contract";
-import {
-  ContractDetailsType,
-  UpdateContractType,
-} from "@/schema/contract.schema";
 
-const formSchema = z
-  .object({
-    quotationId: z.string().optional(),
-    employeeId: z.string().optional(),
-    startDate: z.date(),
-    endDate: z.date(),
-    contractDate: z.date(),
-    status: z.string(),
-  })
-  .refine(
-    (data) => {
-      return new Date(data.endDate) > new Date(data.startDate);
-    },
-    {
-      message: "End Date must be greater than start date",
-      path: ["endDate"],
-    }
-  )
-  .refine(
-    (data) => {
-      return new Date(data.startDate) >= new Date(data.contractDate);
-    },
-    {
-      message: "Contract Date must be less than or equal to start date",
-      path: ["contractDate"],
-    }
-  );
+const formSchema = z.object({
+  quotation_id: z.string(),
+  employee_id: z.string(),
+  start_date: z.date(),
+  end_date: z.date(),
+  contract_date: z.date(),
+  status: z.string(),
+});
 
 export default function UpdateContractPage() {
-  const [startDate, setStartDate] = useState<Date | undefined>();
-  const [endDate, setEndDate] = useState<Date | undefined>();
-  const [contractDate, setContractDate] = useState<Date | undefined>();
-
-  const [isStartDateOpen, setStartDateOpen] = useState(false);
-  const [isEndDateOpen, setEndDateOpen] = useState(false);
-  const [isContractDateOpen, setContractDateOpen] = useState(false);
-
-  const [contract, setContract] = useState<ContractDetailsType>();
-  const path = usePathname();
-  const id = path.split("/").pop();
-  const { data, error } = useContract.useGetContractDetails(id);
-
-  const router = useRouter();
-
-  const { mutate: updateContract, status } = useContract.useUpdateContract(
-    id,
-    router
-  );
-
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [contractDate, setContractDate] = useState<Date | undefined>(undefined);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  const handleStartSelect = (date: Date) => {
-    setStartDate(date);
-    setStartDateOpen(false);
-  };
-
-  const handleEndSelect = (date: Date) => {
-    setEndDate(date);
-    setEndDateOpen(false);
-  };
-
-  const handleContractSelect = (date: Date) => {
-    setContractDate(date);
-    setContractDateOpen(false);
-  };
-
   useEffect(() => {
-    if (data && data.data.length > 0) {
-      const contractData = data.data[0];
-      setContract({
-        id: contractData.id,
-        quotationId: contractData.quotationId,
-        employeeId: contractData.employeeId,
-        startDate: contractData.startDate,
-        contractDate: contractData.contractDate,
-        endDate: contractData.endDate,
-        status: contractData.status,
-        createdAt: contractData.createdAt,
-        updatedAt: contractData.updatedAt,
-      });
-      setStartDate(new Date(contractData.startDate));
-      setEndDate(new Date(contractData.endDate));
-      setContractDate(new Date(contractData.contractDate));
-      form.setValue("status", contractData.status);
-      form.setValue("quotationId", contractData.quotationId);
-      form.setValue("employeeId", contractData.employeeId);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (startDate) form.setValue("startDate", startDate);
+    if (startDate) form.setValue("start_date", startDate);
   }, [startDate]);
 
   useEffect(() => {
-    if (endDate) form.setValue("endDate", endDate);
+    if (endDate) form.setValue("end_date", endDate);
   }, [endDate]);
 
   useEffect(() => {
-    if (contractDate) form.setValue("contractDate", contractDate);
+    if (contractDate) form.setValue("contract_date", contractDate);
   }, [contractDate]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const updateContractBody: Partial<UpdateContractType> = {
-      ...(!isSameDay(values.startDate, contract?.startDate || new Date()) && {
-        startDate: values.startDate.toISOString(),
-      }),
-      ...(!isSameDay(values.endDate, contract?.endDate || new Date()) && {
-        endDate: values.endDate.toISOString(),
-      }),
-      ...(!isSameDay(
-        values.contractDate,
-        contract?.contractDate || new Date()
-      ) && {
-        contractDate: values.contractDate.toISOString(),
-      }),
-      ...(values.status.toUpperCase() !== contract?.status.toUpperCase() && {
-        status: values.status.toUpperCase(),
-      }),
-    };
-    if (Object.keys(updateContractBody).length > 0) {
-      updateContract(updateContractBody);
-    } else {
-      form.setError("root", {
-        type: "validate",
-        message:
-          "No changes detected. The current data is identical to the previous version.",
-      });
-    }
+    console.log({
+      ...values,
+      start_date: values.start_date
+        ? format(values.start_date, "d-M-yyyy")
+        : undefined,
+      end_date: values.end_date
+        ? format(values.end_date, "d-M-yyyy")
+        : undefined,
+      contract_date: values.contract_date
+        ? format(values.contract_date, "d-M-yyyy")
+        : undefined,
+    });
   }
 
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
         <span className="text-3xl font-bold">Update Contract</span>
+        <span></span>
       </div>
-      {error ? (
-        error.message
-      ) : (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            encType="multipart/form-data"
-          >
-            <div className="flex flex-col items-center w-[600px] gap-4 py-4">
-              {/* Quotation ID */}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          encType="multipart/form-data"
+        >
+          <div className="flex flex-col items-center w-[600px] gap-4 py-4">
+            {/* Quotation ID */}
+            <FormField
+              control={form.control}
+              name="quotation_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-bold">Quotation ID</FormLabel>
+                  <FormControl>
+                    {/* Dùng input với thuộc tính readOnly */}
+                    <Input
+                      value={field.value || "ID"}
+                      readOnly
+                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Employee ID */}
+            <FormField
+              control={form.control}
+              name="employee_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-bold">Employee ID</FormLabel>
+                  <FormControl>
+                    {/* Dùng input với thuộc tính readOnly */}
+                    <Input
+                      value={field.value || "ID"}
+                      readOnly
+                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="w-[500px] flex space-x-[12px]">
+              {/* Start Date */}
               <FormField
                 control={form.control}
-                name="quotationId"
+                name="start_date"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-1/2">
                     <FormLabel className="text-[16px] font-bold">
-                      Quotation ID
+                      Start Date
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        value={contract?.id || field.value || ""}
-                        readOnly
-                        className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
-                      />
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={`w-full h-[60px] justify-start text-left font-normal ${
+                              !startDate ? "text-muted-foreground" : ""
+                            }`}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {startDate ? (
+                              format(startDate, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={startDate}
+                            onSelect={(date) => setStartDate(date)}
+                          />
+                        </PopoverContent>
+                      </Popover>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-              {/* Employee ID */}
+              {/* End Date */}
               <FormField
                 control={form.control}
-                name="employeeId"
+                name="end_date"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-1/2">
                     <FormLabel className="text-[16px] font-bold">
-                      Employee ID
+                      End Date
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        value={contract?.employeeId || field.value || ""}
-                        readOnly
-                        className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
-                      />
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={`w-full h-[60px] justify-start text-left font-normal ${
+                              !endDate ? "text-muted-foreground" : ""
+                            }`}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {endDate ? (
+                              format(endDate, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={endDate}
+                            onSelect={(date) => setEndDate(date)}
+                          />
+                        </PopoverContent>
+                      </Popover>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-              <div className="w-[500px] flex space-x-[12px]">
-                {/* Start Date */}
-                <FormField
-                  control={form.control}
-                  name="startDate"
-                  render={() => (
-                    <FormItem className="w-1/2">
-                      <FormLabel className="text-[16px] font-bold">
-                        Start Date
-                      </FormLabel>
-                      <FormControl>
-                        <Popover
-                          open={isStartDateOpen}
-                          onOpenChange={setStartDateOpen}
-                        >
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={`w-full h-[60px] justify-start text-left font-normal ${
-                                !startDate ? "text-muted-foreground" : ""
-                              }`}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {startDate ? (
-                                format(startDate, "PPP")
-                              ) : (
-                                <span>
-                                  {contract &&
-                                    format(contract.startDate, "PPP")}
-                                </span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={startDate}
-                              onSelect={(date) =>
-                                handleStartSelect(date || new Date())
-                              }
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* End Date */}
-                <FormField
-                  control={form.control}
-                  name="endDate"
-                  render={() => (
-                    <FormItem className="w-1/2">
-                      <FormLabel className="text-[16px] font-bold">
-                        End Date
-                      </FormLabel>
-                      <FormControl>
-                        <Popover
-                          open={isEndDateOpen}
-                          onOpenChange={setEndDateOpen}
-                        >
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={`w-full h-[60px] justify-start text-left font-normal ${
-                                !endDate ? "text-muted-foreground" : ""
-                              }`}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {endDate ? (
-                                format(endDate, "PPP")
-                              ) : (
-                                <span>
-                                  {contract && format(contract.endDate, "PPP")}
-                                </span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={endDate}
-                              onSelect={(date) =>
-                                handleEndSelect(date || new Date())
-                              }
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="w-[500px] flex space-x-[12px]">
-                {/* Contract Date */}
-                <FormField
-                  control={form.control}
-                  name="contractDate"
-                  render={() => (
-                    <FormItem className="w-1/2">
-                      <FormLabel className="text-[16px] font-bold">
-                        Contract Date
-                      </FormLabel>
-                      <FormControl>
-                        <Popover
-                          open={isContractDateOpen}
-                          onOpenChange={setContractDateOpen}
-                        >
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={`w-full h-[60px] justify-start text-left font-normal ${
-                                !contractDate ? "text-muted-foreground" : ""
-                              }`}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {contractDate ? (
-                                format(contractDate, "PPP")
-                              ) : (
-                                <span>
-                                  {contract &&
-                                    format(contract.contractDate, "PPP")}
-                                </span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={contractDate}
-                              onSelect={(date) =>
-                                handleContractSelect(date || new Date())
-                              }
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              {/* Status */}
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold">Status</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={contract?.status}
-                      >
-                        <SelectTrigger className="w-[500px] h-[60px]">
-                          <SelectValue placeholder={contract?.status} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Pending">PENDING</SelectItem>
-                          <SelectItem value="Active">ACTIVE</SelectItem>
-                          <SelectItem value="Terminated">TERMINATED</SelectItem>
-                          <SelectItem value="Expired">EXPIRED</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormMessage className="text-[14px]">
-                {form.formState.errors.root?.message}
-              </FormMessage>
             </div>
-            {/* Button */}
-            <div className="flex justify-center mt-6">
-              <div className="w-1/2 flex gap-2.5">
-                <Link href="/contracts" className="w-1/2 h-14">
-                  <Button
-                    className="w-full h-10 text-lg"
-                    variant={"outline"}
-                    type="button"
-                  >
-                    Cancel
-                  </Button>
-                </Link>
-                <Button className="w-1/2 h-10 text-lg" type="submit">
-                  {status === "pending" ? "Updating..." : "Save"}
+            <div className="w-[500px] flex space-x-[12px]">
+              {/* Contract Date */}
+              <FormField
+                control={form.control}
+                name="contract_date"
+                render={({ field }) => (
+                  <FormItem className="w-1/2">
+                    <FormLabel className="text-[16px] font-bold">
+                      Contract Date
+                    </FormLabel>
+                    <FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={`w-full h-[60px] justify-start text-left font-normal ${
+                              !contractDate ? "text-muted-foreground" : ""
+                            }`}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {contractDate ? (
+                              format(contractDate, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={contractDate}
+                            onSelect={(date) => setContractDate(date)}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Status */}
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-bold">Status</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-[500px] h-[60px]">
+                        <SelectValue placeholder="Select a status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="Active">Active</SelectItem>
+                        <SelectItem value="Terminated">Terminated</SelectItem>
+                        <SelectItem value="Expired">Expired</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* Button */}
+          <div className="flex justify-center mt-6">
+            <div className="w-1/2 flex gap-2.5">
+              <Link href="/contract" className="w-1/2 h-14">
+                <Button
+                  className="w-full h-10 text-lg"
+                  variant={"outline"}
+                  type="button"
+                >
+                  Cancel
                 </Button>
-              </div>
+              </Link>
+              <Button className="w-1/2 h-10 text-lg" type="submit">
+                Save
+              </Button>
             </div>
-          </form>
-        </Form>
-      )}
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }
