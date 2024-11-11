@@ -2,12 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { DatePickerDemo } from '@/components/date-picker';
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
 import { format } from "date-fns";
-import { Input } from "@/components/ui/input";
-
 import {
   Form,
   FormField,
@@ -26,24 +22,25 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import "react-datepicker/dist/react-datepicker.css"; 
+import "react-datepicker/dist/react-datepicker.css";
 import React from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 
-
 const formSchema = z.object({
-  quotation_id: z.string(),
-  employee_id: z.string(),
-  start_date: z.date(),
-  end_date: z.date(),
-  contract_date: z.date(),
-  status: z.string(),
+  quotationId: z.string(),
+  employeeId: z.string(),
+  startDate: z.date(),
+  endDate: z.date(),
+  contractDate: z.date(),
 });
 
-export default function UpdateContractPage() {
-  
+export default function AddContractPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -53,85 +50,105 @@ export default function UpdateContractPage() {
   const [contractDate, setContractDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
-    if (startDate) form.setValue("start_date", startDate);
+    if (startDate) form.setValue("startDate", startDate);
   }, [startDate]);
 
   useEffect(() => {
-    if (endDate) form.setValue("end_date", endDate);
+    if (endDate) form.setValue("endDate", endDate);
   }, [endDate]);
 
   useEffect(() => {
-    if (contractDate) form.setValue("contract_date", contractDate);
+    if (contractDate) form.setValue("contractDate", contractDate);
   }, [contractDate]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log({
       ...values,
-      start_date: values.start_date
-        ? format(values.start_date, "d-M-yyyy")
+      start_date: values.startDate
+        ? format(values.startDate, "d-M-yyyy")
         : undefined,
-      end_date: values.end_date ? format(values.end_date, "d-M-yyyy") : undefined,
-      contract_date: values.contract_date ? format(values.contract_date, "d-M-yyyy") : undefined,
+      end_date: values.endDate ? format(values.endDate, "d-M-yyyy") : undefined,
+      contract_date: values.contractDate
+        ? format(values.contractDate, "d-M-yyyy")
+        : undefined,
     });
   }
 
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
-    <div className="flex w-full justify-between items-end">
-      <span className="text-3xl font-bold">Update Contract</span>
-    </div>
+      <div className="flex w-full justify-between items-end">
+        <span className="text-3xl font-bold">Add Contract</span>
+      </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} encType="multipart/form-data">
-        <div className="flex flex-col items-center w-[600px] gap-4 py-4">
-          {/* Quotation ID */}
-          <FormField
-          control={form.control}
-            name="quotation_id"
-            render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-bold">Quotation ID</FormLabel>
-              <FormControl>
-              {/* Dùng input với thuộc tính readOnly */}
-              <Input
-                value={field.value || "ID"} 
-                readOnly  
-                className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed" 
-              />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          encType="multipart/form-data"
+        >
+          <div className="flex flex-col items-center w-[600px] gap-4 py-4">
+            {/* Quotation ID */}
+            <FormField
+              control={form.control}
+              name="quotationId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-bold">Quotation ID</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-[500px] h-[60px]">
+                        <SelectValue placeholder="Select an ID" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="01">01</SelectItem>
+                        <SelectItem value="02">02</SelectItem>
+                        <SelectItem value="03">03</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-
-          {/* Employee ID */}
-          <FormField
-          control={form.control}
-            name="employee_id"
-            render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-bold">Employee ID</FormLabel>
-              <FormControl>
-              {/* Dùng input với thuộc tính readOnly */}
-              <Input
-                value={field.value || "ID"} 
-                readOnly  
-                className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed" 
-              />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            {/* Employee ID */}
+            <FormField
+              control={form.control}
+              name="employeeId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-bold">Employee ID</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-[500px] h-[60px]">
+                        <SelectValue placeholder="Select an ID" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="01">01</SelectItem>
+                        <SelectItem value="02">02</SelectItem>
+                        <SelectItem value="03">03</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <div className="w-[500px] flex space-x-[12px]">
-            {/* Start Date */}
-            <FormField
+              {/* Start Date */}
+              <FormField
                 control={form.control}
-                name="start_date"
+                name="startDate"
                 render={({ field }) => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">Start Date</FormLabel>
+                    <FormLabel className="text-[16px] font-bold">
+                      Start Date
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -162,13 +179,15 @@ export default function UpdateContractPage() {
                   </FormItem>
                 )}
               />
-            {/* End Date */}
-            <FormField
+              {/* End Date */}
+              <FormField
                 control={form.control}
-                name="end_date"
+                name="endDate"
                 render={({ field }) => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">End Date</FormLabel>
+                    <FormLabel className="text-[16px] font-bold">
+                      End Date
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -201,13 +220,15 @@ export default function UpdateContractPage() {
               />
             </div>
             <div className="w-[500px] flex space-x-[12px]">
-            {/* Contract Date */} 
-            <FormField
+              {/* Contract Date */}
+              <FormField
                 control={form.control}
-                name="contract_date"
+                name="contractDate"
                 render={({ field }) => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">Contract Date</FormLabel>
+                    <FormLabel className="text-[16px] font-bold">
+                      Contract Date
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -239,40 +260,16 @@ export default function UpdateContractPage() {
                 )}
               />
             </div>
-
-          {/* Status */}
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-bold">Status</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger className="w-[500px] h-[60px]">
-                      <SelectValue placeholder="Select a status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Pending">Pending</SelectItem>
-                      <SelectItem value="Active">Active</SelectItem>
-                      <SelectItem value="Terminated">Terminated</SelectItem>
-                      <SelectItem value="Expired">Expired</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+          </div>
           {/* Button */}
           <div className="flex justify-center mt-6">
-          <div className="w-1/2 flex gap-2.5">
+            <div className="w-1/2 flex gap-2.5">
               <Link href="/contract" className="w-1/2 h-14">
-                <Button className="w-full h-10 text-lg" variant={"outline"} type="button">
+                <Button
+                  className="w-full h-10 text-lg"
+                  variant={"outline"}
+                  type="button"
+                >
                   Cancel
                 </Button>
               </Link>
