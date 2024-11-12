@@ -8,7 +8,7 @@ import { format } from "date-fns";
 
 export default function ContractManagementPage() {
   const [contractData, setContractData] = useState<IContract[]>([]);
-  const { data, isLoading, error } = useContract.useGetQuoteRequest();
+  const { data, isLoading, error } = useContract.useGetContracts();
 
   useEffect(() => {
     if (data) {
