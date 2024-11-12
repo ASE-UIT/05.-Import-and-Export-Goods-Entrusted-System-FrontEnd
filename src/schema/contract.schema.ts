@@ -9,7 +9,13 @@ export const CreateContractBody = z.object({
   quotationId: z.string(),
 });
 
+export const UpdateContractBody = z.object({
+  startDate: z.string(),
+  endDate: z.string(),
+  contractDate: z.string(),
+  status: z.string(),
+});
 
-export const CreateContractRes = z.object({
-    
-})
+export const CreateContractRes = z.object({});
+
+export type UpdateContractType = z.TypeOf<typeof UpdateContractBody>;
