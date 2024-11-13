@@ -1,5 +1,10 @@
 import contractAction from "@/apis/contract.api";
-import { UpdateContractType } from "@/schema/contract.schema";
+import { IContract } from "@/app/(pages)/contracts/components/columns";
+import {
+  CreateContractBody,
+  CreateContractType,
+  UpdateContractType,
+} from "@/schema/contract.schema";
 import { ErrorType } from "@/types/error.type";
 import {
   useMutation,
@@ -10,12 +15,44 @@ import {
 import { useRouter } from "next/navigation";
 
 const useContract = {
+  useCreateContract(router: ReturnType<typeof useRouter>) {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: (createContractBody: CreateContractType) =>
+        contractAction.createContract(createContractBody),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["contracts"],
+        });
+        router.push("/contracts");
+      },
+      onError: (error: ErrorType) => {
+        console.error("Error during update contract:", error);
+        throw error;
+      },
+    });
+  },
   useGetContracts() {
     return useQuery({
       queryKey: ["contracts"],
       queryFn: async () => {
         try {
           const result = await contractAction.getContracts();
+          return result;
+        } catch (error) {
+          console.error("Error during get contracts:", error);
+          throw error;
+        }
+      },
+      retry: 0,
+    });
+  },
+  useGetBookedQuotations() {
+    return useQuery({
+      queryKey: ["bookedQuotations"],
+      queryFn: async () => {
+        try {
+          const result = await contractAction.getBookedQuotations();
           return result;
         } catch (error) {
           console.error("Error during get contracts:", error);

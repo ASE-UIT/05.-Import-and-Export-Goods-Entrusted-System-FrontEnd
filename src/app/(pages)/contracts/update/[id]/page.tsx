@@ -2,9 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { DatePickerDemo } from "@/components/date-picker";
 import { useState, useEffect } from "react";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { Input } from "@/components/ui/input";
 
@@ -36,9 +35,10 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import useContract from "@/hooks/use-contract";
-import { IContract } from "../../components/columns";
-import { UpdateContractType } from "@/schema/contract.schema";
-import { useMutation } from "@tanstack/react-query";
+import {
+  ContractDetailsType,
+  UpdateContractType,
+} from "@/schema/contract.schema";
 
 const formSchema = z
   .object({
@@ -77,7 +77,7 @@ export default function UpdateContractPage() {
   const [isEndDateOpen, setEndDateOpen] = useState(false);
   const [isContractDateOpen, setContractDateOpen] = useState(false);
 
-  const [contract, setContract] = useState<IContract>();
+  const [contract, setContract] = useState<ContractDetailsType>();
   const path = usePathname();
   const id = path.split("/").pop();
   const { data, error } = useContract.useGetContractDetails(id);
@@ -115,14 +115,16 @@ export default function UpdateContractPage() {
         id: contractData.id,
         quotationId: contractData.quotationId,
         employeeId: contractData.employeeId,
-        startDate: format(contractData.startDate, "yyyy-MM-dd"),
-        contractDate: format(contractData.contractDate, "yyyy-MM-dd"),
-        endDate: format(contractData.endDate, "yyyy-MM-dd"),
+        startDate: contractData.startDate,
+        contractDate: contractData.contractDate,
+        endDate: contractData.endDate,
         status: contractData.status,
+        createdAt: contractData.createdAt,
+        updatedAt: contractData.updatedAt,
       });
-      setStartDate(contractData.startDate);
-      setEndDate(contractData.endDate);
-      setContractDate(contractData.contractDate);
+      setStartDate(parseISO(contractData.startDate));
+      setEndDate(parseISO(contractData.endDate));
+      setContractDate(parseISO(contractData.contractDate));
       form.setValue("status", contractData.status);
     }
   }, [data]);
@@ -149,7 +151,7 @@ export default function UpdateContractPage() {
       ...(values.contractDate !== contract?.contractDate && {
         contractDate: values.contractDate,
       }),
-      ...(values.status !== contract?.status && {
+      ...(values.status.toUpperCase() !== contract?.status && {
         status: values.status.toUpperCase(),
       }),
     };
@@ -379,7 +381,7 @@ export default function UpdateContractPage() {
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        defaultValue={contract?.status}
                       >
                         <SelectTrigger className="w-[500px] h-[60px]">
                           <SelectValue placeholder={contract?.status} />
