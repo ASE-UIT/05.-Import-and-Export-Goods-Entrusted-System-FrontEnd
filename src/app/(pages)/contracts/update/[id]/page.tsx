@@ -414,7 +414,7 @@ export default function UpdateContractPage() {
                     Cancel
                   </Button>
                 </Link>
-                <Button className="w-full h-10 text-lg" type="submit">
+                <Button className="w-1/2 h-10 text-lg" type="submit">
                   {status === "pending" ? "Updating..." : "Save"}
                 </Button>
               </div>
