@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import { IAirFreight } from "..";
+import { AirFreight } from "@/types/data";
 
-export const airColumns: ColumnDef<IAirFreight>[] = [
+export const airColumns: ColumnDef<AirFreight>[] = [
   {
-    accessorKey: "provider_name",
+    accessorKey: "provider_id",
     header: ({ column }) => {
       return (
         <Button
@@ -16,7 +16,7 @@ export const airColumns: ColumnDef<IAirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Provider Name
+          Provider ID
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -37,6 +37,7 @@ export const airColumns: ColumnDef<IAirFreight>[] = [
       );
     },
     cell: ({ row }) => <div>{row.getValue("freight_type")}</div>,
+    cell: ({ row }) => <div>{row.getValue("provider_id")}</div>,
   },
   {
     accessorKey: "origin",
@@ -90,23 +91,6 @@ export const airColumns: ColumnDef<IAirFreight>[] = [
     cell: ({ row }) => row.getValue("transit_time"),
   },
   {
-    accessorKey: "transit",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Transit
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("transit"),
-  },
-  {
     accessorKey: "valid_from",
     header: ({ column }) => {
       return (
@@ -143,20 +127,37 @@ export const airColumns: ColumnDef<IAirFreight>[] = [
   {
     accessorKey: "note",
     header: () => {
+    accessorKey: "addition_fee_breakdown",
+    header: () => {
       return (
         <Button
           className="pl-0"
           variant="ghost"
           style={{ backgroundColor: "transparent" }}
         >
-          Note
+          Addition Fee Breakdown
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("note"),
+    cell: ({ row }) => row.getValue("addition_fee_breakdown"),
   },
   {
-    accessorKey: "free_time",
+    accessorKey: "schedule",
+    header: () => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+        >
+          Schedule
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("schedule"),
+  },
+  {
+    accessorKey: "price_0K",
     header: ({ column }) => {
       return (
         <Button
@@ -165,15 +166,15 @@ export const airColumns: ColumnDef<IAirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Free Time
+          Price 0K
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("free_time"),
+    cell: ({ row }) => row.getValue("price_0K"),
   },
   {
-    accessorKey: "forty_five_K",
+    accessorKey: "price_45K",
     header: ({ column }) => {
       return (
         <Button
@@ -182,15 +183,15 @@ export const airColumns: ColumnDef<IAirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          45K
+          Price 45K
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("forty_five_K"),
+    cell: ({ row }) => row.getValue("price_45K"),
   },
   {
-    accessorKey: "one_hundred_K",
+    accessorKey: "price_100K",
     header: ({ column }) => {
       return (
         <Button
@@ -199,15 +200,15 @@ export const airColumns: ColumnDef<IAirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          100K
+          Price 100K
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("one_hundred_K"),
+    cell: ({ row }) => row.getValue("price_100K"),
   },
   {
-    accessorKey: "three_hundred_K",
+    accessorKey: "price_300K",
     header: ({ column }) => {
       return (
         <Button
@@ -216,15 +217,15 @@ export const airColumns: ColumnDef<IAirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          300K
+          Price 300K
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("three_hundred_K"),
+    cell: ({ row }) => row.getValue("price_300K"),
   },
   {
-    accessorKey: "five_hundred_K",
+    accessorKey: "price_500K",
     header: ({ column }) => {
       return (
         <Button
@@ -233,79 +234,11 @@ export const airColumns: ColumnDef<IAirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          500K
+          Price 500K
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("five_hundred_K"),
-  },
-  {
-    accessorKey: "FSC",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          FSC
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("FSC"),
-  },
-  {
-    accessorKey: "AMS_fees",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          AMS Fees
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("AMS_fees"),
-  },
-  {
-    accessorKey: "SCC",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          SCC
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("SCC"),
-  },
-  {
-    accessorKey: "routine",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Routine
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("routine"),
+    cell: ({ row }) => row.getValue("price_500K"),
   },
 ];

@@ -3,9 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import { LandFreight } from "@/types/data";
+import { FCL } from "@/types/data";
 
-export const landColumns: ColumnDef<LandFreight>[] = [
+export const airColumns: ColumnDef<FCL>[] = [
   {
     accessorKey: "provider_id",
     header: ({ column }) => {
@@ -139,7 +139,7 @@ export const landColumns: ColumnDef<LandFreight>[] = [
     cell: ({ row }) => row.getValue("schedule"),
   },
   {
-    accessorKey: "price_0_100",
+    accessorKey: "price_20dc",
     header: ({ column }) => {
       return (
         <Button
@@ -148,15 +148,15 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 0-100
+          Price 20DC
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_0_100"),
+    cell: ({ row }) => row.getValue("price_20dc"),
   },
   {
-    accessorKey: "price_100_200",
+    accessorKey: "price_40dc",
     header: ({ column }) => {
       return (
         <Button
@@ -165,15 +165,15 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 100-200
+          Price 40DC
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_100_200"),
+    cell: ({ row }) => row.getValue("price_40dc"),
   },
   {
-    accessorKey: "price_200_500",
+    accessorKey: "price_40hc",
     header: ({ column }) => {
       return (
         <Button
@@ -182,15 +182,15 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 200-500
+          Price 40HC
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_200_500"),
+    cell: ({ row }) => row.getValue("price_40hc"),
   },
   {
-    accessorKey: "price_500_1500",
+    accessorKey: "price_20rf",
     header: ({ column }) => {
       return (
         <Button
@@ -199,15 +199,15 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 500-1500
+          Price 20RF
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_500_1500"),
+    cell: ({ row }) => row.getValue("price_20rf"),
   },
   {
-    accessorKey: "price_1500_5000",
+    accessorKey: "price_40rf",
     header: ({ column }) => {
       return (
         <Button
@@ -216,45 +216,11 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 1500-5000
+          Price 40RF
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_1500_5000"),
-  },
-  {
-    accessorKey: "price_5000_10000",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Price 5000-10000
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("price_5000_10000"),
-  },
-  {
-    accessorKey: "price_10000",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Price 10000+
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("price_10000"),
+    cell: ({ row }) => row.getValue("price_40rf"),
   },
 ];

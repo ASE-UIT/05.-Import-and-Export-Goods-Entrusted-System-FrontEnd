@@ -1,3 +1,5 @@
+import { FREIGHT_TYPE, WEEKDAY } from "@/configs/enum";
+
 PaymentStatus =
   "Pending" | "Completed" | "Cancelled" | "Failed" | "Refunded" | "On Hold";
 
@@ -121,4 +123,52 @@ interface Quotation {
   expired_date: string;
   freight_id: number;
   status: QuotationStatus;
+}
+
+interface Freight {
+  id: string;
+  freightType: FREIGHT_TYPE;
+  origin: string;
+  destination: string;
+  transitTime: number;
+  additionFee: number;
+  validFrom: Date;
+  validUntil: Date;
+  addition_fee_breakdown: string;
+  schedule: WEEKDAY;
+  providerId: string;
+}
+
+interface LandFreight {
+  price_0_100: number;
+  price_100_200: number;
+  price_200_500: number;
+  price_500_1500: number;
+  price_1500_5000: number;
+  price_5000_10000: number;
+  price_10000: number;
+  freight_id: string;
+}
+
+interface AirFreight {
+  price_0K: number;
+  price_45K: number;
+  price_100K: number;
+  price_300K: number;
+  price_500K: number;
+  freight_id: string;
+}
+
+interface LCL {
+  cost: number;
+  freight_id: string;
+}
+
+interface FCL {
+  price_20dc: number;
+  price_40dc: number;
+  price_40hc: number;
+  price_20rf: number;
+  price_40rf: number;
+  freight_id: string;
 }
