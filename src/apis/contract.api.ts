@@ -1,13 +1,34 @@
-import { UpdateContractType } from "@/schema/contract.schema";
+import {
+  BookedQuotationsType,
+  ContractDetailsType,
+  ContractsResType,
+  CreateContractBody,
+  CreateContractType,
+  UpdateContractType,
+} from "@/schema/contract.schema";
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
 import axios from "axios";
 
 const contractAction = {
-  async createContract() {},
+  async createContract(createContractBody: CreateContractType) {
+    try {
+      const response = await http.post("v1/contracts", createContractBody);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const createContractError = error.response.data as ErrorType;
+        console.error("Error during create contract:", createContractError);
+        throw createContractError;
+      } else {
+        console.error("Unexpected error during create contract:", error);
+        throw error;
+      }
+    }
+  },
   async getContracts() {
     try {
-      const response = await http.get("v1/contracts");
+      const response = await http.get<ContractsResType>("v1/contracts");
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
@@ -20,9 +41,28 @@ const contractAction = {
       }
     }
   },
+  async getBookedQuotations() {
+    try {
+      const response = await http.get<BookedQuotationsType>(
+        "v1/quotations?status=BOOKED"
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const getBookedQuotationsError = error.response.data as ErrorType;
+        console.error("Error during get contracts:", getBookedQuotationsError);
+        throw getBookedQuotationsError;
+      } else {
+        console.error("Unexpected error during get contracts:", error);
+        throw error;
+      }
+    }
+  },
   async getContractDetails(id: string | undefined) {
     try {
-      const response = await http.get(`v1/contracts?id=${id}`);
+      const response = await http.get<ContractsResType>(
+        `v1/contracts?id=${id}`
+      );
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {

@@ -28,7 +28,6 @@ export function DataTableFilter<TData>({
   const [currentFilter, setCurrentFilter] = useState<string>(
     filterableColumns[0]
   );
-  console.log(filterableColumns);
   return (
     <div className="flex gap-[5px] items-center">
       <div className="w-[300px] ">

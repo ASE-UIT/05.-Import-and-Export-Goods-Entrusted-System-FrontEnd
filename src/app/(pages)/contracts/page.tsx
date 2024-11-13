@@ -5,22 +5,25 @@ import { columns, IContract } from "./components/columns";
 import useContract from "@/hooks/use-contract";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
+import { ContractDetailsType } from "@/schema/contract.schema";
 
 export default function ContractManagementPage() {
-  const [contractData, setContractData] = useState<IContract[]>([]);
+  const [contractData, setContractData] = useState<ContractDetailsType[]>([]);
   const { data, isLoading, error } = useContract.useGetContracts();
 
   useEffect(() => {
     if (data) {
       setContractData(
-        data.data.map((contract: IContract) => ({
+        data.data.map((contract: ContractDetailsType) => ({
           id: contract.id,
-          quotationId: contract.quotationId,
-          employeeId: contract.employeeId,
-          startDate: format(contract.startDate, "yyyy-MM-dd"),
-          contractDate: format(contract.contractDate, "yyyy-MM-dd"),
-          endDate: format(contract.endDate, "yyyy-MM-dd"),
+          startDate: contract.startDate,
+          endDate: contract.endDate,
           status: contract.status,
+          contractDate: contract.contractDate,
+          employeeId: contract.employeeId,
+          quotationId: contract.quotationId,
+          createdAt: contract.createdAt,
+          updatedAt: contract.updatedAt,
         }))
       );
     }
