@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import StatusBadge from "@/components/status-badge";
 import Link from "next/link";
-import { Label } from "@radix-ui/react-label";
+import { format } from "date-fns";
 
 export interface IContract {
   id: string;
@@ -84,7 +84,7 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("startDate"),
+    cell: ({ row }) => format(row.getValue("startDate"), "yyyy-MM-dd"),
     sortingFn: (a, b) =>
       new Date(a.original.startDate).getTime() -
       new Date(b.original.startDate).getTime(),
@@ -104,7 +104,7 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("contractDate"),
+    cell: ({ row }) => format(row.getValue("contractDate"), "yyyy-MM-dd"),
     sortingFn: (a, b) =>
       new Date(a.original.contractDate).getTime() -
       new Date(b.original.contractDate).getTime(),
@@ -124,7 +124,7 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("endDate"),
+    cell: ({ row }) => format(row.getValue("endDate"), "yyyy-MM-dd"),
     sortingFn: (a, b) =>
       new Date(a.original.endDate).getTime() -
       new Date(b.original.endDate).getTime(),
