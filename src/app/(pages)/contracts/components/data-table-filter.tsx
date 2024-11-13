@@ -3,6 +3,8 @@
 import { Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
+
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import {
@@ -25,7 +27,11 @@ export function DataTableFilter<TData>({
   const filterableColumns = table.getAllColumns().filter(
     (column) => column.id !== 'action' 
   ).map((column) => column.id);
+  const filterableColumns = table.getAllColumns().filter(
+    (column) => column.id !== 'action' 
+  ).map((column) => column.id);
 
+  const [currentFilter, setCurrentFilter] = useState<string>(filterableColumns[0]);
   const [currentFilter, setCurrentFilter] = useState<string>(filterableColumns[0]);
   console.log(filterableColumns);
   return (
@@ -50,10 +56,12 @@ export function DataTableFilter<TData>({
         <SelectContent>
           <SelectGroup>
              {filterableColumns.map((title) => (
+             {filterableColumns.map((title) => (
               <SelectItem value={title} key={title}>
                 {title
                   .replace(/([A-Z])/g, " $1")
                   .toLowerCase()
+                  .replace(/\b\w/g, (char) => char.toUpperCase())}
                   .replace(/\b\w/g, (char) => char.toUpperCase())}
               </SelectItem>
             ))}
