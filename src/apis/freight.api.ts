@@ -1,29 +1,22 @@
-import { FreightBody } from "@/schema/freight.schema";
+import { AllFreightResponse } from "@/schema/freight.schema";
+import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
+import axios from "axios";
 
 export const freightApi = {
   getAllFreight: async () => {
-    const response = await http.get<
-      EximResponseWrapper<PaginationWrapper<Freight[]>>
-    >("v1/freights");
-    return response.data.data;
-  },
-  getFreight: async (id: string) => {
-    const response = await http.get<
-      EximResponseWrapper<PaginationWrapper<Freight[]>>
-    >("v1/freights/", {
-      params: {
-        id,
-      },
-    });
-    return response.data.data;
-  },
-  createFreight: async (data: FreightBody) => {
-    const response = await http.post("v1/freights", data);
-    return response.data;
-  },
-  updateFreight: async (id: string, data: FreightBody) => {
-    const response = await http.patch(`v1/freights/${id}`, data);
-    return response.data;
+    try {
+      const response = await http.get<AllFreightResponse>("v1/freights");
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const getError = error.response.data as ErrorType;
+        console.error("Error:", getError);
+        throw getError;
+      } else {
+        console.error("Unexpected error:", error);
+        throw error;
+      }
+    }
   },
 };

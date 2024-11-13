@@ -3,28 +3,21 @@
 import { DataTable } from "../customers/components/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { landColumns } from "./components/columns/land-columns";
-import { landData } from "./data/land-data";
-import { seaColumns } from "./components/columns/sea-columns";
-import { seaData } from "./data/sea-data";
 import { airColumns } from "./components/columns/air-columns";
-import { airData } from "./data/air-data";
-export default function FreightManagementPage() {
-  const freightTypes = ["land", "sea", "air"];
+import { FREIGHT_TYPE } from "@/configs/enum";
+import useAirFreight from "@/hooks/useAirFreight";
+import { airDataFormatter } from "@/helpers/airDataFormatter";
+import { AirFreight } from "@/types/data";
+import useLandFreight from "@/hooks/useLandFreight";
+import { landDataFormatter } from "@/helpers/landDataFormatter";
 
-  const freightTable = {
-    land: {
-      columns: landColumns,
-      data: landData,
-    },
-    sea: {
-      columns: seaColumns,
-      data: seaData,
-    },
-    air: {
-      columns: airColumns,
-      data: airData,
-    },
-  };
+export default function FreightManagementPage() {
+  const freightTypes = Object.values(FREIGHT_TYPE);
+  const { data: allAirData } = useAirFreight().getAllAir;
+  const { data: allLandData } = useLandFreight().getAllLand;
+  const airData: AirFreight[] = allAirData ? airDataFormatter(allAirData) : [];
+  const landData = allLandData ? landDataFormatter(allLandData) : [];
+
   return (
     <div className="flex flex-col p-[24px] w-[calc(100vw-var(--sidebar-width))]">
       <Tabs
@@ -43,23 +36,11 @@ export default function FreightManagementPage() {
             </TabsList>
           </div>
         </div>
-        <TabsContent value="land">
-          {/* <DataTable
-            columns={freightTable.land.columns}
-            data={freightTable.land.data}
-          /> */}
+        <TabsContent value={FREIGHT_TYPE.LAND}>
+          <DataTable columns={landColumns} data={landData} />
         </TabsContent>
-        <TabsContent value="sea">
-          {/* <DataTable
-            columns={freightTable.sea.columns}
-            data={freightTable.sea.data}
-          /> */}
-        </TabsContent>
-        <TabsContent value="air">
-          {/* <DataTable
-            columns={freightTable.air.columns}
-            data={freightTable.air.data}
-          /> */}
+        <TabsContent value={FREIGHT_TYPE.AIR}>
+          <DataTable columns={airColumns} data={airData} />
         </TabsContent>
       </Tabs>
     </div>

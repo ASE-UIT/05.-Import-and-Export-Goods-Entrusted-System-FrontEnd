@@ -1,29 +1,22 @@
-import { AirFreightBody } from "@/schema/air-freight.schema";
+import { AllAirFreightType } from "@/schema/air-freight.schema";
+import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
+import axios from "axios";
 
 export const airFreightApi = {
   getAllAirFreight: async () => {
-    const response = await http.get<
-      EximResponseWrapper<PaginationWrapper<AirFreight[]>>
-    >("v1/air-freights");
-    return response.data.data;
-  },
-  getAirFreight: async (air_freight_id: string) => {
-    const response = await http.get<
-      EximResponseWrapper<PaginationWrapper<AirFreight[]>>
-    >("v1/air-freights", {
-      params: {
-        air_freight_id,
-      },
-    });
-    return response.data.data;
-  },
-  createAirFreight: async (data: AirFreightBody) => {
-    const response = await http.post("v1/air-freights", data);
-    return response.data;
-  },
-  updateAirFreight: async (id: string, data: AirFreightBody) => {
-    const response = await http.patch(`v1/air-freights/${id}`, data);
-    return response.data;
+    try {
+      const response = await http.get<AllAirFreightType>("v1/air-freights");
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const getError = error.response.data as ErrorType;
+        console.error("Error:", getError);
+        throw getError;
+      } else {
+        console.error("Unexpected error:", error);
+        throw error;
+      }
+    }
   },
 };
