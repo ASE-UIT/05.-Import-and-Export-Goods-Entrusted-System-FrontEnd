@@ -29,6 +29,6 @@ export default function RootLayout({
           <TanstackProvider>{children}</TanstackProvider>
         </ThemeProvider>
       </body>
-    </html>
+    </html >
   );
 }
