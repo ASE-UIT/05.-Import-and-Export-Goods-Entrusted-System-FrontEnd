@@ -1,7 +1,5 @@
 import contractAction from "@/apis/contract.api";
-import { IContract } from "@/app/(pages)/contracts/components/columns";
 import {
-  CreateContractBody,
   CreateContractType,
   UpdateContractType,
 } from "@/schema/contract.schema";
@@ -64,7 +62,7 @@ const useContract = {
   },
   useGetContractDetails(id: string | undefined) {
     return useQuery({
-      queryKey: [`contractDetails-${id}`],
+      queryKey: ["contractDetails", id],
       queryFn: async () => {
         try {
           const result = await contractAction.getContractDetails(id);
@@ -87,7 +85,7 @@ const useContract = {
         contractAction.updateContract(id, updateContractBody),
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: [`contractDetails-${id}`],
+          queryKey: ["contractDetails", id],
         });
         router.push("/contracts");
       },
