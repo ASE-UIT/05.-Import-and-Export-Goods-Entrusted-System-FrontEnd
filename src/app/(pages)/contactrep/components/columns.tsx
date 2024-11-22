@@ -6,14 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
-export interface IContactrep {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-}
-
-export const columns: ColumnDef<IContactrep>[] = [
+export const columns: ColumnDef<ContractRepType>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {
