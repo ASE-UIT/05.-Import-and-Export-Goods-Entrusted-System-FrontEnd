@@ -1,6 +1,8 @@
 "use client";
 
 import { Table } from "@tanstack/react-table";
+
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import {
@@ -28,6 +30,7 @@ export function DataTableFilter<TData>({
   const [currentFilter, setCurrentFilter] = useState<string>(
     filterableColumns[0]
   );
+  console.log(filterableColumns);
   return (
     <div className="flex gap-[5px] items-center">
       <div className="w-[300px] ">
@@ -52,8 +55,7 @@ export function DataTableFilter<TData>({
             {filterableColumns.map((title) => (
               <SelectItem value={title} key={title}>
                 {title
-                  .replace(/_/g, " ")
-                  .replace(/([a-z])([A-Z])/g, "$1 $2")
+                  .replace(/([A-Z])/g, " $1")
                   .toLowerCase()
                   .replace(/\b\w/g, (char) => char.toUpperCase())}
               </SelectItem>

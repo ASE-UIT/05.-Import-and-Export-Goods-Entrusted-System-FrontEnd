@@ -25,19 +25,14 @@ import {
 
 import { Button } from "../../../../components/ui/button";
 import * as dataTableFilter from "@/components/table/data-filter";
-import * as dataTableFilter from "@/components/table/data-filter";
 import { CirclePlus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
-import { DataTablePagination } from "@/components/table/data-pagination";
-import { Skeleton } from "@/components/ui/skeleton";
 import { DataTablePagination } from "@/components/table/data-pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  error: Error | null;
-  isPending: boolean;
   error: Error | null;
   isPending: boolean;
 }
@@ -75,7 +70,6 @@ export function DataTable<TData, TValue>({
       <div className="flex w-full justify-between pb-[10px] mb-[20px]">
         <dataTableFilter.DataTableFilter table={table} />
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => router.push(`/provider`)}>
           <Button variant="outline" onClick={() => router.push(`/provider`)}>
             View Provider
           </Button>
@@ -127,20 +121,6 @@ export function DataTable<TData, TValue>({
                         </TableCell>
                       )}
                     </React.Fragment>
-                    <React.Fragment key={cell.id}>
-                      {isPending ? (
-                        <TableCell>
-                          <Skeleton className="w-full h-10 bg-neutral-300" />
-                        </TableCell>
-                      ) : (
-                        <TableCell>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      )}
-                    </React.Fragment>
                   ))}
                 </TableRow>
               ))
@@ -161,4 +141,3 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
-
