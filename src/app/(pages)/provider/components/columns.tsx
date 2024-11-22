@@ -4,20 +4,9 @@ import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from 'next/link';
+import Link from "next/link";
 
-export interface IProvider {
-  id: string;
-  name: string;
-  contactrep: string;
-  email: string;
-  phone: string;
-  address: string;
-  country: string;
-  status: string;
-}
-
-export const columns: ColumnDef<IProvider>[] = [
+export const columns: ColumnDef<ProviderType>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -51,7 +40,7 @@ export const columns: ColumnDef<IProvider>[] = [
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "contactrep",
+    accessorKey: "contactRepId",
     header: ({ column }) => {
       return (
         <Button
@@ -64,7 +53,7 @@ export const columns: ColumnDef<IProvider>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("contactrep")}</div>,
+    cell: ({ row }) => <div>{row.getValue("contactRepId")}</div>,
   },
   {
     accessorKey: "email",
@@ -132,16 +121,16 @@ export const columns: ColumnDef<IProvider>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",  
-    cell: ({ row }) => <StatusBadge status={row.getValue("status")} />
+    header: "Status",
+    cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
   },
   {
     id: "action",
     header: "Action",
     cell: ({ row }) => (
-      <div>  
-      <Link href={`/provider/update/${row.getValue("id")}`}>
-      <button className="text-blue-500">Edit</button>
+      <div>
+        <Link href={`/provider/update/${row.getValue("id")}`}>
+          <button className="text-blue-500">Edit</button>
         </Link>
       </div>
     ),
