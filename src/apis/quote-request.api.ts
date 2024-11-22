@@ -1,4 +1,4 @@
-import { CreateQuoteRequestType, GetQuoteRequestDetailsType, GetQuoteRequestType } from "@/schema/quote-request.schema";
+import { CreateQuoteRequestType, GetPackageDetails, GetQuoteRequestDetailsType, GetQuoteRequestType } from "@/schema/quote-request.schema";
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
 import axios from "axios";
@@ -7,12 +7,12 @@ import axios from "axios";
 const quoteRequestAction = {
   createQuoteRequest : async(quoteRequestCreate : CreateQuoteRequestType) =>{
     try {
-        const response = await http.post("v1/quotation-requests", quoteRequestCreate);
+        const response = await http.post("v1/quotation-requests/with-details", quoteRequestCreate);
         return response.data;
         } catch (error) {
         if (axios.isAxiosError(error) && error.response?.data) {
             const postError = error.response.data as ErrorType;
-            console.error("Error during create:", postError);
+            console.error("Error during create quote request:", postError);
             throw postError;
         } else {
             console.error("Unexpected error during post:", error);
@@ -43,6 +43,21 @@ const quoteRequestAction = {
         if (axios.isAxiosError(error) && error.response?.data) {
             const getError = error.response.data as ErrorType;
             console.error("Error during get quote requests:", getError);
+            throw getError;
+        } else {
+            console.error("Unexpected error during get:", error);
+            throw error;
+        }
+    }
+  },
+  getPackageDetails : async(quoteReqDetailsId: string) =>{
+    try {
+        const response = await http.get<GetPackageDetails>("v1/package-details?detailId="+ quoteReqDetailsId);
+        return response.data;
+        } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            const getError = error.response.data as ErrorType;
+            console.error("Error during get package details:", getError);
             throw getError;
         } else {
             console.error("Unexpected error during get:", error);

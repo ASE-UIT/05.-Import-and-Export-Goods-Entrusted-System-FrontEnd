@@ -2,9 +2,9 @@ import quoteRequestAction from "@/apis/quote-request.api";
 import { CreateQuoteRequestType } from "@/schema/quote-request.schema";
 import { ErrorType } from "@/types/error.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
+import { useRouter } from "next/navigation";
 const useQuoteRequest ={
-    useCreateQuoteRequest() {
+    useCreateQuoteRequest(router: ReturnType<typeof useRouter>) {
         const queryClient = useQueryClient();
         return useMutation({
         mutationFn: (createQuoteRequestBody: CreateQuoteRequestType) =>
@@ -13,6 +13,7 @@ const useQuoteRequest ={
             queryClient.invalidateQueries({
             queryKey: ["quote-request"],
             });
+            router.push("/quote-request");
         },
         onError: (error: ErrorType) => {
             console.error("Error during create:", error);
@@ -46,6 +47,21 @@ const useQuoteRequest ={
             return result;
             } catch (error) {
             console.error("Error during get quote request:", error);
+            throw error;
+            }
+        },
+        retry: 0,
+        });
+    },
+    useGetPackageDetail(quoteReqDetailsId: string) {
+        return useQuery({
+        queryKey: ["package-detail", quoteReqDetailsId],
+        queryFn: async () => {
+            try {
+            const result = await quoteRequestAction.getPackageDetails(quoteReqDetailsId);
+            return result;
+            } catch (error) {
+            console.error("Error during get package details:", error);
             throw error;
             }
         },
