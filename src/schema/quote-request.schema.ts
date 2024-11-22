@@ -1,19 +1,19 @@
 import { z } from "zod";
 export const createQuoteRequestBody = z
   .object({
-    username: z.string().min(1),
-    password: z
-      .string()
-      .min(6, "Password must have at least 6 characters.")
-      .regex(/[A-Z]/, "Password must contain at least 1 capital letter.")
-      .regex(/[a-z]/, "Password must contain at least 1 lower case letter.")
-      .regex(/[0-9]/, "Password must contain at least 1 number.")
-      .regex(
-        /[#?!@$%^&*-]/,
-        "Password must contain at least 1 special character."
-      ),
-  })
-  .strict();
+    requestDate: z.string(),
+    customerId: z.string(),
+    origin: z.string(),
+    destination: z.string(),
+    shipmentReadyDate: z.string(),
+    shipmentDeadline: z.string(),
+    cargoInsurance: z.boolean(),
+    packageType: z.string(),
+    weight: z.number(),
+    length: z.number(),
+    width: z.number(),
+    height: z.number(),
+  });
 
 export const getQuoteRequest = z.array(
     z.object({
@@ -36,18 +36,30 @@ export const getQuoteRequestDetails =  z.object({
         createdAt: z.date(),
         updatedAt:  z.date()
     });
+export const getPackageDetails =  z.object({
+        id: z.string().uuid(),
+        packageType: z.string(),
+        weight: z.number(),
+        length: z.number(),
+        width: z.number(),
+        height: z.number(),
+        detailId: z.string().uuid(),
+        createdAt: z.date(),
+        updatedAt:  z.date()
+    });
 function mapToQuoteRequest(data: z.infer<typeof getQuoteRequest>): QuoteRequest[] {
   return data.map((data) => ({
-    quote_request_id: data.id,                // Assuming `id` is a stringified number
-    customer_id: data.customerId,             // Assuming `customerId` is a stringified number
-    request_date: new Date(data.requestDate).toDateString(),      // Converting Date to string
+    quote_request_id: data.id,                
+    customer_id: data.customerId,             
+    request_date: new Date(data.requestDate).toDateString(),     
     status: data.status,
-    create_at: new Date(data.createdAt).toDateString(),           // Converting Date to string
-    update_at: new Date(data.updatedAt).toDateString()            // Converting Date to string
+    create_at: new Date(data.createdAt).toDateString(),          
+    update_at: new Date(data.updatedAt).toDateString()           
   }));
 }
 
 export type GetQuoteRequestType = z.TypeOf<typeof getQuoteRequest>;
 export type GetQuoteRequestDetailsType = z.TypeOf<typeof getQuoteRequestDetails>;
 export type CreateQuoteRequestType = z.TypeOf<typeof createQuoteRequestBody>;
+export type GetPackageDetails= z.TypeOf<typeof getPackageDetails>;
 export default mapToQuoteRequest;
