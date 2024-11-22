@@ -1,4 +1,4 @@
 type EximResponseWrapper<T = null> = {
-    message: string;
-    data?: T;
-  };
+  message: string;
+  data?: T;
+};
