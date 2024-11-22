@@ -1,9 +1,5 @@
 import providerAction from "@/apis/provider.api";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
-import {
-  createProviderData,
-  updateProviderData,
-} from "@/schema/provider.schema";
 
 export const useProvider = () => {
   const queryClient = useQueryClient();
@@ -12,15 +8,14 @@ export const useProvider = () => {
     return useQuery({
       queryKey: ["providers"],
       queryFn: () => {
-        return providerAction.getProvider();
+        return providerAction.getAllProvider();
       },
     });
   };
 
   const useCreateProvider = () => {
     return useMutation({
-      mutationFn: (data: createProviderData) =>
-        providerAction.createProvider(data),
+      mutationFn: (data: any) => providerAction.createProvider(data),
       onSettled: () => {
         queryClient.invalidateQueries({
           queryKey: ["providers"],
@@ -31,7 +26,7 @@ export const useProvider = () => {
 
   const useUpdateProvider = () => {
     return useMutation({
-      mutationFn: ({ id, data }: { id: string; data: updateProviderData }) =>
+      mutationFn: ({ id, data }: { id: string; data: any }) =>
         providerAction.updateProvider(id, data),
       onSettled: () => {
         queryClient.invalidateQueries({
@@ -41,20 +36,10 @@ export const useProvider = () => {
     });
   };
 
-  const useGetProviderById = (id: string) => {
-    return useQuery({
-      queryKey: ["provider", id],
-      queryFn: () => {
-        return providerAction.getProvider(id);
-      },
-    });
-  };
-
   return {
     queryClient,
     useGetAllProvider,
     useCreateProvider,
     useUpdateProvider,
-    useGetProviderById,
   };
 };
