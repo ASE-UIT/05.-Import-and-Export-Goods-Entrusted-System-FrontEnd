@@ -4,7 +4,9 @@ interface PackageProps {
   quoteRequestDetailsId: string;
 }
 export function PackageDetails({ quoteRequestDetailsId }: PackageProps) {
-  const { data } = useQuoteRequest.useGetPackageDetail(quoteRequestDetailsId);
+  const { data, isLoading, error } = useQuoteRequest.useGetPackageDetail(
+    quoteRequestDetailsId
+  );
   return (
     <div className="flex flex-col ">
       <div className="flex justify-between items-center">

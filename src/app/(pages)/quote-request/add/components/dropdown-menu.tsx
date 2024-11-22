@@ -11,28 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ControllerRenderProps } from "react-hook-form";
-
 interface DropdownMenuCustomProps {
   selectedOption: string | null;
   setSelectedOption: React.Dispatch<React.SetStateAction<string | null>>;
-  field: ControllerRenderProps<
-    {
-      length: string;
-      requestDate: string;
-      customerId: string;
-      origin: string;
-      destination: string;
-      shipmentReadyDate: string;
-      shipmentDeadline: string;
-      cargoInsurance: boolean;
-      packageType: string;
-      weight: string;
-      width: string;
-      height: string;
-    },
-    "packageType"
-  >;
+  field: any;
 }
 
 export default function DropdownMenuCustom({
