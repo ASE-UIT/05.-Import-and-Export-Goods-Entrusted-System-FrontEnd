@@ -1,48 +1,29 @@
 import useQuoteRequest from "@/hooks/use-quote-request";
 
 interface PackageProps {
-  quoteRequestDetailsId: string;
+  quoteRequestDetailsId: string; 
 }
-export function PackageDetails({ quoteRequestDetailsId }: PackageProps) {
-  const { data } = useQuoteRequest.useGetPackageDetail(quoteRequestDetailsId);
-  return (
-    <div className="flex flex-col space-y-1">
-      <div className="flex justify-between items-center">
-        <span className="text-1xl text-black font-extrabold">
-          Package Information :
-        </span>
-      </div>
-      <div className="gap-2 text-sm border border-black-300 rounded-md p-4">
-        {data && data.length > 0 ? (
-          <div>
-            <p>
-              <strong>Package Type:</strong> {data[0].packageType}
-            </p>
-            <p>
-              <strong>Weight:</strong> {data[0].weight}
-            </p>
-            <p>
-              <strong>Length:</strong> {data[0].length}
-            </p>
-            <p>
-              <strong>Width:</strong> {data[0].width}
-            </p>
-            <p>
-              <strong>Height:</strong> {data[0].height}
-            </p>
-            <p>
-              <strong>Updated At:</strong>{" "}
-              {new Date(data[0].updatedAt).toLocaleDateString("en-GB")}
-            </p>
-            <p>
-              <strong>Create At:</strong>{" "}
-              {new Date(data[0].createdAt).toLocaleDateString("en-GB")}
-            </p>
+export function PackageDetails({quoteRequestDetailsId} : PackageProps){
+  const { data, isLoading, error } = useQuoteRequest.useGetPackageDetail(quoteRequestDetailsId );
+    return (
+        <div className="flex flex-col ">
+          <div className="flex justify-between items-center">
+            <span className="text-1xl font-bold">Package Information :</span>
           </div>
-        ) : (
-          <p>Loading...</p>
-        )}
-      </div>
-    </div>
-  );
+            {data ?(
+              <div>
+              <p>Package Type: {data.packageType}</p>
+              <p>Weight: {data.weight}</p>
+              <p>Length: {data.length}</p>
+              <p>Width: {data.width}</p>
+              <p>Height: {data.height}</p>
+              <p>Updated At: {new Date(data.updatedAt).toDateString()}</p>
+              <p>Create At: {new Date(data.createdAt).toDateString()}</p>
+              </div>
+            ): (
+              <p>Loading...</p>
+          )}
+            
+        </div>
+    )
 }
