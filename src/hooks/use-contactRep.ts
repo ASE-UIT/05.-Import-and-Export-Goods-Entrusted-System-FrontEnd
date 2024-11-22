@@ -1,50 +1,45 @@
 import contactRepAction from "@/apis/contactRep.api";
-import { ContactRepBodyType } from "@/schema/contactRep.schema";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 
-const useContactRep = () => {
+export const useContactRep = () => {
   const queryClient = useQueryClient();
 
-  const useListContactRep = (
-    params: ContactRepQueryParams | null | undefined = null
-  ) =>
-    useQuery({
-      queryKey: ["contact-reps", ...Object.values(params ?? {})],
-      queryFn: () => contactRepAction.list(params),
+  const useGetAllContactRep = () => {
+    return useQuery({
+      queryKey: ["contactReps"],
+      queryFn: () => {
+        return contactRepAction.getContactRep();
+      },
     });
+  };
 
-  const useDetailsContactRep = (id: string) =>
-    useQuery({
-      queryKey: ["contact-rep", id],
-      queryFn: () => contactRepAction.details(id),
-    });
-
-  const useCreateContractRep = () =>
-    useMutation({
-      mutationFn: contactRepAction.create,
-    });
-
-  const useUpdateContactRep = () =>
-    useMutation({
-      mutationFn: ({
-        id,
-        body,
-      }: {
-        id: string;
-        body: ContactRepBodyType;
-      }) => contactRepAction.update(id, body),
-      onSuccess: (_, req) => {
+  const useCreateContactRep = () => {
+    return useMutation({
+      mutationFn: (data: any) => contactRepAction.createContactRep(data),
+      onSettled: () => {
         queryClient.invalidateQueries({
-          queryKey: ["contact-rep", req.id],
+          queryKey: ["contactReps"],
         });
       },
     });
+  };
+
+  const useUpdateContactRep = () => {
+    return useMutation({
+      mutationFn: ({ id, data }: { id: string; data: any }) =>
+        contactRepAction.updateContactRep(id, data),
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["contactReps"],
+        });
+      },
+    });
+  };
 
   return {
-    useListContactRep,
-    useDetailsContactRep,
-    useCreateContractRep,
+    queryClient,
+    useGetAllContactRep,
+    useCreateContactRep,
     useUpdateContactRep,
   };
 };
-export default useContactRep;

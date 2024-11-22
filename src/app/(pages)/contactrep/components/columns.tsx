@@ -1,10 +1,12 @@
 "use client";
 
+import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
-export const columns: ColumnDef<ContactRep>[] = [
+export const columns: ColumnDef<ContractRepType>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {

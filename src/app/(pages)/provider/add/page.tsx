@@ -219,25 +219,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { useContactRep } from "@/hooks/use-contactrep";
-import useContactRep from "@/hooks/use-contactRep";
-import { useProvider } from "@/hooks/use-provider";
 import { providerSchema } from "@/schema/provider.schema";
+import { useProvider } from "@/hooks/use-provider";
+import { useContactRep } from "@/hooks/use-contactRep";
 import { useRouter } from "next/navigation";
 
 export default function AddProvider() {
   const router = useRouter();
 
   const { useCreateProvider } = useProvider();
+  const { useGetAllContactRep } = useContactRep();
   const createProvider = useCreateProvider();
 
-  const { useListContactRep } = useContactRep();
-  const contactReps = useListContactRep();
+  const { data: contactReps } = useGetAllContactRep();
 
   const form = useForm<z.infer<typeof providerSchema>>({
     resolver: zodResolver(providerSchema),
   });
 
+  function onSubmit(values: z.infer<typeof providerSchema>) {
+    try {
+      createProvider.mutate(values, {
+        onSuccess: () => {
+          router.push("/provider");
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   function onSubmit(values: z.infer<typeof providerSchema>) {
     try {
       createProvider.mutate(values, {
@@ -280,6 +289,7 @@ export default function AddProvider() {
             <FormField
               control={form.control}
               name="contactRepId"
+              name="contactRepId"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">
@@ -295,24 +305,14 @@ export default function AddProvider() {
                       </SelectTrigger>
                       <SelectContent>
                         {contactReps ? (
-                          contactReps.data
-                            ?.results
-                            ?.map(
-                              (contactRep) => (
-                                <SelectItem
-                                  key={
-                                    contactRep.id
-                                  }
-                                  value={
-                                    contactRep.id
-                                  }
-                                >
-                                  {
-                                    contactRep.name
-                                  }
-                                </SelectItem>
-                              )
-                            )
+                          contactReps.data?.map((contactRep) => (
+                            <SelectItem
+                              key={contactRep.id}
+                              value={contactRep.id}
+                            >
+                              {contactRep.name}
+                            </SelectItem>
+                          ))
                         ) : (
                           <>
                             <SelectItem value="01">

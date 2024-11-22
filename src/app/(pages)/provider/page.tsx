@@ -18,7 +18,7 @@ export default function ProviderManagement() {
         </div>
         <DataTable
           columns={columns}
-          data={providerData?.results ?? sampleData}
+          data={providerData?.data ?? sampleData}
           error={error}
           isPending={isPending}
         />
