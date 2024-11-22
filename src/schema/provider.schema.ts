@@ -8,8 +8,3 @@ export const providerSchema = z.object({
   country: z.string().min(1, "Country cannot be empty"),
   contactRepId: z.string().min(1, "Contact Rep cannot be empty"),
 });
-
-export type createProviderData = z.infer<typeof providerSchema>;
-export type updateProviderData = z.infer<
-  ReturnType<typeof providerSchema.partial>
->;
