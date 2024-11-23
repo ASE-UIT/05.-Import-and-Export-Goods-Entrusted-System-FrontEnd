@@ -1,9 +1,14 @@
 import http from "@/utils/http";
 
 const providerAction = {
-  async getAllProvider() {
+  async getProvider(id?: string) {
     const res = await http.get<EximResponseWrapper<ProviderType[]>>(
-      "/v1/providers"
+      "/v1/providers",
+      {
+        params: {
+          id,
+        },
+      }
     );
     return res.data;
   },
