@@ -117,7 +117,9 @@ export const airColumns: ColumnDef<AirFreight>[] = [
           variant="ghost"
           style={{ backgroundColor: "transparent" }}
         >
-          Addition Fee Breakdown
+          <p className="text-ellipsis overflow-hidden w-[100px]">
+            Addition Fee Breakdown
+          </p>
         </Button>
       );
     },
@@ -148,7 +150,7 @@ export const airColumns: ColumnDef<AirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 0K
+          0K
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -165,7 +167,7 @@ export const airColumns: ColumnDef<AirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 45K
+          45K
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -182,7 +184,7 @@ export const airColumns: ColumnDef<AirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 100K
+          100K
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -199,7 +201,7 @@ export const airColumns: ColumnDef<AirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 300K
+          300K
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -216,7 +218,7 @@ export const airColumns: ColumnDef<AirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 500K
+          500K
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
