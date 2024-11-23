@@ -2,9 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import Link from "next/link";
+import { useContactRep } from "@/hooks/use-contactRep";
+import { contactRepSchema } from "@/schema/contactRep.schema";
 import { useContactRep } from "@/hooks/use-contactRep";
 import { contactRepSchema } from "@/schema/contactRep.schema";
 import { Button } from "@/components/ui/button";
@@ -26,7 +28,11 @@ export default function UpdateContactrep() {
 
   const updateMutation = useUpdateContactRep();
 
-  const { data: contactrep } = useGetContactRepById(contactrepId);
+  const {
+    data: contactrep,
+    error,
+    isPending,
+  } = useGetContactRepById(contactrepId);
 
   const form = useForm<z.infer<typeof contactRepSchema>>({
     resolver: zodResolver(contactRepSchema),
@@ -61,11 +67,21 @@ export default function UpdateContactrep() {
     } catch (error) {
       console.error(error);
     }
+  function onSubmit(values: z.infer<typeof contactRepSchema>) {
+    try {
+      updateMutation.mutate({
+        id: contactrepId,
+        data: values,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
+        <span className="text-3xl font-bold">Update ContactRep</span>
         <span className="text-3xl font-bold">Update ContactRep</span>
       </div>
       <Form {...form}>
