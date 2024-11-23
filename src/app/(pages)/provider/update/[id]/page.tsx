@@ -220,6 +220,9 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Link from "next/link";
+import { useProvider } from "@/hooks/use-provider";
+import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -242,27 +245,29 @@ import {
 import useContactRep from "@/hooks/use-contactRep";
 import { providerSchema } from "@/schema/provider.schema";
 import { useParams } from "next/navigation";
+import { providerSchema } from "@/schema/provider.schema";
+import { useContactRep } from "@/hooks/use-contactRep";
 
 export default function UpdateProvider() {
   const { id: providerId } = useParams<{ id: string }>();
 
   const { useGetProviderById, useUpdateProvider } = useProvider();
+  const { useGetAllContactRep } = useContactRep();
 
   const updateMutation = useUpdateProvider();
-  const { useListContactRep } = useContactRep();
-  const contactReps = useListContactRep();
+  const { data: contactReps } = useGetAllContactRep();
 
   const form = useForm<z.infer<typeof providerSchema>>({
     resolver: zodResolver(providerSchema),
   });
 
-  const { data: provider } = useGetProviderById(providerId);
+  const { data: provider, error, isPending } = useGetProviderById(providerId);
 
   useEffect(() => {
     if (provider) {
       console.log(provider);
-      if (provider.results) {
-        const providerData = provider.results[0];
+      if (provider.data) {
+        const providerData = provider.data[0];
 
         form.reset({
           name: providerData.name,
@@ -316,17 +321,19 @@ export default function UpdateProvider() {
             <FormField
               control={form.control}
               name="contactRepId"
+              name="contactRepId"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">ContactRep</FormLabel>
                   <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full h-[60px]">
                         <SelectValue placeholder="Select a representative" />
                       </SelectTrigger>
                       <SelectContent>
                         {contactReps ? (
-                          contactReps.data?.results?.map((contactRep) => (
+                          contactReps.data?.map((contactRep) => (
                             <SelectItem
                               key={contactRep.id}
                               value={contactRep.id}

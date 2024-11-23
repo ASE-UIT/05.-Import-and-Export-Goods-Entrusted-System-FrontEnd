@@ -1,8 +1,12 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { z } from "zod";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-
+import { useContactRep } from "@/hooks/use-contactRep";
+import { contactRepSchema } from "@/schema/contactRep.schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -25,56 +29,58 @@ import { toast } from "@/hooks/use-toast";
 
 
 
-export default function UpdateContactRep() {
-  const form = useForm<ContactRepBodyType>({
-    resolver: zodResolver(ContactRepBody),
+export default function UpdateContactrep() {
+  const { id: contactrepId } = useParams<{ id: string }>();
+
+  const { useGetContactRepById, useUpdateContactRep } = useContactRep();
+
+  const updateMutation = useUpdateContactRep();
+
+  const {
+    data: contactrep,
+    error,
+    isPending,
+  } = useGetContactRepById(contactrepId);
+
+  const form = useForm<z.infer<typeof contactRepSchema>>({
+    resolver: zodResolver(contactRepSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+    },
   });
-  const { id } = useParams<{ id: string }>();
-  const router = useRouter();
-
-  const { useUpdateContactRep, useDetailsContactRep } = useContactRep();
-
-  const { mutate: updateContactRep, isPending } = useUpdateContactRep();
-
-  const { data } = useDetailsContactRep(id);
-  const contactRep = data?.results[0];
 
   useEffect(() => {
-    if (contactRep) {
-      form.reset(contactRep);
-    }
-  }, [contactRep, form]);
+    if (contactrep) {
+      console.log(contactrep);
+      if (contactrep.data) {
+        const contactRepData = contactrep.data[0];
 
-  function onSubmit(values: ContactRepBodyType) {
-    if (isPending) return;
-
-    updateContactRep(
-      { id, body: values },
-      {
-        onSuccess: () => {
-          router.push("/contactrep");
-          // alert("ContactRep updated successfully");
-
-          toast({
-            title: "Success",
-            description: "ContactRep updated successfully",
-            variant: "default",
-          });
-        },
-        onError: (error) => {
-          const { field, message } = (error as any).errors[0];
-          form.setError(field, { type: "manual", message: message });
-        },
+        form.reset({
+          name: contactRepData.name,
+          email: contactRepData.email,
+          phone: contactRepData.phone,
+        });
       }
-    );
+    }
+  }, [contactrep, form]);
+
+  function onSubmit(values: z.infer<typeof contactRepSchema>) {
+    try {
+      updateMutation.mutate({
+        id: contactrepId,
+        data: values,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
-        <span className="text-3xl font-bold">
-          Update Contact representatives
-        </span>
+        <span className="text-3xl font-bold">Update ContactRep</span>
       </div>
       <Form {...form}>
         <form
