@@ -1,9 +1,14 @@
 import http from "@/utils/http";
 
 const contactRepAction = {
-  async getContactRep(page?: number, limit?: number) {
+  async getContactRep(id?: string) {
     const res = await http.get<EximResponseWrapper<ContractRepType[]>>(
-      "v1/contact-representatives"
+      "v1/contact-representatives",
+      {
+        params: {
+          id,
+        },
+      }
     );
     return res.data;
   },

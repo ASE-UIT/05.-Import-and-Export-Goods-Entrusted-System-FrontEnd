@@ -8,7 +8,7 @@ export const useProvider = () => {
     return useQuery({
       queryKey: ["providers"],
       queryFn: () => {
-        return providerAction.getAllProvider();
+        return providerAction.getProvider();
       },
     });
   };
@@ -36,10 +36,20 @@ export const useProvider = () => {
     });
   };
 
+  const useGetProviderById = (id: string) => {
+    return useQuery({
+      queryKey: ["provider", id],
+      queryFn: () => {
+        return providerAction.getProvider(id);
+      },
+    });
+  };
+
   return {
     queryClient,
     useGetAllProvider,
     useCreateProvider,
     useUpdateProvider,
+    useGetProviderById,
   };
 };

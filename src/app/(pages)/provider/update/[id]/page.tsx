@@ -6,8 +6,6 @@ import { z } from "zod";
 import Link from "next/link";
 import { useProvider } from "@/hooks/use-provider";
 import { useEffect } from "react";
-import { useProvider } from "@/hooks/use-provider";
-import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,10 +23,8 @@ import {
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select"; // Nhập Select
 import { useParams } from "next/navigation";
-import { providerSchema } from "@/schema/provider.schema";
-import { useContactRep } from "@/hooks/use-contactRep";
 import { providerSchema } from "@/schema/provider.schema";
 import { useContactRep } from "@/hooks/use-contactRep";
 
@@ -43,17 +39,9 @@ export default function UpdateProvider() {
 
   const form = useForm<z.infer<typeof providerSchema>>({
     resolver: zodResolver(providerSchema),
-  const { useGetProviderById, useUpdateProvider } = useProvider();
-  const { useGetAllContactRep } = useContactRep();
-
-  const updateMutation = useUpdateProvider();
-  const { data: contactReps } = useGetAllContactRep();
-
-  const form = useForm<z.infer<typeof providerSchema>>({
-    resolver: zodResolver(providerSchema),
   });
 
-  const { data: provider } = useGetProviderById(providerId);
+  const { data: provider, error, isPending } = useGetProviderById(providerId);
 
   useEffect(() => {
     if (provider) {
@@ -113,39 +101,15 @@ export default function UpdateProvider() {
             <FormField
               control={form.control}
               name="contactRepId"
-              name="contactRepId"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">ContactRep</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
-                    <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full h-[60px]">
                         <SelectValue placeholder="Select a representative" />
                       </SelectTrigger>
                       <SelectContent>
-                        {contactReps ? (
-                          contactReps.data?.map((contactRep) => (
-                            <SelectItem
-                              key={contactRep.id}
-                              value={contactRep.id}
-                            >
-                              {contactRep.name}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <>
-                            <SelectItem value="01">
-                              Representative 01
-                            </SelectItem>
-                            <SelectItem value="02">
-                              Representative 02
-                            </SelectItem>
-                            <SelectItem value="03">
-                              Representative 03
-                            </SelectItem>
-                          </>
-                        )}
                         {contactReps ? (
                           contactReps.data?.map((contactRep) => (
                             <SelectItem

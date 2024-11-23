@@ -36,10 +36,20 @@ export const useContactRep = () => {
     });
   };
 
+  const useGetContactRepById = (id: string) => {
+    return useQuery({
+      queryKey: ["contactRep", id],
+      queryFn: () => {
+        return contactRepAction.getContactRep(id);
+      },
+    });
+  };
+
   return {
     queryClient,
     useGetAllContactRep,
     useCreateContactRep,
     useUpdateContactRep,
+    useGetContactRepById,
   };
 };
