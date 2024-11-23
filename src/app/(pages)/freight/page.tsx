@@ -10,6 +10,8 @@ import { airDataFormatter } from "@/helpers/airDataFormatter";
 import { AirFreight } from "@/types/data";
 import useLandFreight from "@/hooks/useLandFreight";
 import { landDataFormatter } from "@/helpers/landDataFormatter";
+import { fclColumns } from "./components/columns/fcl-columns";
+import { lclColumns } from "./components/columns/lcl-columns";
 
 export default function FreightManagementPage() {
   const freightTypes = Object.values(FREIGHT_TYPE);
@@ -41,6 +43,12 @@ export default function FreightManagementPage() {
         </TabsContent>
         <TabsContent value={FREIGHT_TYPE.AIR}>
           <DataTable columns={airColumns} data={airData} />
+        </TabsContent>
+        <TabsContent value={FREIGHT_TYPE.FCL}>
+          <DataTable columns={fclColumns} data={[]} />
+        </TabsContent>
+        <TabsContent value={FREIGHT_TYPE.LCL}>
+          <DataTable columns={lclColumns} data={[]} />
         </TabsContent>
       </Tabs>
     </div>

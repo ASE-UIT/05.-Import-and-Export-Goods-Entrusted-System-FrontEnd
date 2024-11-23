@@ -117,7 +117,9 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           variant="ghost"
           style={{ backgroundColor: "transparent" }}
         >
-          Addition Fee Breakdown
+          <p className="text-ellipsis overflow-hidden w-[100px]">
+            Addition Fee Breakdown
+          </p>
         </Button>
       );
     },
@@ -148,7 +150,7 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 0-100
+          0-100
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -165,7 +167,7 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 100-200
+          100-200
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -182,7 +184,7 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 200-500
+          200-500
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -199,7 +201,7 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 500-1500
+          500-1500
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -216,7 +218,7 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 1500-5000
+          1500-5000
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -233,7 +235,7 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 5000-10000
+          5000-10000
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -250,7 +252,7 @@ export const landColumns: ColumnDef<LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 10000+
+          10000+
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );

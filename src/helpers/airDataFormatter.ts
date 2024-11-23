@@ -2,7 +2,7 @@ import {
   allAirFreightBody,
   AllAirFreightType,
 } from "@/schema/air-freight.schema";
-import { AllFreightResponse } from "@/schema/freight.schema";
+import { AllFreightType } from "@/schema/freight.schema";
 import { AirFreight } from "@/types/data";
 import { UseQueryResult } from "@tanstack/react-query";
 import { z } from "zod";

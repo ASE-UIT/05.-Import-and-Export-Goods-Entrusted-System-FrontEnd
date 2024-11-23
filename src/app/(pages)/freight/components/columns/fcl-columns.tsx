@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { FCL } from "@/types/data";
 
-export const airColumns: ColumnDef<FCL>[] = [
+export const fclColumns: ColumnDef<FCL>[] = [
   {
     accessorKey: "provider_id",
     header: ({ column }) => {
@@ -117,7 +117,9 @@ export const airColumns: ColumnDef<FCL>[] = [
           variant="ghost"
           style={{ backgroundColor: "transparent" }}
         >
-          Addition Fee Breakdown
+          <p className="text-ellipsis overflow-hidden w-[100px]">
+            Addition Fee Breakdown
+          </p>
         </Button>
       );
     },
@@ -148,7 +150,7 @@ export const airColumns: ColumnDef<FCL>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 20DC
+          20DC
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -165,7 +167,7 @@ export const airColumns: ColumnDef<FCL>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 40DC
+          40DC
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -182,7 +184,7 @@ export const airColumns: ColumnDef<FCL>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 40HC
+          40HC
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -199,7 +201,7 @@ export const airColumns: ColumnDef<FCL>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 20RF
+          20RF
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
@@ -216,7 +218,7 @@ export const airColumns: ColumnDef<FCL>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price 40RF
+          40RF
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
