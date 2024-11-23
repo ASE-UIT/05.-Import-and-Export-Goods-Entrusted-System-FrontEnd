@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { LCL } from "@/types/data";
 
-export const airColumns: ColumnDef<LCL>[] = [
+export const lclColumns: ColumnDef<LCL>[] = [
   {
     accessorKey: "provider_id",
     header: ({ column }) => {
@@ -117,7 +117,9 @@ export const airColumns: ColumnDef<LCL>[] = [
           variant="ghost"
           style={{ backgroundColor: "transparent" }}
         >
-          Addition Fee Breakdown
+          <p className="text-ellipsis overflow-hidden w-[100px]">
+            Addition Fee Breakdown
+          </p>
         </Button>
       );
     },
