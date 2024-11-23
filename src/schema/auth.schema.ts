@@ -1,3 +1,4 @@
+import { UserSchema } from "@/types/user.type";
 import { z } from "zod";
 
 export const LoginBody = z
@@ -18,25 +19,7 @@ export const LoginBody = z
 
 export const AuthRes = z.object({
   message: z.string(),
-  data: z.object({
-    id: z.string().uuid(),
-    username: z.string(),
-    employee: z.object({
-      id: z.string().uuid(),
-      name: z.string(),
-      email: z.string(),
-      phone: z.string(),
-      address: z.string(),
-      position: z.string(),
-      dob: z.string(),
-      coefficientSalary: z.number(),
-      baseSalary: z.number(),
-    }),
-    role: z.object({
-      id: z.string().uuid(),
-      name: z.string(),
-    }),
-  }),
+  data: UserSchema,
 });
 
 export type AuthResType = z.TypeOf<typeof AuthRes>;
