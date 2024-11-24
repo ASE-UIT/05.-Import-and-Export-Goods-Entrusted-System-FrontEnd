@@ -36,5 +36,21 @@ const useAuth = {
       retry: 0,
     });
   },
+
+  useLogout() {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: () => authAction.logout(),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["user-session"],
+        });
+      },
+      onError: (error: ErrorType) => {
+        console.error("Error during logout:", error);
+        throw error;
+      },
+    });
+  },
 };
 export default useAuth;
