@@ -1,11 +1,9 @@
 import contactRepAction from "@/apis/contactRep.api";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import {
-  contactRepSchema,
   createContactRepData,
   updateContactRepData,
 } from "@/schema/contactRep.schema";
-import z from "zod";
 
 export const useContactRep = () => {
   const queryClient = useQueryClient();

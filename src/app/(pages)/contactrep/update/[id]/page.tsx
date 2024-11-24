@@ -19,15 +19,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useParams } from "next/navigation";
 
-const formSchema = z.object({
-  name: z.string(),
-  contactrep: z.string(),
-  email: z.string().email(),
-  phone: z.string(),
-  address: z.string(),
-  country: z.string(),
-});
-
 export default function UpdateContactrep() {
   const { id: contactrepId } = useParams<{ id: string }>();
 
