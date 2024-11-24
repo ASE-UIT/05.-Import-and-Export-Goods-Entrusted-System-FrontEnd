@@ -21,6 +21,17 @@ export const AuthRes = z.object({
   data: z.object({
     id: z.string().uuid(),
     username: z.string(),
+    employee: z.object({
+      id: z.string().uuid(),
+      name: z.string(),
+      email: z.string(),
+      phone: z.string(),
+      address: z.string(),
+      position: z.string(),
+      dob: z.string(),
+      coefficientSalary: z.number(),
+      baseSalary: z.number(),
+    }),
     role: z.object({
       id: z.string().uuid(),
       name: z.string(),
