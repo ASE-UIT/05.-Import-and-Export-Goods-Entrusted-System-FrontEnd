@@ -1,8 +1,6 @@
 "use client";
 
 import { Table } from "@tanstack/react-table";
-
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import {
@@ -22,12 +20,14 @@ interface DataTableToolbarProps<TData> {
 export function DataTableFilter<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
-  const filterableColumns = table.getAllColumns().filter(
-    (column) => column.id !== 'action' 
-  ).map((column) => column.id);
+  const filterableColumns = table
+    .getAllColumns()
+    .filter((column) => column.id !== "action")
+    .map((column) => column.id);
 
-  const [currentFilter, setCurrentFilter] = useState<string>(filterableColumns[0]);
-  console.log(filterableColumns);
+  const [currentFilter, setCurrentFilter] = useState<string>(
+    filterableColumns[0]
+  );
   return (
     <div className="flex gap-[5px] items-center">
       <div className="w-[300px] ">
@@ -49,12 +49,13 @@ export function DataTableFilter<TData>({
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-             {filterableColumns.map((title) => (
+            {filterableColumns.map((title) => (
               <SelectItem value={title} key={title}>
                 {title
                   .replace(/([A-Z])/g, " $1")
                   .toLowerCase()
-                  .replace(/\b\w/g, (char) => char.toUpperCase())}
+                  .replace(/\b\w/g, (char) => char.toUpperCase())
+                  .replace(/Id/, "ID")}
               </SelectItem>
             ))}
           </SelectGroup>
