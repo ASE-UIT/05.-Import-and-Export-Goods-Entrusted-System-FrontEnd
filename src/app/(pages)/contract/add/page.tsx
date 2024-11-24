@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
+
 import {
   Form,
   FormField,
@@ -22,182 +23,123 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker.css"; 
 import React from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import useContract from "@/hooks/use-contract";
-import { useRouter } from "next/navigation";
-import { CreateContractType } from "@/schema/contract.schema";
-import { Input } from "@/components/ui/input";
-import useAuth from "@/hooks/use-auth";
 
-const formSchema = z
-  .object({
-    quotationId: z.string(),
-    employeeId: z.string(),
-    startDate: z.string(),
-    endDate: z.string(),
-    contractDate: z.string(),
-  })
-  .refine(
-    (data) => {
-      return new Date(data.endDate) > new Date(data.startDate);
-    },
-    {
-      message: "End Date must be greater than start date",
-      path: ["endDate"],
-    }
-  )
-  .refine(
-    (data) => {
-      return new Date(data.startDate) >= new Date(data.contractDate);
-    },
-    {
-      message: "Contract Date must be less than or equal to start date",
-      path: ["contractDate"],
-    }
-  );
+const formSchema = z.object({
+  quotation_id: z.string(),
+  employee_id: z.string(),
+  start_date: z.date(),
+  end_date: z.date(),
+  contract_date: z.date(),
+});
 
 export default function AddContractPage() {
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
-  const [contractDate, setContractDate] = useState<Date | undefined>(undefined);
-  const [bookedQuotations, setBookedQuotations] = useState<string[]>();
-
-  const router = useRouter();
-  const { data: bookedQuotationData } = useContract.useGetBookedQuotations();
-  const { mutate: createContract, status } =
-    useContract.useCreateContract(router);
-  const { data: sessionData } = useAuth.useGetSession();
-
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  useEffect(() => {
-    if (sessionData) {
-      form.setValue("employeeId", sessionData.employee.id);
-    }
-  }, [sessionData]);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [contractDate, setContractDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
-    if (bookedQuotationData) {
-      const quotations = bookedQuotationData.map((it) => it.id);
-      setBookedQuotations(quotations);
-    }
-  }, [bookedQuotationData]);
-
-  useEffect(() => {
-    if (startDate) form.setValue("startDate", format(startDate, "yyyy-MM-dd"));
+    if (startDate) form.setValue("start_date", startDate);
   }, [startDate]);
 
   useEffect(() => {
-    if (endDate) form.setValue("endDate", format(endDate, "yyyy-MM-dd"));
+    if (endDate) form.setValue("end_date", endDate);
   }, [endDate]);
 
   useEffect(() => {
-    if (contractDate)
-      form.setValue("contractDate", format(contractDate, "yyyy-MM-dd"));
+    if (contractDate) form.setValue("contract_date", contractDate);
   }, [contractDate]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("submit");
-    const createContractBody: CreateContractType = {
-      employeeId: values.employeeId,
-      quotationId: values.quotationId,
-      status: "PENDING",
-      startDate: values.startDate,
-      endDate: values.endDate,
-      contractDate: values.contractDate,
-    };
-    createContract(createContractBody);
+    console.log({
+      ...values,
+      start_date: values.start_date
+        ? format(values.start_date, "d-M-yyyy")
+        : undefined,
+      end_date: values.end_date ? format(values.end_date, "d-M-yyyy") : undefined,
+      contract_date: values.contract_date ? format(values.contract_date, "d-M-yyyy") : undefined,
+    });
   }
 
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
-      <div className="flex w-full justify-between items-end">
-        <span className="text-3xl font-bold">Add Contract</span>
-      </div>
+    <div className="flex w-full justify-between items-end">
+      <span className="text-3xl font-bold">Add Contract</span>
+    </div>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          encType="multipart/form-data"
-        >
-          <div className="flex flex-col items-center w-[600px] gap-4 py-4">
-            {/* Quotation ID */}
-            <FormField
-              control={form.control}
-              name="quotationId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[16px] font-bold">
-                    Quotation ID
-                  </FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className="w-[500px] h-[60px]">
-                        <SelectValue placeholder="Select an ID" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {bookedQuotations ? (
-                          bookedQuotations.map((it) => (
-                            <SelectItem key={it} value={it}>
-                              {it}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <div className="flex items-center justify-center">
-                            No Quotations Available
-                          </div>
-                        )}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <form onSubmit={form.handleSubmit(onSubmit)} encType="multipart/form-data">
+        <div className="flex flex-col items-center w-[600px] gap-4 py-4">
+          {/* Quotation ID */}
+          <FormField
+            control={form.control}
+            name="quotation_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-bold">Quotation ID</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-[500px] h-[60px]">
+                      <SelectValue placeholder="Select an ID" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="01">01</SelectItem>
+                      <SelectItem value="02">02</SelectItem>
+                      <SelectItem value="03">03</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            {/* Employee ID */}
-            <FormField
-              control={form.control}
-              name="employeeId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[16px] font-bold">
-                    Employee ID
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      value={field.value || ""}
-                      readOnly
-                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          {/* Employee ID */}
+          <FormField
+            control={form.control}
+            name="employee_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-bold">Employee ID</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-[500px] h-[60px]">
+                      <SelectValue placeholder="Select an ID" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="01">01</SelectItem>
+                      <SelectItem value="02">02</SelectItem>
+                      <SelectItem value="03">03</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
             <div className="w-[500px] flex space-x-[12px]">
-              {/* Start Date */}
-              <FormField
+            {/* Start Date */}
+            <FormField
                 control={form.control}
-                name="startDate"
+                name="start_date"
                 render={({ field }) => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">
-                      Start Date
-                    </FormLabel>
+                    <FormLabel className="text-[16px] font-bold">Start Date</FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -228,15 +170,13 @@ export default function AddContractPage() {
                   </FormItem>
                 )}
               />
-              {/* End Date */}
-              <FormField
+            {/* End Date */}
+            <FormField
                 control={form.control}
-                name="endDate"
+                name="end_date"
                 render={({ field }) => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">
-                      End Date
-                    </FormLabel>
+                    <FormLabel className="text-[16px] font-bold">End Date</FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -269,15 +209,13 @@ export default function AddContractPage() {
               />
             </div>
             <div className="w-[500px] flex space-x-[12px]">
-              {/* Contract Date */}
-              <FormField
+            {/* Contract Date */} 
+            <FormField
                 control={form.control}
-                name="contractDate"
+                name="contract_date"
                 render={({ field }) => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">
-                      Contract Date
-                    </FormLabel>
+                    <FormLabel className="text-[16px] font-bold">Contract Date</FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -312,18 +250,14 @@ export default function AddContractPage() {
           </div>
           {/* Button */}
           <div className="flex justify-center mt-6">
-            <div className="w-1/2 flex gap-2.5">
+          <div className="w-1/2 flex gap-2.5">
               <Link href="/contract" className="w-1/2 h-14">
-                <Button
-                  className="w-full h-10 text-lg"
-                  variant={"outline"}
-                  type="button"
-                >
+                <Button className="w-full h-10 text-lg" variant={"outline"} type="button">
                   Cancel
                 </Button>
               </Link>
               <Button className="w-1/2 h-10 text-lg" type="submit">
-                {status === "pending" ? "Adding..." : "Save"}
+                Save
               </Button>
             </div>
           </div>

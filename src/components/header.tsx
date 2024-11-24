@@ -4,7 +4,6 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Bell, MessageSquareMore } from "lucide-react";
-import UserDropDown from "@/components/user-drop-down";
 
 export default function Header() {
   return (
@@ -40,7 +39,14 @@ export default function Header() {
           <ModeToggle />
         </div>
         <div className="flex justify-center gap-3 items-center">
-          <UserDropDown />
+          <div className="text-right">
+            <div className="text-[14px]">Khang Buoi</div>
+            <div className="text-xs opacity-50">Admin</div>
+          </div>
+          <Avatar>
+            <AvatarImage src="https://placehold.co/400" alt="KhangBuoi" />
+            <AvatarFallback>KB</AvatarFallback>
+          </Avatar>
         </div>
       </div>
     </div>

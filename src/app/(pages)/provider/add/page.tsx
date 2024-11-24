@@ -21,35 +21,24 @@ import {
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/ui/select";
-import { providerSchema } from "@/schema/provider.schema";
-import { useProvider } from "@/hooks/use-provider";
-import { useContactRep } from "@/hooks/use-contactRep";
-import { useRouter } from "next/navigation";
+} from "@/components/ui/select"; // Nhập Select
+
+const formSchema = z.object({
+  name: z.string(),
+  contactrep: z.string(),
+  email: z.string().email(),
+  phone: z.string(),
+  address: z.string(),
+  country: z.string(),
+});
 
 export default function AddProvider() {
-  const router = useRouter();
-
-  const { useCreateProvider } = useProvider();
-  const { useGetAllContactRep } = useContactRep();
-  const createProvider = useCreateProvider();
-
-  const { data: contactReps } = useGetAllContactRep();
-
-  const form = useForm<z.infer<typeof providerSchema>>({
-    resolver: zodResolver(providerSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
   });
 
-  function onSubmit(values: z.infer<typeof providerSchema>) {
-    try {
-      createProvider.mutate(values, {
-        onSuccess: () => {
-          router.push("/provider");
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
   }
 
   return (
@@ -76,10 +65,11 @@ export default function AddProvider() {
                 </FormItem>
               )}
             />
+
             {/* Contact Representative as Select */}
             <FormField
               control={form.control}
-              name="contactRepId"
+              name="contactrep"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">ContactRep</FormLabel>
@@ -92,28 +82,9 @@ export default function AddProvider() {
                         <SelectValue placeholder="Select a representative" />
                       </SelectTrigger>
                       <SelectContent>
-                        {contactReps ? (
-                          contactReps.data?.map((contactRep) => (
-                            <SelectItem
-                              key={contactRep.id}
-                              value={contactRep.id}
-                            >
-                              {contactRep.name}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <>
-                            <SelectItem value="01">
-                              Representative 01
-                            </SelectItem>
-                            <SelectItem value="02">
-                              Representative 02
-                            </SelectItem>
-                            <SelectItem value="03">
-                              Representative 03
-                            </SelectItem>
-                          </>
-                        )}
+                        <SelectItem value="01">Representative 01</SelectItem>
+                        <SelectItem value="02">Representative 02</SelectItem>
+                        <SelectItem value="03">Representative 03</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

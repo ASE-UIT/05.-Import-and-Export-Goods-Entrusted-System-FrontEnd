@@ -14,30 +14,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { contactRepSchema } from "@/schema/contactRep.schema";
-import { useContactRep } from "@/hooks/use-contactRep";
-import { useRouter } from "next/navigation";
+
+const formSchema = z.object({
+  name: z.string(),
+  contactrep: z.string(),
+  email: z.string().email(),
+  phone: z.string(),
+  address: z.string(),
+  country: z.string(),
+});
 
 export default function AddContactrep() {
-  const router = useRouter();
-
-  const { useCreateContactRep } = useContactRep();
-  const createContactRep = useCreateContactRep();
-
-  const form = useForm<z.infer<typeof contactRepSchema>>({
-    resolver: zodResolver(contactRepSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
   });
 
-  function onSubmit(values: z.infer<typeof contactRepSchema>) {
-    try {
-      createContactRep.mutate(values, {
-        onSuccess: () => {
-          router.push("/contactrep");
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
   }
 
   return (

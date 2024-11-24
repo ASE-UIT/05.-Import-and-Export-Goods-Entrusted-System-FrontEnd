@@ -2,11 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 import Link from "next/link";
-import { useContactRep } from "@/hooks/use-contactRep";
-import { contactRepSchema } from "@/schema/contactRep.schema";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,58 +18,30 @@ import {
 import { Input } from "@/components/ui/input";
 import { useParams } from "next/navigation";
 
+const formSchema = z.object({
+  name: z.string(),
+  contactrep: z.string(),
+  email: z.string().email(),
+  phone: z.string(),
+  address: z.string(),
+  country: z.string(),
+});
+
 export default function UpdateContactrep() {
   const { id: contactrepId } = useParams<{ id: string }>();
 
-  const { useGetContactRepById, useUpdateContactRep } = useContactRep();
-
-  const updateMutation = useUpdateContactRep();
-
-  const {
-    data: contactrep,
-    error,
-    isPending,
-  } = useGetContactRepById(contactrepId);
-
-  const form = useForm<z.infer<typeof contactRepSchema>>({
-    resolver: zodResolver(contactRepSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-    },
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
   });
 
-  useEffect(() => {
-    if (contactrep) {
-      console.log(contactrep);
-      if (contactrep.data) {
-        const contactRepData = contactrep.data[0];
-
-        form.reset({
-          name: contactRepData.name,
-          email: contactRepData.email,
-          phone: contactRepData.phone,
-        });
-      }
-    }
-  }, [contactrep, form]);
-
-  function onSubmit(values: z.infer<typeof contactRepSchema>) {
-    try {
-      updateMutation.mutate({
-        id: contactrepId,
-        data: values,
-      });
-    } catch (error) {
-      console.error(error);
-    }
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
   }
 
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
-        <span className="text-3xl font-bold">Update ContactRep</span>
+        <span className="text-3xl font-bold">Update Contactrep</span>
       </div>
       <Form {...form}>
         <form
