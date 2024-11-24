@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import {
   ColumnDef,
@@ -23,23 +24,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Button } from "../../../../components/ui/button";
-import { Input } from "../../../../components/ui/input";
-import * as dataTableFilter from "./data-filter";
+import { Button } from "@/components/ui/button";
+import * as dataTableFilter from "@/components/table/data-filter";
 import { CirclePlus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
-import { PATH_NAME } from "@/configs";
-import { Pagination } from "@/components/ui/pagination";
-import { DataTablePagination } from "./data-pagination";
+import { DataTablePagination } from "@/components/table/data-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  error: Error | null;
+  isPending: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  error,
+  isPending,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -68,9 +70,7 @@ export function DataTable<TData, TValue>({
       <div className="flex w-full justify-between pb-[10px] mb-[20px]">
         <dataTableFilter.DataTableFilter table={table} />
         <div className="flex gap-3">
-          <Button
-            variant="outline" onClick={() => router.push(`/contactrep`)}
-          >
+          <Button variant="outline" onClick={() => router.push(`/contactrep`)}>
             View Contactrep
           </Button>
           <Button variant="default" onClick={() => router.push(`${path}/add`)}>
@@ -107,12 +107,20 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                    <React.Fragment key={cell.id}>
+                      {isPending ? (
+                        <TableCell>
+                          <Skeleton className="w-full h-10 bg-neutral-300" />
+                        </TableCell>
+                      ) : (
+                        <TableCell>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
                       )}
-                    </TableCell>
+                    </React.Fragment>
                   ))}
                 </TableRow>
               ))
