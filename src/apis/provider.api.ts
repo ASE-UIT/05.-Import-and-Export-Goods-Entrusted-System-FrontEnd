@@ -1,10 +1,8 @@
 import http from "@/utils/http";
 import {
   createProviderData,
-  providerSchema,
   updateProviderData,
 } from "@/schema/provider.schema";
-import z from "zod";
 
 const providerAction = {
   async getProvider(id?: string) {

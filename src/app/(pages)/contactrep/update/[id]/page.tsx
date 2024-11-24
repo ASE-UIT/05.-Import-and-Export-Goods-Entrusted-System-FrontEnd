@@ -17,17 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import { ContactRepBody, ContactRepBodyType } from "@/schema/contactRep.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
-import useContactRep from "@/hooks/use-contactRep";
-import { useEffect } from "react";
-
-import { toast } from "@/hooks/use-toast";
-
-
+import { useParams } from "next/navigation";
 
 export default function UpdateContactrep() {
   const { id: contactrepId } = useParams<{ id: string }>();
