@@ -3,25 +3,23 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import StatusBadge from '@/components/status-badge';
-import Link from 'next/link'
-
+import StatusBadge from "@/components/status-badge";
+import Link from "next/link";
+import { format } from "date-fns";
 
 export interface IContract {
-  contract_id: string;
-  quotation_id: string;
-  employee_id: string;
-  start_date: string;
-  contract_date: string;
-  end_date: string;
-  create_at: string;
-  update_at: string;
+  id: string;
+  quotationId: string;
+  employeeId: string;
+  startDate: string;
+  contractDate: string;
+  endDate: string;
   status: string;
 }
 
 export const columns: ColumnDef<IContract>[] = [
   {
-    accessorKey: "contract_id",
+    accessorKey: "id",
     header: ({ column }) => {
       return (
         <Button
@@ -35,10 +33,10 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("contract_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "quotation_id",
+    accessorKey: "quotationId",
     header: ({ column }) => {
       return (
         <Button
@@ -52,10 +50,10 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("quotation_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("quotationId")}</div>,
   },
   {
-    accessorKey: "employee_id",
+    accessorKey: "employeeId",
     header: ({ column }) => {
       return (
         <Button
@@ -69,10 +67,10 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("employee_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("employeeId")}</div>,
   },
   {
-    accessorKey: "start_date",
+    accessorKey: "startDate",
     header: ({ column }) => {
       return (
         <Button
@@ -86,11 +84,13 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("start_date"),
-    sortingFn: (a, b) => new Date(a.original.start_date).getTime() - new Date(b.original.start_date).getTime(),
+    cell: ({ row }) => format(row.getValue("startDate"), "yyyy-MM-dd"),
+    sortingFn: (a, b) =>
+      new Date(a.original.startDate).getTime() -
+      new Date(b.original.startDate).getTime(),
   },
   {
-    accessorKey: "contract_date",
+    accessorKey: "contractDate",
     header: ({ column }) => {
       return (
         <Button
@@ -104,11 +104,13 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("contract_date"),
-    sortingFn: (a, b) => new Date(a.original.contract_date).getTime() - new Date(b.original.contract_date).getTime(),
+    cell: ({ row }) => format(row.getValue("contractDate"), "yyyy-MM-dd"),
+    sortingFn: (a, b) =>
+      new Date(a.original.contractDate).getTime() -
+      new Date(b.original.contractDate).getTime(),
   },
   {
-    accessorKey: "end_date",
+    accessorKey: "endDate",
     header: ({ column }) => {
       return (
         <Button
@@ -122,57 +124,25 @@ export const columns: ColumnDef<IContract>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("end_date"),
-    sortingFn: (a, b) => new Date(a.original.end_date).getTime() - new Date(b.original.end_date).getTime(),
-  },
-  {
-    accessorKey: "create_at",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Create At
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue("create_at")}</div>,
-  },
-  {
-    accessorKey: "update_at",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Update At
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue("update_at")}</div>,
+    cell: ({ row }) => format(row.getValue("endDate"), "yyyy-MM-dd"),
+    sortingFn: (a, b) =>
+      new Date(a.original.endDate).getTime() -
+      new Date(b.original.endDate).getTime(),
   },
   {
     accessorKey: "status",
-    header: "Status",  
+    header: "Status",
     cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
   },
   {
     id: "action",
     header: "Action",
     cell: ({ row }) => (
-      <div> 
-         <Link href={`/contract/update/${row.getValue("contract_id")}`}>
+      <div>
+        <Link href={`/contracts/update/${row.getValue("id")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
       </div>
     ),
-  }, 
+  },
 ];
