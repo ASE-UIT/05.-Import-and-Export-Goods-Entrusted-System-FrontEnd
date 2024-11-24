@@ -30,7 +30,6 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import useQuoteRequest from "@/hooks/use-quote-request";
-import { ErrorType } from "@/types/error.type";
 import { CreateQuoteRequestType } from "@/schema/quote-request.schema";
 const formSchema = z.object({
   requestDate: z.string(),
@@ -148,12 +147,12 @@ export default function QuoteRequestAddForm() {
                           variant={"outline"}
                           className={cn(
                             "w-full h-[60px] pl-3 text-lg font-normal flex items-center justify-start hover:bg-primary",
-                            !requestDate && "text-black"
+                            !field.value && "text-black"
                           )}
                         >
                           <CalendarIcon className="h-4 w-4 mr-2" />
-                          {requestDate ? (
-                            format(requestDate, "PPP")
+                          {field.value ? (
+                            format(field.value, "PPP")
                           ) : (
                             <span>Pick a date</span>
                           )}
@@ -166,7 +165,7 @@ export default function QuoteRequestAddForm() {
                     >
                       <Calendar
                         mode="single"
-                        selected={requestDate}
+                        selected={new Date(field.value)}
                         onSelect={(date) => setRequestDate(date)}
                       />
                     </PopoverContent>
@@ -236,12 +235,12 @@ export default function QuoteRequestAddForm() {
                           variant={"outline"}
                           className={cn(
                             "w-full h-[60px] pl-3 text-lg font-normal flex items-center justify-start hover:bg-primary",
-                            !shipmentReadyDate && "text-black"
+                            !field.value && "text-black"
                           )}
                         >
                           <CalendarIcon className="h-4 w-4 mr-2" />
-                          {shipmentReadyDate ? (
-                            format(shipmentReadyDate, "PPP")
+                          {field.value ? (
+                            format(field.value, "PPP")
                           ) : (
                             <span>Pick a date</span>
                           )}
@@ -254,7 +253,7 @@ export default function QuoteRequestAddForm() {
                     >
                       <Calendar
                         mode="single"
-                        selected={shipmentReadyDate}
+                        selected={new Date(field.value)}
                         onSelect={(date) => setShipmentReadyDate(date)}
                       />
                     </PopoverContent>
@@ -278,12 +277,12 @@ export default function QuoteRequestAddForm() {
                           variant={"outline"}
                           className={cn(
                             "w-full h-[60px] pl-3 text-lg font-normal flex items-center justify-start hover:bg-primary",
-                            !shipmentDeadline && "text-black"
+                            !field.value && "text-black"
                           )}
                         >
                           <CalendarIcon className="h-4 w-4 mr-2" />
-                          {shipmentDeadline ? (
-                            format(shipmentDeadline, "PPP")
+                          {field.value ? (
+                            format(field.value, "PPP")
                           ) : (
                             <span>Pick a date</span>
                           )}
@@ -297,7 +296,7 @@ export default function QuoteRequestAddForm() {
                     >
                       <Calendar
                         mode="single"
-                        selected={shipmentDeadline}
+                        selected={new Date(field.value)}
                         onSelect={(date) => setShipmentDeadline(date)}
                       />
                     </PopoverContent>
