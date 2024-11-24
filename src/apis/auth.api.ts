@@ -35,22 +35,6 @@ const authAction = {
       }
     }
   },
-
-  logout: async () => {
-    try {
-      const response = await http.delete("v1/session");
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data) {
-        const authError = error.response.data as ErrorType;
-        console.error("Error during logout:", authError);
-        throw authError;
-      } else {
-        console.error("Unexpected error during logout:", error);
-        throw error;
-      }
-    }
-  },
 };
 
 export default authAction;

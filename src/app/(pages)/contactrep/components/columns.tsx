@@ -1,10 +1,19 @@
 "use client";
 
+import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
-export const columns: ColumnDef<ContractRepType>[] = [
+export interface IContactrep {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+}
+
+export const columns: ColumnDef<IContactrep>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {

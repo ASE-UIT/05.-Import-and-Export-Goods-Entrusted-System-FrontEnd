@@ -4,8 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
-import { useProvider } from "@/hooks/use-provider";
-import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,53 +21,27 @@ import {
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select"; // Nhập Select
 import { useParams } from "next/navigation";
-import { providerSchema } from "@/schema/provider.schema";
-import { useContactRep } from "@/hooks/use-contactRep";
+
+const formSchema = z.object({
+  name: z.string(),
+  contactrep: z.string(),
+  email: z.string().email(),
+  phone: z.string(),
+  address: z.string(),
+  country: z.string(),
+});
 
 export default function UpdateProvider() {
   const { id: providerId } = useParams<{ id: string }>();
 
-  const { useGetProviderById, useUpdateProvider } = useProvider();
-  const { useGetAllContactRep } = useContactRep();
-
-  const updateMutation = useUpdateProvider();
-  const { data: contactReps } = useGetAllContactRep();
-
-  const form = useForm<z.infer<typeof providerSchema>>({
-    resolver: zodResolver(providerSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
   });
 
-  const { data: provider, error, isPending } = useGetProviderById(providerId);
-
-  useEffect(() => {
-    if (provider) {
-      console.log(provider);
-      if (provider.data) {
-        const providerData = provider.data[0];
-
-        form.reset({
-          name: providerData.name,
-          email: providerData.email,
-          phone: providerData.phone,
-          address: providerData.address,
-          country: providerData.country,
-          contactRepId: providerData.contactRepId,
-        });
-      }
-    }
-  }, [provider, form]);
-
-  function onSubmit(values: z.infer<typeof providerSchema>) {
-    try {
-      updateMutation.mutate({
-        id: providerId,
-        data: values,
-      });
-    } catch (error) {
-      console.error(error);
-    }
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
   }
 
   return (
@@ -100,38 +72,22 @@ export default function UpdateProvider() {
             {/* Contact Representative as Select */}
             <FormField
               control={form.control}
-              name="contactRepId"
+              name="contactrep"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">ContactRep</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <SelectTrigger className="w-full h-[60px]">
                         <SelectValue placeholder="Select a representative" />
                       </SelectTrigger>
                       <SelectContent>
-                        {contactReps ? (
-                          contactReps.data?.map((contactRep) => (
-                            <SelectItem
-                              key={contactRep.id}
-                              value={contactRep.id}
-                            >
-                              {contactRep.name}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <>
-                            <SelectItem value="01">
-                              Representative 01
-                            </SelectItem>
-                            <SelectItem value="02">
-                              Representative 02
-                            </SelectItem>
-                            <SelectItem value="03">
-                              Representative 03
-                            </SelectItem>
-                          </>
-                        )}
+                        <SelectItem value="01">Representative 01</SelectItem>
+                        <SelectItem value="02">Representative 02</SelectItem>
+                        <SelectItem value="03">Representative 03</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
