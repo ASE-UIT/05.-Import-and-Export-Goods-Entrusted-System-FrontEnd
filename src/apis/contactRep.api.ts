@@ -1,10 +1,8 @@
 import http from "@/utils/http";
 import {
-  contactRepSchema,
   createContactRepData,
   updateContactRepData,
 } from "@/schema/contactRep.schema";
-import z from "zod";
 
 const contactRepAction = {
   async getContactRep(id?: string) {
