@@ -7,6 +7,7 @@ import { PATH_NAME } from "@/configs";
 import {
   ColumnDef,
   ColumnFiltersState,
+  Row,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -29,30 +30,27 @@ import { useRouter } from "next/navigation";
 import { DataTablePagination } from "../../shipment/tracking/components/pagination";
 import { DataTableFilter } from "./filter";
 import StatusBadge, { Status } from "@/components/status-badge";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CustomDialog } from "./popup";
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface DataTableProps {
+  columns: ColumnDef<QuoteRequest, unknown>[];
+  data: QuoteRequest[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [selectedRow, setSelectedRow] = React.useState(null);
   const [isPopupOpen, setIsPopupOpen] = React.useState(false);
   const [quoteRequestId, setQuoteRequestId] = React.useState<string | null>(null);
   const router = useRouter();
-   const handleRowClick = async (row) => {
+   const handleRowClick = async (row : Row<QuoteRequest>) => {
     const id = row.original.quote_request_id;
-    setSelectedRow(row);
     setQuoteRequestId(id);
     setIsPopupOpen(true);
    }
-  const table = useReactTable({
+  const table = useReactTable<QuoteRequest>({
     data,
     columns,
     onSortingChange: setSorting,
@@ -113,7 +111,7 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  key={row.original.quote_request_id}
+                  key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => handleRowClick(row)}
                   className="cursor-pointer"
