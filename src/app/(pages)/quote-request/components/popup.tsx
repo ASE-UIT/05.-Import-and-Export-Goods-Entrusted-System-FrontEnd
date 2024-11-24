@@ -17,11 +17,8 @@ export function CustomDialog({
   quoteRequestId,
   setIsPopupOpen,
 }: CustomDialogProps) {
-  const { data, isLoading, error } = useQuoteRequest.useGetQuoteRequestDetail(
-    quoteRequestId || "",
-    {
-      enabled: !!quoteRequestId,
-    }
+  const { data } = useQuoteRequest.useGetQuoteRequestDetail(
+    quoteRequestId || ""
   );
   const closePopup = () => {
     setIsPopupOpen(false);
