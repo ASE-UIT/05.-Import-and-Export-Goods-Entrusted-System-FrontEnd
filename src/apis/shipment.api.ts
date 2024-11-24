@@ -7,7 +7,7 @@ import {
 
 const shipmentAction={
     async getShipment(id?: string){
-        const res= await http.get<EximResponseWrapper<ShipmentType[]>>(
+        const res= await http.get<EximResponseWrapper<IShipment[]>>(
             "/v1/shipment",{
                 params: {
                     id,
