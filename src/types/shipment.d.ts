@@ -8,4 +8,5 @@ type IShipment={
     status: string;
     origin: string;
     destination: string;
+    contractId: string
 }
