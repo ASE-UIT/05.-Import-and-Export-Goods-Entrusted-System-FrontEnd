@@ -31,3 +31,5 @@ const shipmentAction={
         return res.data;
       },
 }
+
+export default shipmentAction;
