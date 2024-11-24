@@ -1,7 +1,5 @@
 import { UpdateShipmentTrackingBodyType } from "@/schema/shipmentTracking.schema";
 import { ErrorType } from "@/types/error.type";
-import { ShipmentTracking } from "@/types/shipment-tracking.type";
-import { Shipment } from "@/types/shipment.type";
 import http from "@/utils/http";
 import axios from "axios";
 
@@ -17,10 +15,7 @@ const shipmentTrackingAction = {
         location,
         status,
       };
-      const response = await http.get<EximResponseWrapper<ShipmentTracking[]>>(
-        `v1/shipment-tracking`,
-        { params }
-      );
+      const response = await http.get(`/shipment-tracking`, { params });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
@@ -35,12 +30,12 @@ const shipmentTrackingAction = {
   },
 
   updateShipmentTracking: async (
-    trackingId: string,
+    shipmentId: string,
     body: UpdateShipmentTrackingBodyType
   ) => {
     try {
       const response = await http.patch(
-        `v1/shipment-tracking/${trackingId}`,
+        `/shipment-tracking/${shipmentId}`,
         body
       );
       return response.data;
@@ -57,29 +52,6 @@ const shipmentTrackingAction = {
           "Unexpected error during update shipment tracking:",
           error
         );
-        throw error;
-      }
-    }
-  },
-
-  getShipment: async (contractId?: string, shipmentType?: string) => {
-    try {
-      const params = {
-        contractId,
-        shipmentType,
-      };
-      const response = await http.get<EximResponseWrapper<Shipment[]>>(
-        `v1/shipment`,
-        { params }
-      );
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data) {
-        const shipmentError = error.response.data as ErrorType;
-        console.error("Error during shipment:", shipmentError);
-        throw shipmentError;
-      } else {
-        console.error("Unexpected error during shipment:", error);
         throw error;
       }
     }
