@@ -28,7 +28,6 @@ const useQuoteRequest ={
         queryFn: async () => {
             try {
             const result = await quoteRequestAction.getQuoteRequest();
-            console.log("Hello");;
             return result;
             } catch (error) {
             console.error("Error during get quote request:", error);
@@ -38,7 +37,7 @@ const useQuoteRequest ={
         retry: 0,
         });
     },
-    useGetQuoteRequestDetail(quoteRequestId: string, p0: { enabled: boolean; }) {
+    useGetQuoteRequestDetail(quoteRequestId: string) {
         return useQuery({
         queryKey: ["quote-request-detail", quoteRequestId],
         queryFn: async () => {
