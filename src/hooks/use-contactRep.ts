@@ -1,5 +1,11 @@
 import contactRepAction from "@/apis/contactRep.api";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
+import {
+  contactRepSchema,
+  createContactRepData,
+  updateContactRepData,
+} from "@/schema/contactRep.schema";
+import z from "zod";
 
 export const useContactRep = () => {
   const queryClient = useQueryClient();
@@ -15,7 +21,8 @@ export const useContactRep = () => {
 
   const useCreateContactRep = () => {
     return useMutation({
-      mutationFn: (data: any) => contactRepAction.createContactRep(data),
+      mutationFn: (data: createContactRepData) =>
+        contactRepAction.createContactRep(data),
       onSettled: () => {
         queryClient.invalidateQueries({
           queryKey: ["contactReps"],
@@ -26,7 +33,7 @@ export const useContactRep = () => {
 
   const useUpdateContactRep = () => {
     return useMutation({
-      mutationFn: ({ id, data }: { id: string; data: any }) =>
+      mutationFn: ({ id, data }: { id: string; data: updateContactRepData }) =>
         contactRepAction.updateContactRep(id, data),
       onSettled: () => {
         queryClient.invalidateQueries({

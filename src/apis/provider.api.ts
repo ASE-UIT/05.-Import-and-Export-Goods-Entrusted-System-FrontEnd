@@ -1,4 +1,10 @@
 import http from "@/utils/http";
+import {
+  createProviderData,
+  providerSchema,
+  updateProviderData,
+} from "@/schema/provider.schema";
+import z from "zod";
 
 const providerAction = {
   async getProvider(id?: string) {
@@ -12,11 +18,11 @@ const providerAction = {
     );
     return res.data;
   },
-  async createProvider(data: any) {
+  async createProvider(data: createProviderData) {
     const res = await http.post<EximResponseWrapper>(`/v1/providers`, data);
     return res.data;
   },
-  async updateProvider(id: string, data: any) {
+  async updateProvider(id: string, data: updateProviderData) {
     const res = await http.patch<EximResponseWrapper>(
       `/v1/providers/${id}`,
       data

@@ -1,4 +1,10 @@
 import http from "@/utils/http";
+import {
+  contactRepSchema,
+  createContactRepData,
+  updateContactRepData,
+} from "@/schema/contactRep.schema";
+import z from "zod";
 
 const contactRepAction = {
   async getContactRep(id?: string) {
@@ -12,14 +18,14 @@ const contactRepAction = {
     );
     return res.data;
   },
-  async createContactRep(data: any) {
+  async createContactRep(data: createContactRepData) {
     const res = await http.post<EximResponseWrapper>(
       `v1/contact-representatives`,
       data
     );
     return res.data;
   },
-  async updateContactRep(id: string, data: any) {
+  async updateContactRep(id: string, data: updateContactRepData) {
     const res = await http.patch<EximResponseWrapper>(
       `v1/contact-representatives/${id}`,
       data
