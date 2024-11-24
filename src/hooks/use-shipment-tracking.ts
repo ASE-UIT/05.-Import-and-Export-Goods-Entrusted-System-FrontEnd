@@ -7,9 +7,7 @@ const useShipmentTracking = {
   useGetShipmentTracking(
     shipmentId?: string,
     location?: string,
-    status?: string,
-    page?: number,
-    limit?: number
+    status?: string
   ) {
     return useQuery({
       queryKey: ["shipment-tracking"],
@@ -18,11 +16,9 @@ const useShipmentTracking = {
           const result = await shipmentTrackingAction.getShipmentTracking(
             shipmentId,
             location,
-            status,
-            page,
-            limit
+            status
           );
-          return result;
+          return result.data;
         } catch (error) {
           console.error("Error during shipment tracking retrieval:", error);
           throw error;
@@ -36,51 +32,25 @@ const useShipmentTracking = {
     const queryClient = useQueryClient();
     return useMutation({
       mutationFn: ({
-        trackingId,
+        shipmentId,
         updateDetails,
       }: {
-        trackingId: string;
+        shipmentId: string;
         updateDetails: UpdateShipmentTrackingBodyType;
       }) =>
         shipmentTrackingAction.updateShipmentTracking(
-          trackingId,
+          shipmentId,
           updateDetails
         ),
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ["shipment-tracking", "shipment"],
+          queryKey: ["shipment-tracking"],
         });
       },
       onError: (error: ErrorType) => {
         console.error("Error during shipment tracking update:", error);
         throw error;
       },
-    });
-  },
-
-  useGetShipment(
-    contractId?: string,
-    shipmentType?: string,
-    page?: number,
-    limit?: number
-  ) {
-    return useQuery({
-      queryKey: ["shipment", contractId, shipmentType, page, limit],
-      queryFn: async () => {
-        try {
-          const result = await shipmentTrackingAction.getShipment(
-            contractId,
-            shipmentType,
-            page,
-            limit
-          );
-          return result;
-        } catch (error) {
-          console.error("Error during shipment retrieval:", error);
-          throw error;
-        }
-      },
-      retry: 0,
     });
   },
 };
