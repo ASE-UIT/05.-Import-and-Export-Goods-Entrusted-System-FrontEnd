@@ -2,7 +2,6 @@ import providerAction from "@/apis/provider.api";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import {
   createProviderData,
-  providerSchema,
   updateProviderData,
 } from "@/schema/provider.schema";
 
