@@ -1,5 +1,11 @@
 type IShipment={
     id: string;
-    shipmentType: string;
-    contractId: string;
+    type: string;
+    client: string;
+    price: string;
+    enddate: string;
+    location: string;
+    status: string;
+    origin: string;
+    destination: string;
 }
