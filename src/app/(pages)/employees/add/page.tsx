@@ -56,6 +56,7 @@ export default function AddEmployeePage() {
       } catch (error) {
         setPreview(null);
         form.resetField("file");
+        console.error(error);
       }
     },
     [form]
@@ -79,7 +80,9 @@ export default function AddEmployeePage() {
             <FormField
               control={form.control}
               name="file"
-              render={({ field: { value, onChange, ...fieldProps } }) => (
+              render={({
+                field: { value: _value, onChange, ...fieldProps },
+              }) => (
                 <FormItem className="w-full">
                   <FormControl>
                     <div className="flex flex-col items-center gap-4">

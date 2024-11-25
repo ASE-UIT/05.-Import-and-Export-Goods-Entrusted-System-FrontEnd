@@ -24,8 +24,11 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { useParams } from "next/navigation";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 
@@ -68,7 +71,9 @@ export default function AddInvoice() {
       invoice_date: values.invoice_date
         ? format(values.invoice_date, "d-M-yyyy")
         : undefined,
-      paid_date: values.paid_date ? format(values.paid_date, "d-M-yyyy") : undefined,
+      paid_date: values.paid_date
+        ? format(values.paid_date, "d-M-yyyy")
+        : undefined,
     });
   }
 
@@ -78,7 +83,10 @@ export default function AddInvoice() {
         <span className="text-3xl font-bold">Add Invoice</span>
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} encType="multipart/form-data">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          encType="multipart/form-data"
+        >
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
             {/* Contract ID */}
             <FormField
@@ -88,7 +96,10 @@ export default function AddInvoice() {
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Contract ID</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <SelectTrigger className="w-full h-[60px]">
                         <SelectValue placeholder="Select contract ID" />
                       </SelectTrigger>
@@ -112,7 +123,10 @@ export default function AddInvoice() {
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Employee ID</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <SelectTrigger className="w-full h-[60px]">
                         <SelectValue placeholder="Select employee ID" />
                       </SelectTrigger>
@@ -134,9 +148,11 @@ export default function AddInvoice() {
               <FormField
                 control={form.control}
                 name="invoice_date"
-                render={({ field }) => (
+                render={() => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">Invoice Date</FormLabel>
+                    <FormLabel className="text-[16px] font-bold">
+                      Invoice Date
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -172,9 +188,11 @@ export default function AddInvoice() {
               <FormField
                 control={form.control}
                 name="paid_date"
-                render={({ field }) => (
+                render={() => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">Paid Date</FormLabel>
+                    <FormLabel className="text-[16px] font-bold">
+                      Paid Date
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -239,7 +257,11 @@ export default function AddInvoice() {
 
             <div className="w-1/2 flex gap-2.5">
               <Link href="/payment" className="w-1/2 h-14">
-                <Button className="w-full h-10 text-lg" variant={"outline"} type="button">
+                <Button
+                  className="w-full h-10 text-lg"
+                  variant={"outline"}
+                  type="button"
+                >
                   Cancel
                 </Button>
               </Link>

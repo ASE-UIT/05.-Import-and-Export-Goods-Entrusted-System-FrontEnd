@@ -1,7 +1,4 @@
-
 import { IQuotation } from "../components/columns";
-import StatusBadge from '@/components/status-badge';
-import Link from 'next/link'
 
 export const quotationData: IQuotation[] = [
   {
@@ -152,7 +149,7 @@ export const quotationData: IQuotation[] = [
     quotation_id: "13",
     quote_request_id: "13",
     employee_id: "13",
-    freight_id :"13",
+    freight_id: "13",
     total_price: "$10,000",
     pickup_date: "2024-06-16",
     delivery_date: "2024-06-16",
@@ -164,7 +161,7 @@ export const quotationData: IQuotation[] = [
     quotation_id: "14",
     quote_request_id: "14",
     employee_id: "14",
-    freight_id :"14",
+    freight_id: "14",
     total_price: "$90,000",
     pickup_date: "2024-01-14",
     delivery_date: "2024-01-14",

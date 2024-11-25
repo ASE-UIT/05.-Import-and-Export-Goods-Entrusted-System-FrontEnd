@@ -27,8 +27,6 @@ import { Button } from "../../../../../../components/ui/button";
 
 import { CirclePlus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
-import { PATH_NAME } from "@/configs";
-import { Pagination } from "@/components/ui/pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

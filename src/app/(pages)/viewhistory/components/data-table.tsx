@@ -24,12 +24,8 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "../../../../components/ui/button";
-import { Input } from "../../../../components/ui/input";
 import * as dataTableFilter from "./data-filter";
-import { CirclePlus } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
-import { PATH_NAME } from "@/configs";
-import { Pagination } from "@/components/ui/pagination";
+import { useRouter } from "next/navigation";
 import { DataTablePagination } from "./data-pagination";
 
 interface DataTableProps<TData, TValue> {
@@ -46,7 +42,7 @@ export function DataTable<TData, TValue>({
     []
   );
   const router = useRouter();
-  const path = usePathname();
+  // const path = usePathname();
 
   const table = useReactTable({
     data,
@@ -68,9 +64,7 @@ export function DataTable<TData, TValue>({
       <div className="flex w-full justify-between pb-[10px] mb-[20px]">
         <dataTableFilter.DataTableFilter table={table} />
         <div className="flex gap-3">
-          <Button
-            variant="outline" onClick={() => router.push(`/payment`)}
-          >
+          <Button variant="outline" onClick={() => router.push(`/payment`)}>
             View Payment
           </Button>
         </div>
