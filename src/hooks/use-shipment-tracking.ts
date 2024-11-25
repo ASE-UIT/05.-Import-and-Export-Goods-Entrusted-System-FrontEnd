@@ -32,25 +32,44 @@ const useShipmentTracking = {
     const queryClient = useQueryClient();
     return useMutation({
       mutationFn: ({
-        shipmentId,
+        trackingId,
         updateDetails,
       }: {
-        shipmentId: string;
+        trackingId: string;
         updateDetails: UpdateShipmentTrackingBodyType;
       }) =>
         shipmentTrackingAction.updateShipmentTracking(
-          shipmentId,
+          trackingId,
           updateDetails
         ),
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ["shipment-tracking"],
+          queryKey: ["shipment-tracking", "shipment"],
         });
       },
       onError: (error: ErrorType) => {
         console.error("Error during shipment tracking update:", error);
         throw error;
       },
+    });
+  },
+
+  useGetShipment(contractId?: string, shipmentType?: string) {
+    return useQuery({
+      queryKey: ["shipment"],
+      queryFn: async () => {
+        try {
+          const result = await shipmentTrackingAction.getShipment(
+            contractId,
+            shipmentType
+          );
+          return result.data;
+        } catch (error) {
+          console.error("Error during shipment retrieval:", error);
+          throw error;
+        }
+      },
+      retry: 0,
     });
   },
 };

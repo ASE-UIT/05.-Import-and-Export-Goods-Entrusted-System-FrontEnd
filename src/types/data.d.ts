@@ -54,7 +54,7 @@ interface ShipmentTracking {
   status: ShipmentStatus;
   location: string;
   client: string;
-  shipment_type: ShipmentType
+  shipment_type: ShipmentType;
 }
 
 ContractStatus = "Pending" | "Active" | "Expired" | "Terminated";
