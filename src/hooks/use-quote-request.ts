@@ -67,5 +67,20 @@ const useQuoteRequest ={
         retry: 0,
         });
     },
+    useGetCustomerInfo() {
+        return useQuery({
+        queryKey: ["customers"],
+        queryFn: async () => {
+            try {
+            const result = await quoteRequestAction.getCustomerInfo();
+            return result;
+            } catch (error) {
+            console.error("Error during get customer info:", error);
+            throw error;
+            }
+        },
+        retry: 0,
+        });
+    },
 }
 export default useQuoteRequest
