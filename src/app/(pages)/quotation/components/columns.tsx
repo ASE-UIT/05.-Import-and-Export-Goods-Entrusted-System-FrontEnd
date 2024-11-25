@@ -4,14 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import StatusBadge from '@/components/status-badge';
-import Link from 'next/link'
-import {TableCell} from '@/components/ui/table'
-
+import StatusBadge from "@/components/status-badge";
+import Link from "next/link";
 
 export interface IQuotation {
   quotation_id: string;
-  quote_request_id:string
+  quote_request_id: string;
   employee_id: string;
   freight_id: string;
   total_price: string;
@@ -27,15 +25,19 @@ export const columns: ColumnDef<IQuotation>[] = [
     id: "checkbox",
     cell: ({ row }) => (
       <div className="flex justify-center">
-        <Checkbox 
+        <Checkbox
           className="h-4 w-4"
           onCheckedChange={(checked) => {
             if (checked) {
-              console.log(`Selected row with ID: ${row.getValue("quotation_id")}`);
+              console.log(
+                `Selected row with ID: ${row.getValue("quotation_id")}`
+              );
             } else {
-              console.log(`Deselected row with ID: ${row.getValue("quotation_id")}`);
+              console.log(
+                `Deselected row with ID: ${row.getValue("quotation_id")}`
+              );
             }
-          }} 
+          }}
         />
       </div>
     ),
@@ -195,14 +197,14 @@ export const columns: ColumnDef<IQuotation>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",  
+    header: "Status",
     cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
   },
   {
     id: "action",
     header: "Action",
     cell: ({ row }) => (
-      <div>  
+      <div>
         <Link href={`/quotation/update/${row.getValue("quotation_id")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
@@ -211,11 +213,12 @@ export const columns: ColumnDef<IQuotation>[] = [
   },
   {
     id: "delete",
-    cell: ({ row }) => (
-      <div>  
-        <Button 
-          variant="default"  
-          className="flex items-center gap-2 text-sm px-2 py-1">
+    cell: () => (
+      <div>
+        <Button
+          variant="default"
+          className="flex items-center gap-2 text-sm px-2 py-1"
+        >
           <span>Delete</span>
         </Button>
       </div>

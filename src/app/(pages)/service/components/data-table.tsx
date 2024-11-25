@@ -24,12 +24,9 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "../../../../components/ui/button";
-import { Input } from "../../../../components/ui/input";
 import * as dataTableFilter from "./data-filter";
 import { CirclePlus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
-import { PATH_NAME } from "@/configs";
-import { Pagination } from "@/components/ui/pagination";
 import { DataTablePagination } from "./data-pagination";
 
 interface DataTableProps<TData, TValue> {

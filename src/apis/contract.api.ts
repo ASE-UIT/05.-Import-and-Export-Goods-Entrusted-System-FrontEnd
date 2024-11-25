@@ -1,8 +1,6 @@
 import {
   BookedQuotationsType,
-  ContractDetailsType,
   ContractsResType,
-  CreateContractBody,
   CreateContractType,
   UpdateContractType,
 } from "@/schema/contract.schema";

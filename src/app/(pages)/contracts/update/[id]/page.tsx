@@ -227,7 +227,7 @@ export default function UpdateContractPage() {
                 <FormField
                   control={form.control}
                   name="startDate"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem className="w-1/2">
                       <FormLabel className="text-[16px] font-bold">
                         Start Date
@@ -274,7 +274,7 @@ export default function UpdateContractPage() {
                 <FormField
                   control={form.control}
                   name="endDate"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem className="w-1/2">
                       <FormLabel className="text-[16px] font-bold">
                         End Date
@@ -323,7 +323,7 @@ export default function UpdateContractPage() {
                 <FormField
                   control={form.control}
                   name="contractDate"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem className="w-1/2">
                       <FormLabel className="text-[16px] font-bold">
                         Contract Date
