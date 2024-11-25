@@ -31,6 +31,13 @@ import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import useQuoteRequest from "@/hooks/use-quote-request";
 import { CreateQuoteRequestType } from "@/schema/quote-request.schema";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 const formSchema = z.object({
   requestDate: z.string(),
   customerId: z.string(),
@@ -54,9 +61,13 @@ export default function QuoteRequestAddForm() {
     undefined
   );
   const [requestDate, setRequestDate] = useState<Date | undefined>(undefined);
+
   const router = useRouter();
+
   const { mutate: CreateQuoteRequest } =
     useQuoteRequest.useCreateQuoteRequest(router);
+  const { data: customerData } = useQuoteRequest.useGetCustomerInfo();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -74,6 +85,7 @@ export default function QuoteRequestAddForm() {
       width: "",
     },
   });
+
   useEffect(() => {
     if (shipmentReadyDate)
       form.setValue(
@@ -126,7 +138,27 @@ export default function QuoteRequestAddForm() {
                 <FormItem>
                   <FormLabel className="text-lg">Customer Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input" {...field} className="w-full" />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-full h-[60px] text-lg ">
+                        <SelectValue placeholder="Select customer" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {customerData?.data ? (
+                          customerData.data.map((it) => (
+                            <SelectItem key={it.id} value={it.id}>
+                              {it.name}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            No Customer Available
+                          </div>
+                        )}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

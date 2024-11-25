@@ -47,6 +47,22 @@ export const getPackageDetails =  z.object({
         createdAt: z.date(),
         updatedAt:  z.date()
     });
+export const getCustomerInfo =  z.object({
+        message: z.string(),
+        data: z.array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+            shortName: z.string(),
+            email: z.string(),
+            phone: z.string(),
+            address: z.string(),
+            taxId: z.string(),
+            legalRepId: z.string()
+          })
+        ),
+       
+    });
 function mapToQuoteRequest(data: z.infer<typeof getQuoteRequest>): QuoteRequest[] {
   return data.map((data) => ({
     quote_request_id: data.id,                
@@ -62,4 +78,5 @@ export type GetQuoteRequestType = z.TypeOf<typeof getQuoteRequest>;
 export type GetQuoteRequestDetailsType = z.TypeOf<typeof getQuoteRequestDetails>;
 export type CreateQuoteRequestType = z.TypeOf<typeof createQuoteRequestBody>;
 export type GetPackageDetails= z.TypeOf<typeof getPackageDetails>;
+export type GetCustomerInfo= z.TypeOf<typeof getCustomerInfo>;
 export default mapToQuoteRequest;
