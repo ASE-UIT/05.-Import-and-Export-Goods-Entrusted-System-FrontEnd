@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const statusColors: { [key in Status]: string } = {
+const statusColors: { [_key in Status]: string } = {
   PENDING: "#FF7700",
   COMPLETED: "#108080",
   CANCELLED: "#3C3C3C",

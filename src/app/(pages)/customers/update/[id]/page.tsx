@@ -67,7 +67,8 @@ export default function UpdateCustomerPage() {
       } catch (error) {
         console.log(error);
         setPreview(null);
-        form.resetField('file');
+        form.resetField("file");
+        console.error(error);
       }
     },
     [form]
@@ -120,6 +121,9 @@ export default function UpdateCustomerPage() {
             <FormField
               control={form.control}
               name="file"
+              render={({
+                field: { value: _value, onChange, ...fieldProps },
+              }) => (
               render={({
                 field: { value: _value, onChange, ...fieldProps },
               }) => (

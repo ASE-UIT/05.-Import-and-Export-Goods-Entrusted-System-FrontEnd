@@ -1,10 +1,9 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
-import { ICustomer } from '.';
-import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
+import { ICustomer } from ".";
 
 export const columns: ColumnDef<ICustomer>[] = [
   {

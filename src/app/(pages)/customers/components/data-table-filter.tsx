@@ -1,8 +1,9 @@
 'use client';
 
-import { Table } from '@tanstack/react-table';
-import { Input } from '@/components/ui/input';
-import { SetStateAction, useState } from 'react';
+import { Table } from "@tanstack/react-table";
+
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import {
   Select,
   SelectTrigger,
@@ -57,7 +58,7 @@ export function DataTableFilter<TData>({
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {filterableColumns.map((title) => (
+            {columnsTitle.map((title) => (
               <SelectItem value={title} key={title}>
                 {title
                   .split('_')

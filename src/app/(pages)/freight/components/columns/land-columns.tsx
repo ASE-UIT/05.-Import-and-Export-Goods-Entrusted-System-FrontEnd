@@ -21,12 +21,22 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => {
-      const providerName =
-        useProvider().useGetProviderById(row.getValue("providerId")).data
-          ?.data?.[0]?.name || "Noname";
-      return <div>{providerName}</div>;
+    cell: ({ row }) => <div>{row.getValue("provider_name")}</div>,
+  },
+  {
+    accessorKey: "freight_type",
+    header: () => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+        >
+          Freight Type
+        </Button>
+      );
     },
+    cell: ({ row }) => <div>{row.getValue("freight_type")}</div>,
   },
   {
     accessorKey: "origin",
@@ -114,24 +124,7 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
     cell: ({ row }) => row.getValue("validUntil"),
   },
   {
-    accessorKey: "additionFee",
-    header: () => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-        >
-          <p className="text-ellipsis overflow-hidden w-[100px]">
-            Addition Fee
-          </p>
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("additionFee"),
-  },
-  {
-    accessorKey: "addition_fee_breakdown",
+    accessorKey: "note",
     header: () => {
       return (
         <Button

@@ -258,7 +258,7 @@ export default function UpdateProvider() {
     resolver: zodResolver(providerSchema),
   });
 
-  const { data: provider, error, isPending } = useGetProviderById(providerId);
+  const { data: provider } = useGetProviderById(providerId);
 
   useEffect(() => {
     if (provider) {

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useProvider } from "@/hooks/use-provider";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
@@ -21,12 +20,22 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => {
-      const providerName =
-        useProvider().useGetProviderById(row.getValue("providerId")).data
-          ?.data?.[0]?.name || "Noname";
-      return <div>{providerName}</div>;
+    cell: ({ row }) => <div>{row.getValue("provider_name")}</div>,
+  },
+  {
+    accessorKey: "freight_type",
+    header: () => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+        >
+          Freight Type
+        </Button>
+      );
     },
+    cell: ({ row }) => <div>{row.getValue("freight_type")}</div>,
   },
   {
     accessorKey: "origin",
@@ -114,24 +123,7 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
     cell: ({ row }) => row.getValue("validUntil"),
   },
   {
-    accessorKey: "additionFee",
-    header: () => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-        >
-          <p className="text-ellipsis overflow-hidden w-[100px]">
-            Addition Fee
-          </p>
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("additionFee"),
-  },
-  {
-    accessorKey: "addition_fee_breakdown",
+    accessorKey: "note",
     header: () => {
       return (
         <Button

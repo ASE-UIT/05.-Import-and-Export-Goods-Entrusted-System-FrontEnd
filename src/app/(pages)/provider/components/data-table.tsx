@@ -40,7 +40,6 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  error,
   isPending,
   error,
   isPending,
