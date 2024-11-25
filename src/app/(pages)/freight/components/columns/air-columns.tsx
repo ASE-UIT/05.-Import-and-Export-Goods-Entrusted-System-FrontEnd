@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import { useProvider } from "@/hooks/use-provider";
+import { IAirFreight } from "..";
 
-export const airColumns: ColumnDef<Freight & AirFreight>[] = [
+export const airColumns: ColumnDef<IAirFreight>[] = [
   {
-    accessorKey: "providerId",
+    accessorKey: "provider_name",
     header: ({ column }) => {
       return (
         <Button
@@ -16,17 +16,27 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Provider
+          Provider Name
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => {
-      const providerName =
-        useProvider().useGetProviderById(row.getValue("providerId")).data
-          ?.data?.[0]?.name || "Noname";
-      return <div>{providerName}</div>;
+    cell: ({ row }) => <div>{row.getValue("provider_name")}</div>,
+  },
+  {
+    accessorKey: "freight_type",
+    header: () => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+        >
+          Freight Type
+        </Button>
+      );
     },
+    cell: ({ row }) => <div>{row.getValue("freight_type")}</div>,
   },
   {
     accessorKey: "origin",
@@ -63,7 +73,7 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
     cell: ({ row }) => row.getValue("destination"),
   },
   {
-    accessorKey: "transitTime",
+    accessorKey: "transit_time",
     header: ({ column }) => {
       return (
         <Button
@@ -77,10 +87,27 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("transitTime"),
+    cell: ({ row }) => row.getValue("transit_time"),
   },
   {
-    accessorKey: "validFrom",
+    accessorKey: "transit",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Transit
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("transit"),
+  },
+  {
+    accessorKey: "valid_from",
     header: ({ column }) => {
       return (
         <Button
@@ -94,10 +121,10 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("validFrom"),
+    cell: ({ row }) => row.getValue("valid_from"),
   },
   {
-    accessorKey: "validUntil",
+    accessorKey: "valid_until",
     header: ({ column }) => {
       return (
         <Button
@@ -111,10 +138,10 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("validUntil"),
+    cell: ({ row }) => row.getValue("valid_until"),
   },
   {
-    accessorKey: "additionFee",
+    accessorKey: "note",
     header: () => {
       return (
         <Button
@@ -122,51 +149,14 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
           variant="ghost"
           style={{ backgroundColor: "transparent" }}
         >
-          <p className="text-ellipsis overflow-hidden w-[100px]">
-            Addition Fee
-          </p>
+          Note
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("additionFee"),
+    cell: ({ row }) => row.getValue("note"),
   },
   {
-    accessorKey: "addition_fee_breakdown",
-    header: () => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-        >
-          <p className="text-ellipsis overflow-hidden w-[100px]">
-            Addition Fee Breakdown
-          </p>
-        </Button>
-      );
-    },
-    cell: ({ row }) =>
-      row.getValue("addition_fee_breakdown")
-        ? row.getValue("addition_fee_breakdown")
-        : "N/A",
-  },
-  {
-    accessorKey: "schedule",
-    header: () => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-        >
-          Schedule
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("schedule"),
-  },
-  {
-    accessorKey: "price_0K",
+    accessorKey: "free_time",
     header: ({ column }) => {
       return (
         <Button
@@ -175,15 +165,15 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          0K
+          Free Time
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_0K"),
+    cell: ({ row }) => row.getValue("free_time"),
   },
   {
-    accessorKey: "price_45K",
+    accessorKey: "forty_five_K",
     header: ({ column }) => {
       return (
         <Button
@@ -197,10 +187,10 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_45K"),
+    cell: ({ row }) => row.getValue("forty_five_K"),
   },
   {
-    accessorKey: "price_100K",
+    accessorKey: "one_hundred_K",
     header: ({ column }) => {
       return (
         <Button
@@ -214,10 +204,10 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_100K"),
+    cell: ({ row }) => row.getValue("one_hundred_K"),
   },
   {
-    accessorKey: "price_300K",
+    accessorKey: "three_hundred_K",
     header: ({ column }) => {
       return (
         <Button
@@ -231,10 +221,10 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_300K"),
+    cell: ({ row }) => row.getValue("three_hundred_K"),
   },
   {
-    accessorKey: "price_500K",
+    accessorKey: "five_hundred_K",
     header: ({ column }) => {
       return (
         <Button
@@ -248,6 +238,74 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_500K"),
+    cell: ({ row }) => row.getValue("five_hundred_K"),
+  },
+  {
+    accessorKey: "FSC",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          FSC
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("FSC"),
+  },
+  {
+    accessorKey: "AMS_fees",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          AMS Fees
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("AMS_fees"),
+  },
+  {
+    accessorKey: "SCC",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          SCC
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("SCC"),
+  },
+  {
+    accessorKey: "routine",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Routine
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("routine"),
   },
 ];

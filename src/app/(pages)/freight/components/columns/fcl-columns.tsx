@@ -1,13 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useProvider } from "@/hooks/use-provider";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
+import { ISeaFreight } from "..";
 
-export const fclColumns: ColumnDef<Freight & FCL>[] = [
+export const seaColumns: ColumnDef<ISeaFreight>[] = [
   {
-    accessorKey: "providerId",
+    accessorKey: "provider_name",
     header: ({ column }) => {
       return (
         <Button
@@ -16,17 +16,27 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Provider
+          Provider Name
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => {
-      const providerName =
-        useProvider().useGetProviderById(row.getValue("providerId")).data
-          ?.data?.[0]?.name || "Noname";
-      return <div>{providerName}</div>;
+    cell: ({ row }) => <div>{row.getValue("provider_name")}</div>,
+  },
+  {
+    accessorKey: "freight_type",
+    header: () => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+        >
+          Freight Type
+        </Button>
+      );
     },
+    cell: ({ row }) => <div>{row.getValue("freight_type")}</div>,
   },
   {
     accessorKey: "origin",
@@ -63,7 +73,7 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
     cell: ({ row }) => row.getValue("destination"),
   },
   {
-    accessorKey: "transitTime",
+    accessorKey: "transit_time",
     header: ({ column }) => {
       return (
         <Button
@@ -77,10 +87,27 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("transitTime"),
+    cell: ({ row }) => row.getValue("transit_time"),
   },
   {
-    accessorKey: "validFrom",
+    accessorKey: "transit",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Transit
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("transit"),
+  },
+  {
+    accessorKey: "valid_from",
     header: ({ column }) => {
       return (
         <Button
@@ -94,10 +121,10 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("validFrom"),
+    cell: ({ row }) => row.getValue("valid_from"),
   },
   {
-    accessorKey: "validUntil",
+    accessorKey: "valid_until",
     header: ({ column }) => {
       return (
         <Button
@@ -111,10 +138,10 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("validUntil"),
+    cell: ({ row }) => row.getValue("valid_until"),
   },
   {
-    accessorKey: "additionFee",
+    accessorKey: "note",
     header: () => {
       return (
         <Button
@@ -122,51 +149,31 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
           variant="ghost"
           style={{ backgroundColor: "transparent" }}
         >
-          <p className="text-ellipsis overflow-hidden w-[100px]">
-            Addition Fee
-          </p>
+          Note
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("additionFee"),
+    cell: ({ row }) => row.getValue("note"),
   },
   {
-    accessorKey: "addition_fee_breakdown",
-    header: () => {
+    accessorKey: "free_time",
+    header: ({ column }) => {
       return (
         <Button
           className="pl-0"
           variant="ghost"
           style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          <p className="text-ellipsis overflow-hidden w-[100px]">
-            Addition Fee Breakdown
-          </p>
+          Free Time
+          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) =>
-      row.getValue("addition_fee_breakdown")
-        ? row.getValue("addition_fee_breakdown")
-        : "N/A",
+    cell: ({ row }) => row.getValue("free_time"),
   },
   {
-    accessorKey: "schedule",
-    header: () => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-        >
-          Schedule
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("schedule"),
-  },
-  {
-    accessorKey: "price_20dc",
+    accessorKey: "twenty_DC",
     header: ({ column }) => {
       return (
         <Button
@@ -180,10 +187,10 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_20dc"),
+    cell: ({ row }) => row.getValue("twenty_DC"),
   },
   {
-    accessorKey: "price_40dc",
+    accessorKey: "forty_DC",
     header: ({ column }) => {
       return (
         <Button
@@ -197,10 +204,10 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_40dc"),
+    cell: ({ row }) => row.getValue("forty_DC"),
   },
   {
-    accessorKey: "price_40hc",
+    accessorKey: "forty_HC",
     header: ({ column }) => {
       return (
         <Button
@@ -214,10 +221,10 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_40hc"),
+    cell: ({ row }) => row.getValue("forty_HC"),
   },
   {
-    accessorKey: "price_20rf",
+    accessorKey: "twenty_RF",
     header: ({ column }) => {
       return (
         <Button
@@ -231,10 +238,10 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_20rf"),
+    cell: ({ row }) => row.getValue("twenty_RF"),
   },
   {
-    accessorKey: "price_40rf",
+    accessorKey: "forty_RF",
     header: ({ column }) => {
       return (
         <Button
@@ -248,6 +255,6 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_40rf"),
+    cell: ({ row }) => row.getValue("forty_RF"),
   },
 ];

@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import { useProvider } from "@/hooks/use-provider";
+import { ILandFreight } from "..";
 
-export const landColumns: ColumnDef<Freight & LandFreight>[] = [
+export const landColumns: ColumnDef<ILandFreight>[] = [
   {
-    accessorKey: "providerId",
+    accessorKey: "provider_name",
     header: ({ column }) => {
       return (
         <Button
@@ -16,17 +16,27 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Provider
+          Provider Name
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => {
-      const providerName =
-        useProvider().useGetProviderById(row.getValue("providerId")).data
-          ?.data?.[0]?.name || "Noname";
-      return <div>{providerName}</div>;
+    cell: ({ row }) => <div>{row.getValue("provider_name")}</div>,
+  },
+  {
+    accessorKey: "freight_type",
+    header: () => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+        >
+          Freight Type
+        </Button>
+      );
     },
+    cell: ({ row }) => <div>{row.getValue("freight_type")}</div>,
   },
   {
     accessorKey: "origin",
@@ -63,7 +73,7 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
     cell: ({ row }) => row.getValue("destination"),
   },
   {
-    accessorKey: "transitTime",
+    accessorKey: "transit_time",
     header: ({ column }) => {
       return (
         <Button
@@ -77,10 +87,27 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("transitTime"),
+    cell: ({ row }) => row.getValue("transit_time"),
   },
   {
-    accessorKey: "validFrom",
+    accessorKey: "transit",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Transit
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("transit"),
+  },
+  {
+    accessorKey: "valid_from",
     header: ({ column }) => {
       return (
         <Button
@@ -94,10 +121,10 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("validFrom"),
+    cell: ({ row }) => row.getValue("valid_from"),
   },
   {
-    accessorKey: "validUntil",
+    accessorKey: "valid_until",
     header: ({ column }) => {
       return (
         <Button
@@ -111,10 +138,10 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("validUntil"),
+    cell: ({ row }) => row.getValue("valid_until"),
   },
   {
-    accessorKey: "additionFee",
+    accessorKey: "note",
     header: () => {
       return (
         <Button
@@ -122,51 +149,14 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
           variant="ghost"
           style={{ backgroundColor: "transparent" }}
         >
-          <p className="text-ellipsis overflow-hidden w-[100px]">
-            Addition Fee
-          </p>
+          Note
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("additionFee"),
+    cell: ({ row }) => row.getValue("note"),
   },
   {
-    accessorKey: "addition_fee_breakdown",
-    header: () => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-        >
-          <p className="text-ellipsis overflow-hidden w-[100px]">
-            Addition Fee Breakdown
-          </p>
-        </Button>
-      );
-    },
-    cell: ({ row }) =>
-      row.getValue("addition_fee_breakdown")
-        ? row.getValue("addition_fee_breakdown")
-        : "N/A",
-  },
-  {
-    accessorKey: "schedule",
-    header: () => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-        >
-          Schedule
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("schedule"),
-  },
-  {
-    accessorKey: "price_0_100",
+    accessorKey: "free_time",
     header: ({ column }) => {
       return (
         <Button
@@ -175,15 +165,32 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          0-100
+          Free Time
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_0_100"),
+    cell: ({ row }) => row.getValue("free_time"),
   },
   {
-    accessorKey: "price_100_200",
+    accessorKey: "weight",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Weight
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("weight"),
+  },
+  {
+    accessorKey: "weight_100_to_200",
     header: ({ column }) => {
       return (
         <Button
@@ -197,10 +204,10 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_100_200"),
+    cell: ({ row }) => row.getValue("weight_100_to_200"),
   },
   {
-    accessorKey: "price_200_500",
+    accessorKey: "weight_200_to_500",
     header: ({ column }) => {
       return (
         <Button
@@ -214,10 +221,10 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_200_500"),
+    cell: ({ row }) => row.getValue("weight_200_to_500"),
   },
   {
-    accessorKey: "price_500_1500",
+    accessorKey: "weight_500_to_1500",
     header: ({ column }) => {
       return (
         <Button
@@ -231,10 +238,10 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_500_1500"),
+    cell: ({ row }) => row.getValue("weight_500_to_1500"),
   },
   {
-    accessorKey: "price_1500_5000",
+    accessorKey: "weight_1500_to_5000",
     header: ({ column }) => {
       return (
         <Button
@@ -248,10 +255,10 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_1500_5000"),
+    cell: ({ row }) => row.getValue("weight_1500_to_5000"),
   },
   {
-    accessorKey: "price_5000_10000",
+    accessorKey: "weight_5000_to_10000",
     header: ({ column }) => {
       return (
         <Button
@@ -265,10 +272,10 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_5000_10000"),
+    cell: ({ row }) => row.getValue("weight_5000_to_10000"),
   },
   {
-    accessorKey: "price_10000",
+    accessorKey: "weight_over_10000",
     header: ({ column }) => {
       return (
         <Button
@@ -282,6 +289,6 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_10000"),
+    cell: ({ row }) => row.getValue("weight_over_10000"),
   },
 ];
