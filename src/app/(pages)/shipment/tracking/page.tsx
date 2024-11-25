@@ -1,53 +1,55 @@
 "use client";
 import { columns, ShipmentTrackingTable } from "./components/columns";
+import { columns, ShipmentTrackingTable } from "./components/columns";
 import { DataTable } from "./components/table";
 import React, { useEffect, useState } from "react";
 import useShipmentTracking from "@/hooks/use-shipment-tracking";
+import { ShipmentTracking } from "@/types/shipment-tracking.type";
 import { Shipment } from "@/types/shipment.type";
 
-export default function ShipmentTrackingPage() {
-  const [searchParams, setSearchParams] = useState<{
-    limit: number;
-    page: number;
-  }>({
-    limit: 10,
-    page: 1,
-  });
+const mergeShipmentData = (
+  trackings: ShipmentTracking[],
+  shipments: Shipment[]
+): ShipmentTrackingTable[] => {
+  return trackings.map((tracking) => {
+    const shipment = shipments.find((s) => s.id === tracking.shipmentId);
 
+    if (!shipment) {
+      throw new Error(`No shipment found for tracking ID: ${tracking.id}`);
+    }
+
+    return {
+      id: tracking.id,
+      shipment_id: tracking.shipmentId,
+      tracking_id: tracking.id,
+      shipment_type: shipment.shipmentType,
+      location: tracking.location,
+      status: tracking.status,
+    };
+  });
+};
+
+export default function ShipmentTrackingPage() {
+  const {
+    data: shipmentTracking,
+    isLoading: isLoadingTracking,
+    error: trackingError,
+  } = useShipmentTracking.useGetShipmentTracking();
   const {
     data: shipments,
     isLoading: isLoadingShipments,
     error: shipmentError,
-  } = useShipmentTracking.useGetShipment(
-    undefined,
-    undefined,
-    searchParams.page,
-    searchParams.limit
-  );
+  } = useShipmentTracking.useGetShipment();
   const [shipmentMocking, setShipmentMocking] = useState<
     ShipmentTrackingTable[]
   >([]);
 
   useEffect(() => {
-    if (shipments?.results) {
-      setShipmentMocking(
-        shipments.results.map((shipment: Shipment) => ({
-          shipment_id: shipment.id,
-          shipment_type: shipment.shipmentType,
-          location: shipment.tracking?.location || "",
-          client: shipment.contract?.quotation.quotationReq.customer.name || "",
-          status: shipment.tracking?.status || "",
-        }))
-      );
+    if (shipments && shipmentTracking) {
+      const shipmentData = mergeShipmentData(shipmentTracking, shipments);
+      setShipmentMocking(shipmentData);
     }
-  }, [shipments?.results]);
-
-  const [totalPages, setTotalPages] = useState(0);
-  useEffect(() => {
-    if (shipments?.pagination.totalPages) {
-      setTotalPages(shipments?.pagination.totalPages);
-    }
-  }, [shipments?.pagination.totalPages]);
+  }, [shipments, shipmentTracking]);
 
   return (
     <div className="flex flex-col p-[28px] w-full h-[calc(100vh-60px)] flex-grow">
@@ -57,12 +59,9 @@ export default function ShipmentTrackingPage() {
         </div>
         <DataTable
           columns={columns}
-          totalPages={totalPages}
           data={shipmentMocking}
-          isPending={isLoadingShipments}
-          error={shipmentError?.message}
-          queryParams={searchParams}
-          setQueryParams={setSearchParams}
+          isPending={isLoadingTracking || isLoadingShipments}
+          error={trackingError?.message || shipmentError?.message}
         />
       </div>
     </div>

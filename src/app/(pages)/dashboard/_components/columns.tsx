@@ -6,6 +6,7 @@ import { ArrowUpDown } from "lucide-react";
 
 export type TableShipmentTracking = {
   shipment_id: string;
+  tracking_id: string;
   shipment_type: string;
   location: string;
   client: string;

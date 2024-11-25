@@ -77,7 +77,7 @@ export default function UpdateTrackingForm({
 
   useEffect(() => {
     if (data) {
-      setShipmentTracking(data.results[0]);
+      setShipmentTracking(data[0]);
     }
   }, [data]);
 
@@ -86,12 +86,7 @@ export default function UpdateTrackingForm({
       status: shipmentTracking?.status,
       location: shipmentTracking?.location,
     });
-  }, [
-    data?.results,
-    form,
-    shipmentTracking?.location,
-    shipmentTracking?.status,
-  ]);
+  }, [shipmentTracking]);
 
   async function onSubmit(values: UpdateShipmentTrackingBodyType) {
     if (loading) return;
