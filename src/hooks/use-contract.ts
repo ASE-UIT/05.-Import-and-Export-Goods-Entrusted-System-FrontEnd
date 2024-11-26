@@ -78,7 +78,7 @@ const useContract = {
   useUpdateContract(
     id: string | undefined,
     router: ReturnType<typeof useRouter>
-  ): UseMutationResult<any, ErrorType, Partial<UpdateContractType>> {
+  ) {
     const queryClient = useQueryClient();
     return useMutation({
       mutationFn: (updateContractBody: Partial<UpdateContractType>) =>
