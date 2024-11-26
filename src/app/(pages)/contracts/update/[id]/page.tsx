@@ -126,20 +126,21 @@ export default function UpdateContractPage() {
       setEndDate(parseISO(contractData.endDate));
       setContractDate(parseISO(contractData.contractDate));
       form.setValue("status", contractData.status);
+      form.setValue("quotationId", contractData.quotationId);
+      form.setValue("employeeId", contractData.employeeId);
     }
   }, [data]);
 
   useEffect(() => {
-    if (startDate) form.setValue("startDate", format(startDate, "yyyy-MM-dd"));
+    if (startDate) form.setValue("startDate", startDate.toISOString());
   }, [startDate]);
 
   useEffect(() => {
-    if (endDate) form.setValue("endDate", format(endDate, "yyyy-MM-dd"));
+    if (endDate) form.setValue("endDate", endDate.toISOString());
   }, [endDate]);
 
   useEffect(() => {
-    if (contractDate)
-      form.setValue("contractDate", format(contractDate, "yyyy-MM-dd"));
+    if (contractDate) form.setValue("contractDate", contractDate.toISOString());
   }, [contractDate]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -151,7 +152,7 @@ export default function UpdateContractPage() {
       ...(values.contractDate !== contract?.contractDate && {
         contractDate: values.contractDate,
       }),
-      ...(values.status.toUpperCase() !== contract?.status && {
+      ...(values.status.toUpperCase() !== contract?.status.toUpperCase() && {
         status: values.status.toUpperCase(),
       }),
     };
