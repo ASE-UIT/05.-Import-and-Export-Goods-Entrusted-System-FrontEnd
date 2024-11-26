@@ -18,10 +18,10 @@ export const UpdateContractBody = z.object({
 
 export const ContractDetailsRes = z.object({
   id: z.string(),
-  startDate: z.string(),
-  endDate: z.string(),
+  startDate: z.date(),
+  endDate: z.date(),
   status: z.string(),
-  contractDate: z.string(),
+  contractDate: z.date(),
   employeeId: z.string(),
   quotationId: z.string(),
   createdAt: z.string(),

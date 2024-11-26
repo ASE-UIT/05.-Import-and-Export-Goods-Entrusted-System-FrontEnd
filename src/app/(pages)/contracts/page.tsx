@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import { ContractDetailsType } from "@/schema/contract.schema";
 
 export default function ContractManagementPage() {
-  const [contractData, setContractData] = useState<ContractDetailsType[]>([]);
+  const [contractData, setContractData] = useState<IContract[]>([]);
   const { data, isLoading, error } = useContract.useGetContracts();
 
   useEffect(() => {
@@ -16,10 +16,10 @@ export default function ContractManagementPage() {
       setContractData(
         data.data.map((contract: ContractDetailsType) => ({
           id: contract.id,
-          startDate: contract.startDate,
-          endDate: contract.endDate,
+          startDate: contract.startDate.toString(),
+          endDate: contract.endDate.toString(),
           status: contract.status,
-          contractDate: contract.contractDate,
+          contractDate: contract.contractDate.toString(),
           employeeId: contract.employeeId,
           quotationId: contract.quotationId,
           createdAt: contract.createdAt,
