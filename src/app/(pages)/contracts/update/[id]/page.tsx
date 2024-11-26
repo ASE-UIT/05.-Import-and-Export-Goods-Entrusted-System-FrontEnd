@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { format, parseISO } from "date-fns";
+import { format, isSameDay, parseISO } from "date-fns";
 import { Input } from "@/components/ui/input";
 
 import {
@@ -44,9 +44,9 @@ const formSchema = z
   .object({
     quotationId: z.string().optional(),
     employeeId: z.string().optional(),
-    startDate: z.string(),
-    endDate: z.string(),
-    contractDate: z.string(),
+    startDate: z.date(),
+    endDate: z.date(),
+    contractDate: z.date(),
     status: z.string(),
   })
   .refine(
@@ -93,7 +93,7 @@ export default function UpdateContractPage() {
     resolver: zodResolver(formSchema),
   });
 
-  const handleDateSelect = (date: Date) => {
+  const handleStartSelect = (date: Date) => {
     setStartDate(date);
     setStartDateOpen(false);
   };
@@ -122,9 +122,9 @@ export default function UpdateContractPage() {
         createdAt: contractData.createdAt,
         updatedAt: contractData.updatedAt,
       });
-      setStartDate(parseISO(contractData.startDate));
-      setEndDate(parseISO(contractData.endDate));
-      setContractDate(parseISO(contractData.contractDate));
+      setStartDate(new Date(contractData.startDate));
+      setEndDate(new Date(contractData.endDate));
+      setContractDate(new Date(contractData.contractDate));
       form.setValue("status", contractData.status);
       form.setValue("quotationId", contractData.quotationId);
       form.setValue("employeeId", contractData.employeeId);
@@ -132,25 +132,30 @@ export default function UpdateContractPage() {
   }, [data]);
 
   useEffect(() => {
-    if (startDate) form.setValue("startDate", startDate.toISOString());
+    if (startDate) form.setValue("startDate", startDate);
   }, [startDate]);
 
   useEffect(() => {
-    if (endDate) form.setValue("endDate", endDate.toISOString());
+    if (endDate) form.setValue("endDate", endDate);
   }, [endDate]);
 
   useEffect(() => {
-    if (contractDate) form.setValue("contractDate", contractDate.toISOString());
+    if (contractDate) form.setValue("contractDate", contractDate);
   }, [contractDate]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const updateContractBody: Partial<UpdateContractType> = {
-      ...(values.startDate !== contract?.startDate && {
-        startDate: values.startDate,
+      ...(!isSameDay(values.startDate, contract?.startDate || new Date()) && {
+        startDate: values.startDate.toISOString(),
       }),
-      ...(values.endDate !== contract?.endDate && { endDate: values.endDate }),
-      ...(values.contractDate !== contract?.contractDate && {
-        contractDate: values.contractDate,
+      ...(!isSameDay(values.endDate, contract?.endDate || new Date()) && {
+        endDate: values.endDate.toISOString(),
+      }),
+      ...(!isSameDay(
+        values.contractDate,
+        contract?.contractDate || new Date()
+      ) && {
+        contractDate: values.contractDate.toISOString(),
       }),
       ...(values.status.toUpperCase() !== contract?.status.toUpperCase() && {
         status: values.status.toUpperCase(),
@@ -251,7 +256,7 @@ export default function UpdateContractPage() {
                               ) : (
                                 <span>
                                   {contract &&
-                                    format(parseISO(contract.startDate), "PPP")}
+                                    format(contract.startDate, "PPP")}
                                 </span>
                               )}
                             </Button>
@@ -261,7 +266,7 @@ export default function UpdateContractPage() {
                               mode="single"
                               selected={startDate}
                               onSelect={(date) =>
-                                handleDateSelect(date || new Date())
+                                handleStartSelect(date || new Date())
                               }
                             />
                           </PopoverContent>
@@ -297,8 +302,7 @@ export default function UpdateContractPage() {
                                 format(endDate, "PPP")
                               ) : (
                                 <span>
-                                  {contract &&
-                                    format(parseISO(contract.endDate), "PPP")}
+                                  {contract && format(contract.endDate, "PPP")}
                                 </span>
                               )}
                             </Button>
@@ -347,10 +351,7 @@ export default function UpdateContractPage() {
                               ) : (
                                 <span>
                                   {contract &&
-                                    format(
-                                      parseISO(contract.contractDate),
-                                      "PPP"
-                                    )}
+                                    format(contract.contractDate, "PPP")}
                                 </span>
                               )}
                             </Button>
