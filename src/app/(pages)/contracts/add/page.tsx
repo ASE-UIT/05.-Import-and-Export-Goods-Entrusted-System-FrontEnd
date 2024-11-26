@@ -107,7 +107,6 @@ export default function AddContractPage() {
   }, [contractDate]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("submit");
     const createContractBody: CreateContractType = {
       employeeId: values.employeeId,
       quotationId: values.quotationId,
