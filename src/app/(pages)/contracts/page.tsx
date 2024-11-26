@@ -1,7 +1,7 @@
 "use client";
 
 import { DataTable } from "@/app/(pages)/contracts/components/data-table";
-import { columns } from "./components/columns";
+import { columns, IContract } from "./components/columns";
 import useContract from "@/hooks/use-contract";
 import { useEffect, useState } from "react";
 import { ContractDetailsType } from "@/schema/contract.schema";
