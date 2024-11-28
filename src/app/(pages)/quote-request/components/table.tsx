@@ -119,7 +119,7 @@ export function DataTable({ columns, data }: DataTableProps) {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {cell.column.columnDef.accessorKey === "status" ? (
+                      {cell.column.id === "status" ? (
                         <StatusBadge status={cell.getValue() as Status} />
                       ) : (
                         flexRender(
