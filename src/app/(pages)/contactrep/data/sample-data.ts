@@ -1,6 +1,4 @@
-import { IContactrep } from "../components/columns";
-
-export const contactrepData: IContactrep[] = [
+export const contactrepData: ContractRepType[] = [
   {
     id: "01",
     name: "Nguyen Van A",

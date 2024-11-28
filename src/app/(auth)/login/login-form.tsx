@@ -20,6 +20,7 @@ import { useState } from "react";
 import useAuth from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 import { ErrorType } from "@/types/error.type";
+import { toast } from "@/hooks/use-toast";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -34,12 +35,14 @@ const LoginForm = () => {
   });
 
   async function onSubmit(values: LoginBodyType) {
-    console.log({ values });
     if (loading) return;
     setLoading(true);
     try {
-      const result = await loginAction.mutateAsync(values);
-      console.log({ result });
+      await loginAction.mutateAsync(values);
+      toast({
+        title: "Login success",
+        description: "You have successfully logged in",
+      });
       router.push("/dashboard");
     } catch (error) {
       console.error({ error });
@@ -53,7 +56,11 @@ const LoginForm = () => {
           });
           break;
         default:
-          console.error("Unknown error", error);
+          toast({
+            title: "Login failed",
+            description: "An error occurred while logging in",
+            variant: "destructive",
+          });
           break;
       }
     } finally {
@@ -73,7 +80,7 @@ const LoginForm = () => {
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[16px]">User Name</FormLabel>
+              <FormLabel className="text-[16px] font-bold">User Name</FormLabel>
               <FormControl>
                 <Input
                   className="h-[60px]"
@@ -90,7 +97,7 @@ const LoginForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[16px]">Password</FormLabel>
+              <FormLabel className="text-[16px] font-bold">Password</FormLabel>
               <FormControl>
                 <Input
                   className="h-[60px]"
@@ -116,8 +123,12 @@ const LoginForm = () => {
           </Link>
         </div>
 
-        <Button type="submit" className="!mt-8 w-full h-[60px] text-2xl">
-          Sign in
+        <Button
+          type="submit"
+          className="!mt-8 w-full h-[60px] text-2xl"
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Login"}
         </Button>
       </form>
     </Form>
