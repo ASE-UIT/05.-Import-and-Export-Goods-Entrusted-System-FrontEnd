@@ -1,7 +1,6 @@
 "use client"
  
 import * as React from "react"
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
  
 import { Button } from "@/components/ui/button"
 import {
@@ -12,39 +11,59 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
- 
-type Checked = DropdownMenuCheckboxItemProps["checked"]
+import { ControllerRenderProps } from "react-hook-form"
 
-export default function DropdownMenuCustom(){
-    const [showContainerOption, setShowContainerOption] = React.useState<Checked>(true)
-    const [showDrumOption, setShowDrumOption] = React.useState<Checked>(false)
-    const [showCrateOption, setShowCrateOption] = React.useState<Checked>(false)
+ interface DropdownMenuCustomProps {
+  selectedOption: string | null;
+  setSelectedOption: React.Dispatch<React.SetStateAction<string | null>>;
+  field: ControllerRenderProps<{
+    length: string;
+    requestDate: string;
+    customerId: string;
+    origin: string;
+    destination: string;
+    shipmentReadyDate: string;
+    shipmentDeadline: string;
+    cargoInsurance: boolean;
+    packageType: string;
+    weight: string;
+    width: string;
+    height: string;
+}, "packageType">;  
+}
+
+export default function DropdownMenuCustom({ selectedOption, setSelectedOption, field }: DropdownMenuCustomProps){
+    const buttonText = selectedOption ? selectedOption : "Select Type";
+    const handleSelect = (value: string) => {
+            setSelectedOption(value);
+            field.onChange(value);  // Update the form field value
+  };
     return (         
             <div className="w-[160px]">
                 <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="hover:bg-primary">Package Type </Button>
+                    <Button variant="outline" className="hover:bg-primary">{buttonText}</Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
                     <DropdownMenuLabel>Type</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuCheckboxItem
-                    checked={showContainerOption}
-                    onCheckedChange={setShowContainerOption}
+                    checked={selectedOption === "DRY"}
+                    onCheckedChange={() => handleSelect("DRY")}
                     >
-                    Container
+                    DRY
                     </DropdownMenuCheckboxItem>
                     <DropdownMenuCheckboxItem
-                    checked={showDrumOption}
-                    onCheckedChange={setShowDrumOption}
+                    checked={selectedOption === "SEA"}
+                    onCheckedChange={() => handleSelect("SEA")}
                     >
-                    Drum
+                    SEA
                     </DropdownMenuCheckboxItem>
                     <DropdownMenuCheckboxItem
-                    checked={showCrateOption}
-                    onCheckedChange={setShowCrateOption}
+                    checked={selectedOption === "FREEZE"}
+                    onCheckedChange={() => handleSelect("FREEZE")}
                     >
-                    Crate
+                    FREEZE
                     </DropdownMenuCheckboxItem>
                 </DropdownMenuContent>
             </DropdownMenu>
