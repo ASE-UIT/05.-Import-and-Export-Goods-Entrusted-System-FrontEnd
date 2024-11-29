@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { ModeToggle } from "@/components/mode-toggle";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Bell, MessageSquareMore } from "lucide-react";
 import UserDropDown from "@/components/user-drop-down";

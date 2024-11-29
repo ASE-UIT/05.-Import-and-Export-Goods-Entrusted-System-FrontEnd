@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { format } from "date-fns"; 
+import { format } from "date-fns";
 
 import {
   Form,
@@ -25,9 +24,13 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import "react-datepicker/dist/react-datepicker.css"; 
+import "react-datepicker/dist/react-datepicker.css";
 import React from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 
@@ -43,15 +46,17 @@ const formSchema = z.object({
 });
 
 export default function AddQuotationtPage() {
-  const { id: quotation_id } = useParams<{ id: string }>();
-  
+  // const { id: quotation_id } = useParams<{ id: string }>();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
   const [pickupDate, setPickupDate] = useState<Date | undefined>(undefined);
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>(undefined);
-  const [quotationDate, setQuotationDate] = useState<Date | undefined>(undefined);
+  const [quotationDate, setQuotationDate] = useState<Date | undefined>(
+    undefined
+  );
   const [expiredDate, setExpiredDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
@@ -76,109 +81,122 @@ export default function AddQuotationtPage() {
       pickup_date: values.pickup_date
         ? format(values.pickup_date, "d-M-yyyy")
         : undefined,
-      delivery_date: values.delivery_date ? format(values.delivery_date, "d-M-yyyy") : undefined,
-      quotation_date: values.quotation_date ? format(values.quotation_date, "d-M-yyyy") : undefined,
-      expired_date: values.expired_date ? format(values.expired_date, "d-M-yyyy") : undefined,
+      delivery_date: values.delivery_date
+        ? format(values.delivery_date, "d-M-yyyy")
+        : undefined,
+      quotation_date: values.quotation_date
+        ? format(values.quotation_date, "d-M-yyyy")
+        : undefined,
+      expired_date: values.expired_date
+        ? format(values.expired_date, "d-M-yyyy")
+        : undefined,
     });
   }
 
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
-    <div className="flex w-full justify-between items-end">
-      <span className="text-3xl font-bold">Add Quotation</span>
-    </div>
+      <div className="flex w-full justify-between items-end">
+        <span className="text-3xl font-bold">Add Quotation</span>
+      </div>
       <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} encType="multipart/form-data">
-      <div className="flex flex-col items-center w-[600px] gap-4 py-4">
-          {/* Quotation ID */}
-          <FormField
-            control={form.control}
-            name="quote_request_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-bold">Quotation Request ID</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger className="w-[500px] h-[60px]">
-                      <SelectValue placeholder="Select an ID" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="01">01</SelectItem>
-                      <SelectItem value="02">02</SelectItem>
-                      <SelectItem value="03">03</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          encType="multipart/form-data"
+        >
+          <div className="flex flex-col items-center w-[600px] gap-4 py-4">
+            {/* Quotation ID */}
+            <FormField
+              control={form.control}
+              name="quote_request_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-bold">
+                    Quotation Request ID
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-[500px] h-[60px]">
+                        <SelectValue placeholder="Select an ID" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="01">01</SelectItem>
+                        <SelectItem value="02">02</SelectItem>
+                        <SelectItem value="03">03</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Employee ID */}
-          <FormField
-            control={form.control}
-            name="employee_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-bold">Employee ID</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger className="w-[500px] h-[60px]">
-                      <SelectValue placeholder="Select an ID" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="01">01</SelectItem>
-                      <SelectItem value="02">02</SelectItem>
-                      <SelectItem value="03">03</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {/* Employee ID */}
+            <FormField
+              control={form.control}
+              name="employee_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-bold">Employee ID</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-[500px] h-[60px]">
+                        <SelectValue placeholder="Select an ID" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="01">01</SelectItem>
+                        <SelectItem value="02">02</SelectItem>
+                        <SelectItem value="03">03</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Freight ID */}
-          <FormField
-            control={form.control}
-            name="freight_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-bold">Freight ID</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger className="w-[500px] h-[60px]">
-                      <SelectValue placeholder="Select an ID" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="01">01</SelectItem>
-                      <SelectItem value="02">02</SelectItem>
-                      <SelectItem value="03">03</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {/* Freight ID */}
+            <FormField
+              control={form.control}
+              name="freight_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-bold">Freight ID</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-[500px] h-[60px]">
+                        <SelectValue placeholder="Select an ID" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="01">01</SelectItem>
+                        <SelectItem value="02">02</SelectItem>
+                        <SelectItem value="03">03</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <div className="w-[500px] flex space-x-[12px]">
-            {/* Pickup Date */}
-            <FormField
+              {/* Pickup Date */}
+              <FormField
                 control={form.control}
                 name="pickup_date"
-                render={({ field }) => (
+                render={() => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">Pickup Date</FormLabel>
+                    <FormLabel className="text-[16px] font-bold">
+                      Pickup Date
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -209,13 +227,15 @@ export default function AddQuotationtPage() {
                   </FormItem>
                 )}
               />
-            {/* Delivery Date */}
-            <FormField
+              {/* Delivery Date */}
+              <FormField
                 control={form.control}
                 name="delivery_date"
-                render={({ field }) => (
+                render={() => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">Delivery Date</FormLabel>
+                    <FormLabel className="text-[16px] font-bold">
+                      Delivery Date
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -249,13 +269,15 @@ export default function AddQuotationtPage() {
             </div>
 
             <div className="w-[500px] flex space-x-[12px]">
-            {/* Quotation Date */} 
-            <FormField
+              {/* Quotation Date */}
+              <FormField
                 control={form.control}
                 name="quotation_date"
-                render={({ field }) => (
+                render={() => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">Quotation Date</FormLabel>
+                    <FormLabel className="text-[16px] font-bold">
+                      Quotation Date
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -287,13 +309,15 @@ export default function AddQuotationtPage() {
                 )}
               />
 
-            {/* Expired Date */} 
-            <FormField
+              {/* Expired Date */}
+              <FormField
                 control={form.control}
                 name="expired_date"
-                render={({ field }) => (
+                render={() => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">Expired Date</FormLabel>
+                    <FormLabel className="text-[16px] font-bold">
+                      Expired Date
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -326,8 +350,8 @@ export default function AddQuotationtPage() {
               />
             </div>
 
-          {/* Price */}
-          <FormField
+            {/* Price */}
+            <FormField
               control={form.control}
               name="total_price"
               render={({ field }) => (
@@ -340,13 +364,16 @@ export default function AddQuotationtPage() {
                 </FormItem>
               )}
             />
-          
           </div>
-           {/* Button */}
-           <div className="flex justify-center mt-6">
-           <div className="w-1/2 flex gap-2.5">
+          {/* Button */}
+          <div className="flex justify-center mt-6">
+            <div className="w-1/2 flex gap-2.5">
               <Link href="/quotation" className="w-1/2 h-14">
-                <Button className="w-full h-10 text-lg" variant={"outline"} type="button">
+                <Button
+                  className="w-full h-10 text-lg"
+                  variant={"outline"}
+                  type="button"
+                >
                   Cancel
                 </Button>
               </Link>

@@ -4,12 +4,7 @@ import {
   UpdateContractType,
 } from "@/schema/contract.schema";
 import { ErrorType } from "@/types/error.type";
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 const useContract = {
@@ -78,7 +73,7 @@ const useContract = {
   useUpdateContract(
     id: string | undefined,
     router: ReturnType<typeof useRouter>
-  ): UseMutationResult<any, ErrorType, Partial<UpdateContractType>> {
+  ) {
     const queryClient = useQueryClient();
     return useMutation({
       mutationFn: (updateContractBody: Partial<UpdateContractType>) =>

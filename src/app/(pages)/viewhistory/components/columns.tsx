@@ -2,9 +2,7 @@
 
 import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from 'next/link';
 
 export interface IPayment {
   id: string;
@@ -18,7 +16,7 @@ export interface IPayment {
 }
 
 export const columns: ColumnDef<IPayment>[] = [
-    {
+  {
     accessorKey: "id",
     header: ({ column }) => {
       return (
@@ -66,7 +64,7 @@ export const columns: ColumnDef<IPayment>[] = [
     },
     cell: ({ row }) => <div>{row.getValue("employee_id")}</div>,
   },
-  
+
   {
     accessorKey: "invoice_date",
     header: ({ column }) => {
@@ -101,8 +99,8 @@ export const columns: ColumnDef<IPayment>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",  
-    cell: ({ row }) => <StatusBadge status={row.getValue("status")} />
+    header: "Status",
+    cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
   },
   {
     accessorKey: "tax",

@@ -26,9 +26,7 @@ import {
 import { Button } from "../../../../../../components/ui/button";
 
 import { CirclePlus } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
-import { PATH_NAME } from "@/configs";
-import { Pagination } from "@/components/ui/pagination";
+import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -44,7 +42,7 @@ export function DataTable<TData, TValue>({
     []
   );
   const router = useRouter();
-  const path = usePathname();
+  // const path = usePathname();
 
   const table = useReactTable({
     data,
