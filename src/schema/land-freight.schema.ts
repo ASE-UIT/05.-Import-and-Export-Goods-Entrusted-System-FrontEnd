@@ -11,11 +11,7 @@ export const landFreightBody = z.object({
   freight_id: z.string(),
 });
 
-export type LandFreightType = z.TypeOf<typeof landFreightBody>;
-
-export const allLandFreightBody = z.object({
-  message: z.string(),
-  data: z.array(landFreightBody),
-});
-
-export type AllLandFreightType = z.TypeOf<typeof allLandFreightBody>;
+export type CreateLandFreightBody = z.TypeOf<typeof landFreightBody>;
+export type UpdateLandFreightBody = z.TypeOf<
+  ReturnType<typeof landFreightBody.partial>
+>;

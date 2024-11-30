@@ -1,17 +1,26 @@
 import http from "@/utils/http";
+import {
+  createProviderData,
+  updateProviderData,
+} from "@/schema/provider.schema";
 
 const providerAction = {
-  async getAllProvider() {
+  async getProvider(id?: string) {
     const res = await http.get<EximResponseWrapper<ProviderType[]>>(
-      "/v1/providers"
+      "/v1/providers",
+      {
+        params: {
+          id,
+        },
+      }
     );
     return res.data;
   },
-  async createProvider(data: any) {
+  async createProvider(data: createProviderData) {
     const res = await http.post<EximResponseWrapper>(`/v1/providers`, data);
     return res.data;
   },
-  async updateProvider(id: string, data: any) {
+  async updateProvider(id: string, data: updateProviderData) {
     const res = await http.patch<EximResponseWrapper>(
       `/v1/providers/${id}`,
       data
