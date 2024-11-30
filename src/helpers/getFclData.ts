@@ -1,11 +1,11 @@
 import useFcl from "@/hooks/use-fcl";
 import useFreight from "@/hooks/use-freight";
 
-const useGetFclData = () => {
+export const getFclData = () => {
   const { data: allFreight } = useFreight().getAllFreight;
   const { data: allFcl } = useFcl().getAllFcl;
-  const fcl = allFcl ? allFcl.results : [];
-  const freightData = allFreight ? allFreight.results : [];
+  const fcl = allFcl && allFcl.data ? allFcl.data : [];
+  const freightData = allFreight && allFreight.data ? allFreight.data : [];
   const fclData: (Freight & FCL)[] = freightData
     .map((freight: Freight) => {
       const fclFreight = fcl.find((a) => a.freight_id === freight.id);
@@ -14,5 +14,3 @@ const useGetFclData = () => {
     .filter((item) => item !== null) as (Freight & FCL)[];
   return fclData;
 };
-
-export { useGetFclData as getFclData };

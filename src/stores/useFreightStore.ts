@@ -1,14 +1,11 @@
 import { create } from "zustand";
 
-interface State {
+interface FreightStore {
   id: string;
-}
-
-interface Actions {
   setId: (id: string) => void;
 }
 
-export const useFreightStore = create<State & Actions>((set) => ({
+export const useFreightStore = create<FreightStore>((set) => ({
   id: "",
   setId: (id) => set({ id }),
 }));

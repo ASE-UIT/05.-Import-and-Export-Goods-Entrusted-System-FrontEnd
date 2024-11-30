@@ -1,9 +1,12 @@
 import { airFreightApi } from "@/apis/air-freight.api";
-import { AirFreightBody } from "@/schema/air-freight.schema";
+import {
+  CreateAirFreightBody,
+  UpdateAirFreightBody,
+} from "@/schema/air-freight.schema";
 import { useFreightStore } from "@/stores/useFreightStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { toast } from "./use-toast";
+import { toast } from "react-toastify";
 
 const useAirFreight = () => {
   const queryClient = useQueryClient();
@@ -13,7 +16,7 @@ const useAirFreight = () => {
     queryKey: ["air-freights"],
     queryFn: () => airFreightApi.getAllAirFreight(),
   });
-  const useGetAirById = (id: string) => {
+  const getAirById = (id: string) => {
     return useQuery({
       queryKey: ["air-freights", id],
       queryFn: () => {
@@ -21,23 +24,15 @@ const useAirFreight = () => {
       },
     });
   };
-  const { mutateAsync: createAirFreight } = useMutation({
-    mutationFn: (data: AirFreightBody) => airFreightApi.createAirFreight(data),
+  const { mutate: createAirFreight } = useMutation({
+    mutationFn: (data: CreateAirFreightBody) =>
+      airFreightApi.createAirFreight(data),
     onSuccess: () => {
-      toast({
-        variant: "default",
-        title: "Success",
-        description: "Air Freight created successfully",
-      });
       setId("");
       router.push("/freight");
     },
     onError: (error) => {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
+      toast.error(error.message);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -46,37 +41,25 @@ const useAirFreight = () => {
     },
   });
 
-  const useUpdateAirFreight = () => {
+  const updateAirFreight = (id: string, data: UpdateAirFreightBody) => {
     return useMutation({
-      mutationFn: ({ id, body }: { id: string; body: AirFreightBody }) => {
-        return airFreightApi.updateAirFreight(id, body);
+      mutationFn: () => {
+        return airFreightApi.updateAirFreight(id, data);
       },
-      onSuccess: (_, req) => {
-        queryClient.invalidateQueries({
-          queryKey: ["air-freights", req.id],
-        });
-        toast({
-          variant: "default",
-          title: "Success",
-          description: "Air Freight updated successfully",
-        });
+      onSuccess: () => {
         router.push("/freight");
       },
       onError: (error) => {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: error.message,
+        toast.error(error.message);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["air-freights"],
         });
       },
     });
   };
-  return {
-    getAllAir,
-    getAirById: useGetAirById,
-    createAirFreight,
-    useUpdateAirFreight,
-  };
+  return { getAllAir, getAirById, createAirFreight, updateAirFreight };
 };
 
 export default useAirFreight;

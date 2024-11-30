@@ -1,8 +1,8 @@
 import { freightApi } from "@/apis/freight.api";
-import { FreightBody } from "@/schema/freight.schema";
+import { CreateFreightBody, UpdateFreightBody } from "@/schema/freight.schema";
 import { useFreightStore } from "@/stores/useFreightStore";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "./use-toast";
+import { toast } from "react-toastify";
 import { useRouter, usePathname } from "next/navigation";
 
 const useFreight = () => {
@@ -15,32 +15,23 @@ const useFreight = () => {
     queryFn: freightApi.getAllFreight,
   });
 
-  const useGetFreightById = (id: string) => {
+  const getFreightById = (id: string) => {
     return useQuery({
       queryKey: ["freights", id],
-      queryFn: async () => {
-        const result = await freightApi.getFreight(id);
-        return result;
+      queryFn: () => {
+        return freightApi.getFreight(id);
       },
     });
   };
-  const { mutateAsync: createFreight } = useMutation({
-    mutationFn: (data: FreightBody) => freightApi.createFreight(data),
+
+  const { mutate: createFreight } = useMutation({
+    mutationFn: (data: CreateFreightBody) => freightApi.createFreight(data),
     onSuccess: (data) => {
-      toast({
-        variant: "default",
-        title: "Success",
-        description: "Freight created successfully",
-      });
       setId(data.data.id);
       router.push(`${path}/${data.data.freightType.toLowerCase()}`);
     },
     onError: (error) => {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
+      toast.error(error.message);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -49,30 +40,23 @@ const useFreight = () => {
     },
   });
 
-  const useUpdateFreight = useMutation({
-    mutationFn: ({ id, body }: { id: string; body: FreightBody }) =>
-      freightApi.updateFreight(id, body),
-    onError: (error) => {
-      console.log(error.message);
-      throw error;
+  const { mutate: updateFreight } = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateFreightBody }) =>
+      freightApi.updateFreight(id, data),
+
+    onSuccess: (data) => {
+      router.push(`${path}/${data.data.freightType.toLowerCase()}`);
     },
-    onSuccess: (_, req) => {
-      toast({
-        variant: "default",
-        title: "Success",
-        description: "Freight updated successfully",
-      });
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["freights", req.id],
+        queryKey: ["freights"],
       });
     },
   });
-  return {
-    getAllFreight,
-    getFreightById: useGetFreightById,
-    createFreight,
-    useUpdateFreight,
-  };
+  return { getAllFreight, getFreightById, createFreight, updateFreight };
 };
 
 export default useFreight;

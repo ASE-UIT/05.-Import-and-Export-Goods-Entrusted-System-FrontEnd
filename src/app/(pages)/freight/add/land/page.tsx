@@ -2,7 +2,6 @@
 
 import useLandFreight from "@/hooks/use-land-freight";
 import { CreateLandFreightForm } from "../../components/forms/land-freight-form";
-import { Toaster } from "@/components/ui/toaster";
 
 export default function AddLandFreightPage() {
   return (
@@ -10,7 +9,6 @@ export default function AddLandFreightPage() {
       <div className="flex w-full justify-between">
         <span className="text-3xl font-bold">Add Land Freight</span>
       </div>
-      <Toaster />
       <CreateLandFreightForm onSubmit={useLandFreight().createLandFreight} />
     </div>
   );

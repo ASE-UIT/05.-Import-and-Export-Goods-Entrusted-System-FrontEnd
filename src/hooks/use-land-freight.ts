@@ -1,9 +1,12 @@
 import { landFreightApi } from "@/apis/land-freight.api";
-import { LandFreightBody } from "@/schema/land-freight.schema";
+import {
+  CreateLandFreightBody,
+  UpdateLandFreightBody,
+} from "@/schema/land-freight.schema";
 import { useFreightStore } from "@/stores/useFreightStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { toast } from "./use-toast";
+import { toast } from "react-toastify";
 
 const useLandFreight = () => {
   const queryClient = useQueryClient();
@@ -11,34 +14,27 @@ const useLandFreight = () => {
   const router = useRouter();
   const getAllLand = useQuery({
     queryKey: ["land-freights"],
-    queryFn: () => landFreightApi.getAllLandFreight(),
+    queryFn: landFreightApi.getAllLandFreight,
   });
-  const useGetLandById = (id: string) => {
-    return useQuery({
+
+  const getLandById = (id: string) => {
+    return useQuery<EximResponseWrapper<LandFreight>, Error>({
       queryKey: ["land-freights", id],
       queryFn: () => {
         return landFreightApi.getLandFreight(id);
       },
     });
   };
-  const { mutateAsync: createLandFreight } = useMutation({
-    mutationFn: (data: LandFreightBody) =>
+
+  const { mutate: createLandFreight } = useMutation({
+    mutationFn: (data: CreateLandFreightBody) =>
       landFreightApi.createLandFreight(data),
     onSuccess: () => {
-      toast({
-        variant: "default",
-        title: "Success",
-        description: "Land Freight created successfully",
-      });
       setId("");
       router.push("/freight");
     },
     onError: (error) => {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
+      toast.error(error.message);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -47,37 +43,25 @@ const useLandFreight = () => {
     },
   });
 
-  const useUpdateLandFreight = () => {
+  const updateLandFreight = (id: string, data: UpdateLandFreightBody) => {
     return useMutation({
-      mutationFn: ({ id, body }: { id: string; body: LandFreightBody }) => {
-        return landFreightApi.updateLandFreight(id, body);
+      mutationFn: () => {
+        return landFreightApi.updateLandFreight(id, data);
       },
-      onSuccess: (_, req) => {
-        queryClient.invalidateQueries({
-          queryKey: ["land-freights", req.id],
-        });
-        toast({
-          variant: "default",
-          title: "Success",
-          description: "Land Freight updated successfully",
-        });
+      onSuccess: () => {
         router.push("/freight");
       },
       onError: (error) => {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: error.message,
+        toast.error(error.message);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["land-freights"],
         });
       },
     });
   };
-  return {
-    getAllLand,
-    getLandById: useGetLandById,
-    createLandFreight,
-    useUpdateLandFreight,
-  };
+  return { getAllLand, getLandById, createLandFreight, updateLandFreight };
 };
 
 export default useLandFreight;

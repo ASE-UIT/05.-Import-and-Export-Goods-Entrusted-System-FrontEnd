@@ -1,44 +1,36 @@
 import { fclApi } from "@/apis/fcl.api";
-import { FclBody } from "@/schema/fcl.schema";
+import { CreateFclBody, UpdateFclBody } from "@/schema/fcl.schema";
 import { useFreightStore } from "@/stores/useFreightStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { toast } from "./use-toast";
+import { toast } from "react-toastify";
 
 const useFcl = () => {
   const queryClient = useQueryClient();
   const setId = useFreightStore((state) => state.setId);
   const router = useRouter();
-
   const getAllFcl = useQuery({
     queryKey: ["fcls"],
-    queryFn: () => fclApi.getAllFcl(),
+    queryFn: fclApi.getAllFcl,
   });
 
-  const useGetFclById = (id: string) => {
+  const getFclById = (id: string) => {
     return useQuery({
       queryKey: ["fcls", id],
-      queryFn: () => fclApi.getFcl(id),
+      queryFn: () => {
+        return fclApi.getFcl(id);
+      },
     });
   };
 
-  const { mutateAsync: createFcl } = useMutation({
-    mutationFn: (data: FclBody) => fclApi.createFcl(data),
+  const { mutate: createFcl } = useMutation({
+    mutationFn: (data: CreateFclBody) => fclApi.createFcl(data),
     onSuccess: () => {
-      toast({
-        variant: "default",
-        title: "Success",
-        description: "FCL created successfully",
-      });
       setId("");
       router.push("/freight");
     },
     onError: (error) => {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
+      toast.error(error.message);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -47,38 +39,26 @@ const useFcl = () => {
     },
   });
 
-  const useUpdateFcl = () => {
+  const updateFcl = (id: string, data: UpdateFclBody) => {
     return useMutation({
-      mutationFn: ({ id, body }: { id: string; body: FclBody }) => {
-        return fclApi.updateFcl(id, body);
+      mutationFn: () => {
+        return fclApi.updateFcl(id, data);
       },
-      onSuccess: (_, req) => {
-        queryClient.invalidateQueries({
-          queryKey: ["fcls", req.id],
-        });
-        toast({
-          variant: "default",
-          title: "Success",
-          description: "FCL updated successfully",
-        });
+      onSuccess: () => {
         router.push("/freight");
       },
       onError: (error) => {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: error.message,
+        toast.error(error.message);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["fcls"],
         });
       },
     });
   };
 
-  return {
-    getAllFcl,
-    getFclById: useGetFclById,
-    createFcl,
-    useUpdateFcl,
-  };
+  return { getAllFcl, getFclById, createFcl, updateFcl };
 };
 
 export default useFcl;

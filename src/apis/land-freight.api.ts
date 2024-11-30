@@ -1,22 +1,34 @@
-import { AllLandFreightType } from "@/schema/land-freight.schema";
-import { ErrorType } from "@/types/error.type";
+import {
+  CreateLandFreightBody,
+  UpdateLandFreightBody,
+} from "@/schema/land-freight.schema";
 import http from "@/utils/http";
-import axios from "axios";
+import { get } from "http";
 
 export const landFreightApi = {
   getAllLandFreight: async () => {
-    try {
-      const response = await http.get<AllLandFreightType>("v1/land-freights");
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data) {
-        const getError = error.response.data as ErrorType;
-        console.error("Error:", getError);
-        throw getError;
-      } else {
-        console.error("Unexpected error:", error);
-        throw error;
+    const response = await http.get<EximResponseWrapper<LandFreight[]>>(
+      "v1/land-freights"
+    );
+    return response.data;
+  },
+  getLandFreight: async (id: string) => {
+    const response = await http.get<EximResponseWrapper<LandFreight>>(
+      "v1/land-freights/",
+      {
+        params: {
+          id,
+        },
       }
-    }
+    );
+    return response.data;
+  },
+  createLandFreight: async (data: CreateLandFreightBody) => {
+    const response = await http.post("v1/land-freights", data);
+    return response.data;
+  },
+  updateLandFreight: async (id: string, data: UpdateLandFreightBody) => {
+    const response = await http.patch(`v1/land-freights/${id}`, data);
+    return response.data;
   },
 };

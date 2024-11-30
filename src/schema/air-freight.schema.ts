@@ -9,11 +9,7 @@ export const airFreightBody = z.object({
   freight_id: z.string(),
 });
 
-export type AirFreightType = z.TypeOf<typeof airFreightBody>;
-
-export const allAirFreightBody = z.object({
-  message: z.string(),
-  data: z.array(airFreightBody),
-});
-
-export type AllAirFreightType = z.TypeOf<typeof allAirFreightBody>;
+export type CreateAirFreightBody = z.TypeOf<typeof airFreightBody>;
+export type UpdateAirFreightBody = z.TypeOf<
+  ReturnType<typeof airFreightBody.partial>
+>;

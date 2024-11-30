@@ -1,44 +1,36 @@
 import { lclApi } from "@/apis/lcl.api";
-import { LclBody } from "@/schema/lcl.schema";
+import { CreateLclBody, UpdateLclBody } from "@/schema/lcl.schema";
 import { useFreightStore } from "@/stores/useFreightStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { toast } from "./use-toast";
+import { toast } from "react-toastify";
 
 const useLcl = () => {
   const queryClient = useQueryClient();
   const setId = useFreightStore((state) => state.setId);
   const router = useRouter();
-
   const getAllLcl = useQuery({
     queryKey: ["lcls"],
-    queryFn: () => lclApi.getAllLcl(),
+    queryFn: lclApi.getAllLcl,
   });
 
-  const useGetLclById = (id: string) => {
+  const getLclById = (id: string) => {
     return useQuery({
       queryKey: ["lcls", id],
-      queryFn: () => lclApi.getLcl(id),
+      queryFn: () => {
+        return lclApi.getLcl(id);
+      },
     });
   };
 
-  const { mutateAsync: createLcl } = useMutation({
-    mutationFn: (data: LclBody) => lclApi.createLcl(data),
+  const { mutate: createLcl } = useMutation({
+    mutationFn: (data: CreateLclBody) => lclApi.createLcl(data),
     onSuccess: () => {
-      toast({
-        variant: "default",
-        title: "Success",
-        description: "LCL created successfully",
-      });
       setId("");
       router.push("/freight");
     },
     onError: (error) => {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
+      toast.error(error.message);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -47,38 +39,26 @@ const useLcl = () => {
     },
   });
 
-  const useUpdateLcl = () => {
+  const updateLcl = (id: string, data: UpdateLclBody) => {
     return useMutation({
-      mutationFn: ({ id, body }: { id: string; body: LclBody }) => {
-        return lclApi.updateLcl(id, body);
+      mutationFn: () => {
+        return lclApi.updateLcl(id, data);
       },
-      onSuccess: (_, req) => {
-        queryClient.invalidateQueries({
-          queryKey: ["lcls", req.id],
-        });
-        toast({
-          variant: "default",
-          title: "Success",
-          description: "LCL updated successfully",
-        });
+      onSuccess: () => {
         router.push("/freight");
       },
       onError: (error) => {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: error.message,
+        toast.error(error.message);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["lcls"],
         });
       },
     });
   };
 
-  return {
-    getAllLcl,
-    getLclById: useGetLclById,
-    createLcl,
-    useUpdateLcl,
-  };
+  return { getAllLcl, getLclById, createLcl, updateLcl };
 };
 
 export default useLcl;

@@ -1,5 +1,9 @@
 import contactRepAction from "@/apis/contactRep.api";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
+import {
+  createContactRepData,
+  updateContactRepData,
+} from "@/schema/contactRep.schema";
 
 export const useContactRep = () => {
   const queryClient = useQueryClient();
@@ -15,7 +19,8 @@ export const useContactRep = () => {
 
   const useCreateContactRep = () => {
     return useMutation({
-      mutationFn: (data: any) => contactRepAction.createContactRep(data),
+      mutationFn: (data: createContactRepData) =>
+        contactRepAction.createContactRep(data),
       onSettled: () => {
         queryClient.invalidateQueries({
           queryKey: ["contactReps"],
@@ -26,7 +31,7 @@ export const useContactRep = () => {
 
   const useUpdateContactRep = () => {
     return useMutation({
-      mutationFn: ({ id, data }: { id: string; data: any }) =>
+      mutationFn: ({ id, data }: { id: string; data: updateContactRepData }) =>
         contactRepAction.updateContactRep(id, data),
       onSettled: () => {
         queryClient.invalidateQueries({
@@ -36,10 +41,20 @@ export const useContactRep = () => {
     });
   };
 
+  const useGetContactRepById = (id: string) => {
+    return useQuery({
+      queryKey: ["contactRep", id],
+      queryFn: () => {
+        return contactRepAction.getContactRep(id);
+      },
+    });
+  };
+
   return {
     queryClient,
     useGetAllContactRep,
     useCreateContactRep,
     useUpdateContactRep,
+    useGetContactRepById,
   };
 };
