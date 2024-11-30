@@ -5,21 +5,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { landColumns } from "./components/columns/land-columns";
 import { airColumns } from "./components/columns/air-columns";
 import { FREIGHT_TYPE } from "@/configs/enum";
-import useAirFreight from "@/hooks/useAirFreight";
-import { airDataFormatter } from "@/helpers/airDataFormatter";
-import { AirFreight } from "@/types/data";
-import useLandFreight from "@/hooks/useLandFreight";
-import { landDataFormatter } from "@/helpers/landDataFormatter";
 import { fclColumns } from "./components/columns/fcl-columns";
 import { lclColumns } from "./components/columns/lcl-columns";
+import { getAirData } from "@/helpers/getAirData";
+import { getLandData } from "@/helpers/getLandData";
+import { getFclData } from "@/helpers/getFclData";
+import { getLclData } from "@/helpers/getLclData";
 
 export default function FreightManagementPage() {
   const freightTypes = Object.values(FREIGHT_TYPE);
-  const { data: allAirData } = useAirFreight().getAllAir;
-  const { data: allLandData } = useLandFreight().getAllLand;
-  const airData: AirFreight[] = allAirData ? airDataFormatter(allAirData) : [];
-  const landData = allLandData ? landDataFormatter(allLandData) : [];
 
+  const airfreightdata = getAirData();
+  const landfreightdata = getLandData();
+  const fclData = getFclData();
+  const lclData = getLclData();
   return (
     <div className="flex flex-col p-[24px] w-[calc(100vw-var(--sidebar-width))]">
       <Tabs
@@ -39,16 +38,16 @@ export default function FreightManagementPage() {
           </div>
         </div>
         <TabsContent value={FREIGHT_TYPE.LAND}>
-          <DataTable columns={landColumns} data={landData} />
+          <DataTable columns={landColumns} data={landfreightdata} />
         </TabsContent>
         <TabsContent value={FREIGHT_TYPE.AIR}>
-          <DataTable columns={airColumns} data={airData} />
+          <DataTable columns={airColumns} data={airfreightdata} />
         </TabsContent>
         <TabsContent value={FREIGHT_TYPE.FCL}>
-          <DataTable columns={fclColumns} data={[]} />
+          <DataTable columns={fclColumns} data={fclData} />
         </TabsContent>
         <TabsContent value={FREIGHT_TYPE.LCL}>
-          <DataTable columns={lclColumns} data={[]} />
+          <DataTable columns={lclColumns} data={lclData} />
         </TabsContent>
       </Tabs>
     </div>
