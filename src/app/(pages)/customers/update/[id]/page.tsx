@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useCallback, useState } from "react";
-import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { useCallback, useState } from 'react';
+import { z } from 'zod';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -13,11 +13,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera } from "lucide-react";
-import { useParams } from "next/navigation";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Camera } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import useCustomer from '@/hooks/use-customer';
 
 const formSchema = z.object({
   name: z.string(),
@@ -30,7 +31,7 @@ const formSchema = z.object({
   file: z
     .instanceof(File)
     .refine((file) => file.size < 10000000, {
-      message: "Your file must be less than 10MB.",
+      message: 'Your file must be less than 10MB.',
     })
     .optional(),
 });
@@ -49,19 +50,32 @@ export default function UpdateCustomerPage() {
       try {
         reader.onload = () => setPreview(reader.result as string);
         reader.readAsDataURL(acceptedFile);
-        form.setValue("file", acceptedFile);
-        form.clearErrors("file");
+        form.setValue('file', acceptedFile);
+        form.clearErrors('file');
       } catch (error) {
+        console.log(error);
         setPreview(null);
-        form.resetField("file");
-        console.error(error);
+        form.resetField('file');
       }
     },
     [form]
   );
 
+  const { useUpdateCustomer } = useCustomer();
+  const { mutate: updateCustomer } = useUpdateCustomer();
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    updateCustomer({
+      id: customerId,
+      body: {
+        name: values.name,
+        shortName: values.short_name,
+        email: values.email,
+        phone: values.phone,
+        taxId: values.tax_id,
+        address: values.address,
+      },
+    });
   }
 
   return (
@@ -108,7 +122,7 @@ export default function UpdateCustomerPage() {
                       />
                       <Button
                         type="button"
-                        onClick={() => document.getElementById("file")?.click()}
+                        onClick={() => document.getElementById('file')?.click()}
                       >
                         Upload Image
                       </Button>
