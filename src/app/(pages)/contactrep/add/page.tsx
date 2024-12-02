@@ -1,9 +1,8 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,22 +14,56 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const formSchema = z.object({
-  name: z.string(),
-  contactrep: z.string(),
-  email: z.string().email(),
-  phone: z.string(),
-  address: z.string(),
-  country: z.string(),
-});
+import { ContactRepBody, ContactRepBodyType } from "@/schema/contactrep.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import useContactRep from "@/hooks/use-contactrep";
+import { ErrorType } from "@/types/error.type";
 
 export default function AddContactrep() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ContactRepBodyType>({
+    resolver: zodResolver(ContactRepBody),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+    },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const router = useRouter();
+
+  const { mutate: createContactRep, isPending } =
+    useContactRep.useCreateContactRep();
+
+  function onSubmit(values: ContactRepBodyType) {
     console.log(values);
+    if (isPending) return;
+
+    createContactRep(values, {
+      onSuccess() {
+        router.push("/contactrep");
+      },
+      onError: (error) => {
+        console.log("🚀 ~ onSubmit ~ error:", error);
+        switch ((error as ErrorType).statusCode) {
+          case 409: {
+            if (!error.errors?.length) return;
+
+            error.errors.forEach((err) => {
+              const filed = err.field as keyof ContactRepBodyType;
+              form.setError(filed, {
+                message: err.message,
+              });
+            });
+            break;
+          }
+          default:
+            console.error("Unknown error", error);
+            break;
+        }
+      },
+    });
   }
 
   return (
@@ -42,6 +75,7 @@ export default function AddContactrep() {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           encType="multipart/form-data"
+          noValidate
         >
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
             <FormField
@@ -49,7 +83,9 @@ export default function AddContactrep() {
               name="name"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Name</FormLabel>
+                  <FormLabel className="font-bold">
+                    Name
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Name" {...field} />
                   </FormControl>
@@ -62,9 +98,15 @@ export default function AddContactrep() {
               name="email"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Email</FormLabel>
+                  <FormLabel className="font-bold">
+                    Email
+                  </FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="Email" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="Email"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -75,9 +117,15 @@ export default function AddContactrep() {
               name="phone"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Phone</FormLabel>
+                  <FormLabel className="font-bold">
+                    Phone
+                  </FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder="Phone" {...field} />
+                    <Input
+                      type="tel"
+                      placeholder="Phone"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -101,6 +149,7 @@ export default function AddContactrep() {
                 className="w-1/2 h-10 text-lg"
                 variant={"default"}
                 type="submit"
+                disabled={isPending}
               >
                 Save
               </Button>

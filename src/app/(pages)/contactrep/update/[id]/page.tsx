@@ -1,10 +1,8 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { z } from "zod";
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,26 +14,74 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useParams } from "next/navigation";
 
-const formSchema = z.object({
-  name: z.string(),
-  contactrep: z.string(),
-  email: z.string().email(),
-  phone: z.string(),
-  address: z.string(),
-  country: z.string(),
-});
+import { ContactRepBody, ContactRepBodyType } from "@/schema/contactrep.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import useContactRep from "@/hooks/use-contactrep";
 
 export default function UpdateContactrep() {
-  const { id: contactrepId } = useParams<{ id: string }>();
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ContactRepBodyType>({
+    resolver: zodResolver(ContactRepBody),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+    },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+
+  const { mutate: updateContactRep, isPending } =
+    useContactRep.useUpdateContactRep();
+
+  const { data } = useContactRep.useGetContactRep();
+
+  useEffect(() => {
+    if (!data) return;
+    const contactRep = data.find((contactRep) => contactRep.id === id);
+    if (!contactRep) {
+      router.push("/contactrep");
+      return;
+    }
+
+    form.reset(contactRep);
+  }, [data, form, id, router]);
+
+  function onSubmit(values: ContactRepBodyType) {
     console.log(values);
+    if (isPending) return;
+
+    updateContactRep(
+      { ...values, id },
+      {
+        onSuccess: () => {
+          router.push("/contactrep");
+        },
+        onError: (error) => {
+          console.error({ error });
+          switch (error.statusCode) {
+            case 409: {
+              if (!error.errors?.length) return;
+
+              error.errors.forEach((err) => {
+                const filed =
+                  err.field as keyof ContactRepBodyType;
+                form.setError(filed, {
+                  message: err.message,
+                });
+              });
+              break;
+            }
+            default:
+              console.error("Unknown error", error);
+              break;
+          }
+        },
+      }
+    );
   }
 
   return (
@@ -54,7 +100,9 @@ export default function UpdateContactrep() {
               name="name"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Name</FormLabel>
+                  <FormLabel className="font-bold">
+                    Name
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Name" {...field} />
                   </FormControl>
@@ -67,9 +115,15 @@ export default function UpdateContactrep() {
               name="email"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Email</FormLabel>
+                  <FormLabel className="font-bold">
+                    Email
+                  </FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="Email" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="Email"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -80,9 +134,15 @@ export default function UpdateContactrep() {
               name="phone"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Phone</FormLabel>
+                  <FormLabel className="font-bold">
+                    Phone
+                  </FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder="Phone" {...field} />
+                    <Input
+                      type="tel"
+                      placeholder="Phone"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -97,7 +157,11 @@ export default function UpdateContactrep() {
               >
                 <Link href="/contactrep">Cancel</Link>
               </Button>
-              <Button className="w-1/2 h-10 text-lg" type="submit">
+              <Button
+                className="w-1/2 h-10 text-lg"
+                type="submit"
+                disabled={isPending}
+              >
                 Save
               </Button>
             </div>

@@ -2,11 +2,9 @@
 
 import { DataTable } from "@/app/(pages)/contactrep/components/data-table";
 import { Loader2, TriangleAlert } from "lucide-react";
-
 import { columns } from "./components/columns";
-// import { contactrepData } from "./data/contactrep-data";
-import useContactRep from "@/hooks/use-contactrep";
 
+import useContactRep from "@/hooks/use-contactrep";
 
 export default function ContactrepManagement() {
   const {
