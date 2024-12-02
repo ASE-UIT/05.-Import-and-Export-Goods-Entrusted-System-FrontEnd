@@ -1,7 +1,6 @@
 "use client";
 
 import { Table } from "@tanstack/react-table";
-
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import {
@@ -23,13 +22,12 @@ export function DataTableFilter<TData>({
 }: DataTableToolbarProps<TData>) {
   const filterableColumns = table
     .getAllColumns()
-    .filter((column) => !["action", "delete", "checkbox"].includes(column.id))
+    .filter((column) => !["action", "checkbox"].includes(column.id))
     .map((column) => column.id);
 
   const [currentFilter, setCurrentFilter] = useState<string>(
     filterableColumns[0]
   );
-  console.log(filterableColumns);
   return (
     <div className="flex gap-[5px] items-center">
       <div className="w-[300px] ">
@@ -56,7 +54,8 @@ export function DataTableFilter<TData>({
                 {title
                   .replace(/([A-Z])/g, " $1")
                   .toLowerCase()
-                  .replace(/\b\w/g, (char) => char.toUpperCase())}
+                  .replace(/\b\w/g, (char) => char.toUpperCase())
+                  .replace(/Id/, "ID")}
               </SelectItem>
             ))}
           </SelectGroup>

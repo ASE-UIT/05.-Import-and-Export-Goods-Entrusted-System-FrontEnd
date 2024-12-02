@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -13,7 +12,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -22,7 +20,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 import { Button } from "../../../../components/ui/button";
 import { DataTableFilter } from "./data-table-filter";
 import { CirclePlus } from "lucide-react";
@@ -32,11 +29,15 @@ import { DataTablePagination } from "./data-table-pagination";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isLoading: boolean;
+  error: string | undefined;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isLoading,
+  error,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -66,10 +67,19 @@ export function DataTable<TData, TValue>({
         <DataTableFilter table={table} />
         <Button variant="default" onClick={() => router.push(`${path}/add`)}>
           <CirclePlus className="mr-2" />
-          <span>Add {path.slice(1, path.length)}</span>
+          <span>
+            Add{" "}
+            {path.slice(1).charAt(0).toUpperCase() +
+              path.slice(2).replace(/s$/, "")}
+          </span>
         </Button>
       </div>
       <div className="rounded-md">
+        {isLoading ? (
+          <div className="flex items-center justify-center">Loading...</div>
+        ) : error ? (
+          <div className="flex items-center justify-center">Error: {error}</div>
+        ) : (
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -118,8 +128,11 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+      )}
       </div>
-      <DataTablePagination table={table} />
+      {table.getRowModel().rows?.length > 0 && (
+        <DataTablePagination table={table} />
+      )}
     </div>
   );
 }

@@ -3,20 +3,26 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
-import StatusBadge from "@/components/status-badge";
-import Link from "next/link";
+import { ArrowUpDown, Pencil, Trash2 } from "lucide-react";
+import StatusBadge from '@/components/status-badge';
+import { useState } from "react";
+import {
+  Dialog,
+  DialogFooter,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export interface IQuotation {
-  quotation_id: string;
-  quote_request_id: string;
-  employee_id: string;
-  freight_id: string;
-  total_price: string;
-  pickup_date: string;
-  delivery_date: string;
-  quotation_date: string;
-  expired_date: string;
+  id: string;
+  quoteReqId:string
+  employeeId: string;
+  freightId: string;
+  totalPrice: string;
+  pickupDate: string;
+  deliveryDate: string;
+  quotationDate: string;
+  expiredDate: string;
   status: string;
 }
 
@@ -25,25 +31,21 @@ export const columns: ColumnDef<IQuotation>[] = [
     id: "checkbox",
     cell: ({ row }) => (
       <div className="flex justify-center">
-        <Checkbox
+        <Checkbox 
           className="h-4 w-4"
           onCheckedChange={(checked) => {
             if (checked) {
-              console.log(
-                `Selected row with ID: ${row.getValue("quotation_id")}`
-              );
+              console.log(`Selected row with ID: ${row.getValue("id")}`);
             } else {
-              console.log(
-                `Deselected row with ID: ${row.getValue("quotation_id")}`
-              );
+              console.log(`Deselected row with ID: ${row.getValue("id")}`);
             }
-          }}
+          }} 
         />
       </div>
     ),
   },
   {
-    accessorKey: "quotation_id",
+    accessorKey: "id",
     header: ({ column }) => {
       return (
         <Button
@@ -57,10 +59,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("quotation_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "quote_request_id",
+    accessorKey: "quoteReqId",
     header: ({ column }) => {
       return (
         <Button
@@ -74,10 +76,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("quote_request_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("quoteReqId")}</div>,
   },
   {
-    accessorKey: "employee_id",
+    accessorKey: "employeeId",
     header: ({ column }) => {
       return (
         <Button
@@ -91,10 +93,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("employee_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("employeeId")}</div>,
   },
   {
-    accessorKey: "freight_id",
+    accessorKey: "freightId",
     header: ({ column }) => {
       return (
         <Button
@@ -108,10 +110,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("freight_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("freightId")}</div>,
   },
   {
-    accessorKey: "total_price",
+    accessorKey: "totalPrice",
     header: ({ column }) => {
       return (
         <Button
@@ -125,10 +127,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("total_price"),
+    cell: ({ row }) => row.getValue("totalPrice"),
   },
   {
-    accessorKey: "pickup_date",
+    accessorKey: "pickupDate",
     header: ({ column }) => {
       return (
         <Button
@@ -142,10 +144,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("pickup_date"),
+    cell: ({ row }) => row.getValue("pickupDate"),
   },
   {
-    accessorKey: "delivery_date",
+    accessorKey: "deliveryDate",
     header: ({ column }) => {
       return (
         <Button
@@ -159,10 +161,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("delivery_date"),
+    cell: ({ row }) => row.getValue("deliveryDate"),
   },
   {
-    accessorKey: "quotation_date",
+    accessorKey: "quotationDate",
     header: ({ column }) => {
       return (
         <Button
@@ -176,10 +178,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("quotation_date"),
+    cell: ({ row }) => row.getValue("quotationDate"),
   },
   {
-    accessorKey: "expired_date",
+    accessorKey: "expiredDate",
     header: ({ column }) => {
       return (
         <Button
@@ -193,7 +195,7 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("expired_date"),
+    cell: ({ row }) => row.getValue("expiredDate"),
   },
   {
     accessorKey: "status",
@@ -202,26 +204,52 @@ export const columns: ColumnDef<IQuotation>[] = [
   },
   {
     id: "action",
-    header: "Action",
-    cell: ({ row }) => (
-      <div>
-        <Link href={`/quotation/update/${row.getValue("quotation_id")}`}>
-          <button className="text-blue-500">Edit</button>
-        </Link>
-      </div>
-    ),
-  },
-  {
-    id: "delete",
-    cell: () => (
-      <div>
-        <Button
-          variant="default"
-          className="flex items-center gap-2 text-sm px-2 py-1"
-        >
-          <span>Delete</span>
-        </Button>
-      </div>
-    ),
+    cell: ({ row }) => {
+      const id = row.original.id;
+      const [open, setOpen] = useState(false);
+
+      const handleEdit = () => {
+        window.location.href = `${window.location.pathname}/update/${id}`;
+      };
+
+      const handleDelete = () => {
+        console.log("Delete clicked for ID:", id);
+      };
+
+      return (
+        <div className="flex space-x-2">
+          <Button
+            variant="default"
+            className="aspect-square p-[6px] h-auto w-auto"
+            onClick={handleEdit}
+          >
+            <Pencil className=" aspect-square w-5 h-5"></Pencil>
+          </Button>
+
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button
+                className="aspect-square p-[6px] h-auto w-auto"
+                variant="destructive"
+                onClick={handleDelete}
+              >
+                <Trash2 className=" aspect-square w-5 h-5"></Trash2>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <p>Are you sure you want to delete this quotation?</p>
+              <DialogFooter>
+                <Button variant="ghost" onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
+                <Button variant="destructive" onClick={handleDelete}>
+                  Confirm Delete
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      );
+    },
   },
 ];
