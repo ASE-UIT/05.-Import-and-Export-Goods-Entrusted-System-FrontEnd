@@ -1,5 +1,5 @@
 "use client";
-import { DatePicker } from "@/components/date-picker";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -67,33 +67,33 @@ export default function SettingForm() {
   const inputFile = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState(null);
   const [displayImage, setDisplayImage] = useState("https://placehold.co/400");
-  const [loading, setLoading] = useState(false);
+  const [_loading] = useState(false);
   const pressOnce = useRef(false);
 
-  const handleImageChange = (event: any) => {
-    pressOnce.current = true;
-    setImage(event.target.files[0]);
-    setDisplayImage(
-      event.target.files[0] ? URL.createObjectURL(event.target.files[0]) : ""
-    );
-    event.target.value = null;
-  };
+  // const handleImageChange = (event: any) => {
+  //   pressOnce.current = true;
+  //   setImage(event.target.files[0]);
+  //   setDisplayImage(
+  //     event.target.files[0] ? URL.createObjectURL(event.target.files[0]) : ""
+  //   );
+  //   event.target.value = null;
+  // };
 
-  const handleSetImage = async () => {
-    console.log("submitted");
-    let formdata = new FormData();
-    if (image != null) {
-      console.log(image);
-      formdata.append("avatar", image);
-    }
-    setLoading(true);
-    try {
-      console.log("submitting");
-    } catch (err: any) {
-      console.log(err);
-    }
-    setLoading(false);
-  };
+  // const handleSetImage = async () => {
+  //   console.log("submitted");
+  //   const formdata = new FormData();
+  //   if (image != null) {
+  //     console.log(image);
+  //     formdata.append("avatar", image);
+  //   }
+  //   setLoading(true);
+  //   try {
+  //     console.log("submitting");
+  //   } catch (err: any) {
+  //     console.log(err);
+  //   }
+  //   setLoading(false);
+  // };
 
   const onSubmit = form.handleSubmit((values) => {
     console.log(values);
@@ -107,7 +107,7 @@ export default function SettingForm() {
           id="file"
           ref={inputFile}
           style={{ display: "none" }}
-          onChange={handleImageChange}
+          // onChange={handleImageChange}
           multiple
         />
         <div className="relative">
@@ -145,7 +145,7 @@ export default function SettingForm() {
       <div className="mt-8 pl-80 pr-80">
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={onSubmit}
             className="space-y-4 w-full flex-shrink-0"
             noValidate
           >
@@ -232,7 +232,7 @@ export default function SettingForm() {
               <FormField
                 control={form.control}
                 name="dateOfBirth"
-                render={({ field }) => (
+                render={() => (
                   <FormItem className="flex flex-col">
                     <FormLabel className="text-[16px] font-bold">
                       Date Of Birth

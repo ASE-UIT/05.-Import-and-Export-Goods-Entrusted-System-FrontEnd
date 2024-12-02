@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import { useState, useRef, ChangeEvent, KeyboardEvent } from "react";
+import { useState, useRef, ChangeEvent } from "react";
 
 interface FormData {
   email: string;
@@ -14,7 +14,7 @@ interface FormData {
 export default function Page() {
   const [step, setStep] = useState(1);
 
-  const [formData, setFormData] = useState({
+  const [formData] = useState({
     email: "",
     newPassword: "",
     confirmPassword: "",
@@ -48,7 +48,7 @@ interface FormStepProps {
   nextStep: () => void;
 }
 
-const Form_Step_1: React.FC<FormStepProps> = ({ formData, nextStep }) => {
+const Form_Step_1: React.FC<FormStepProps> = ({ nextStep }) => {
   return (
     <>
       <Image
@@ -84,7 +84,7 @@ const Form_Step_1: React.FC<FormStepProps> = ({ formData, nextStep }) => {
   );
 };
 
-const Form_Step_2: React.FC<FormStepProps> = ({ formData, nextStep }) => {
+const Form_Step_2: React.FC<FormStepProps> = ({ nextStep }) => {
   const [values, setValues] = useState<string[]>(["", "", "", ""]);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -155,7 +155,7 @@ const Form_Step_2: React.FC<FormStepProps> = ({ formData, nextStep }) => {
   );
 };
 
-const Form_Step_3: React.FC<FormStepProps> = ({ formData, nextStep }) => {
+const Form_Step_3: React.FC<FormStepProps> = ({ nextStep }) => {
   return (
     <>
       <Image
@@ -199,33 +199,33 @@ const Form_Step_3: React.FC<FormStepProps> = ({ formData, nextStep }) => {
   );
 };
 
-function Form_Step_4_Success() {
-  return (
-    <>
-      <Image
-        src={"/images/upload.svg"}
-        width={0}
-        height={0}
-        className="w-[10.25rem] h-[10.25rem] z-10"
-        quality={100}
-        alt="Main Icon"
-      ></Image>
-      <h1 className=" text-[#153060] text-[45px] font-[400] text-center leading-[52px] self-stretch">
-        Successfully
-      </h1>
-      <h2 className="text-[#828282] text-base font-[400] leading-6 tracking-[0.00938rem]">
-        Your password has been reset successfully
-      </h2>
-      <div className="flex flex-col items-start gap-[1.3rem] self-stretch">
-        <Button className="h-[3.75rem] self-stretch">
-          <span className="text-[#fff] text-[1.25rem] font-[600] tracking-[0.0375rem]">
-            Back To Home Page
-          </span>
-        </Button>
-      </div>
-    </>
-  );
-}
+// function Form_Step_4_Success() {
+//   return (
+//     <>
+//       <Image
+//         src={"/images/upload.svg"}
+//         width={0}
+//         height={0}
+//         className="w-[10.25rem] h-[10.25rem] z-10"
+//         quality={100}
+//         alt="Main Icon"
+//       ></Image>
+//       <h1 className=" text-[#153060] text-[45px] font-[400] text-center leading-[52px] self-stretch">
+//         Successfully
+//       </h1>
+//       <h2 className="text-[#828282] text-base font-[400] leading-6 tracking-[0.00938rem]">
+//         Your password has been reset successfully
+//       </h2>
+//       <div className="flex flex-col items-start gap-[1.3rem] self-stretch">
+//         <Button className="h-[3.75rem] self-stretch">
+//           <span className="text-[#fff] text-[1.25rem] font-[600] tracking-[0.0375rem]">
+//             Back To Home Page
+//           </span>
+//         </Button>
+//       </div>
+//     </>
+//   );
+// }
 
 function Form_Step_4_Fail() {
   return (

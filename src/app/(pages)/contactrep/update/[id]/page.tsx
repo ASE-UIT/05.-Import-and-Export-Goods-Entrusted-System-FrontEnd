@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { z } from "zod";
 import Link from "next/link";
 import { useContactRep } from "@/hooks/use-contactRep";
@@ -35,11 +35,7 @@ export default function UpdateContactrep() {
 
   const updateMutation = useUpdateContactRep();
 
-  const {
-    data: contactrep,
-    error,
-    isPending,
-  } = useGetContactRepById(contactrepId);
+  const { data: contactrep } = useGetContactRepById(contactrepId);
 
   const form = useForm<z.infer<typeof contactRepSchema>>({
     resolver: zodResolver(contactRepSchema),

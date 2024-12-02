@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { ISeaFreight } from "..";
@@ -26,7 +25,7 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
   },
   {
     accessorKey: "freight_type",
-    header: ({ column }) => {
+    header: () => {
       return (
         <Button
           className="pl-0"
@@ -143,7 +142,7 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
   },
   {
     accessorKey: "note",
-    header: ({ column }) => {
+    header: () => {
       return (
         <Button
           className="pl-0"
