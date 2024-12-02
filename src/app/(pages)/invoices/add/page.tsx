@@ -63,8 +63,8 @@ export default function AddInvoice() {
 
   useEffect(() => {
     if (contractDetailsData) {
-      const contractId = contractDetailsData.id; 
-      setcontractID([contractId]); 
+      const contracts = contractDetailsData.map((it) => it.id);
+      setcontractID(contracts);
     }
   }, [contractDetailsData]);
 
@@ -148,16 +148,11 @@ export default function AddInvoice() {
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Employee ID</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="w-full h-[60px]">
-                        <SelectValue placeholder="Select employee ID" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="01">4fa85f64-5717-4562-b3fc-2c963f66afa6</SelectItem>
-                        <SelectItem value="02">5fa85f64-5717-4562-b3fc-2c963f66afa6</SelectItem>
-                        <SelectItem value="03">6fa85f64-5717-4562-b3fc-2c963f66afa6</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      value={field.value || ""}
+                      readOnly
+                      className="w-full h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -298,7 +293,7 @@ export default function AddInvoice() {
                   <FormControl>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger className="w-full h-[60px]">
-                        <SelectValue placeholder="Select employee ID" />
+                        <SelectValue placeholder="Select Status" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="01">PENDING</SelectItem>

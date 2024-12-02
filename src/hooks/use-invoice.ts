@@ -62,13 +62,13 @@ const useInvoice = {
     });
   },
 
-  useGetContractDetails() { // New hook for contract details
+  useGetContractDetails() {
     return useQuery({
       queryKey: ["contractDetails"],
       queryFn: async () => {
         try {
           const result = await invoiceAction.getContractDetail();
-          return result;
+          return result; // Kết quả trả về là ContractDetailsType[]
         } catch (error) {
           console.error("Error during get contracts:", error);
           throw error;
@@ -76,7 +76,7 @@ const useInvoice = {
       },
       retry: 0,
     });
-  },
+  }, 
 
   useUpdateInvoice(
     id: string | undefined,

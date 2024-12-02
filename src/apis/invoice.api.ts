@@ -1,9 +1,9 @@
-import { ContractDetailsType } from "@/schema/contract.schema";
 import {
     UpdateInvoiceType,
     CreateInvoiceType,
     InvoicesResType,
     InvoiceDetailsType,
+    ContractDetailResType,
   } from "@/schema/invoice.schema";
   import { ErrorType } from "@/types/error.type";
   import http from "@/utils/http";
@@ -29,10 +29,10 @@ import {
 
     async getContractDetail() {
       try {
-        const response = await http.get<ContractDetailsType>(
-          "v1/invoices?status=PENDING"
+        const response = await http.get<ContractDetailResType>( 
+          "v1/contract?status=PENDING"
         );
-        return response.data;
+        return response.data; 
       } catch (error) {
         if (axios.isAxiosError(error) && error.response?.data) {
           const getBookedQuotationsError = error.response.data as ErrorType;
@@ -43,7 +43,7 @@ import {
           throw error;
         }
       }
-    },
+    },     
       
     async getInvoice() {
       try {

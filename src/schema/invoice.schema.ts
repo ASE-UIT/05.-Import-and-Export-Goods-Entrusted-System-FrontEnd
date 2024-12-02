@@ -51,9 +51,10 @@ export const InvoiceRes = z.object({
   data: z.array(InvoiceDetailsRes),
 });
 
-export const ContractDetailRes = z.array(ContractDetailsRes);
+export const ContractDetailRes = z.array(ContractDetailsRes); // Array
 export type UpdateInvoiceType = z.TypeOf<typeof UpdateInvoiceBody>;
 export type CreateInvoiceType = z.TypeOf<typeof CreateInvoiceBody>;
 export type InvoicesResType = z.TypeOf<typeof InvoiceRes>;
 export type InvoiceDetailsType = z.TypeOf<typeof InvoiceDetailsRes>;
-export type ContractDetailsType = z.TypeOf<typeof ContractDetailRes>;
+export type ContractDetailsType = z.TypeOf<typeof ContractDetailsRes>; // Object
+export type ContractDetailResType = z.TypeOf<typeof ContractDetailRes>; // Array
