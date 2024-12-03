@@ -1,6 +1,7 @@
 
 import contactRepAction from "@/apis/contactrep.api";
 import { ContactRepBodyType } from "@/schema/contactrep.schema";
+// import { ContactRepBodyType } from "@/schema/contactrep.schema";
 import { ErrorType } from "@/types/error.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

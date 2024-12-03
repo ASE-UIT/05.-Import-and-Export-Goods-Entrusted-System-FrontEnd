@@ -1,6 +1,7 @@
-
-
-import { ContactRepBodyType, ContactRepResType } from "@/schema/contactrep.schema";
+import {
+    ContactRepBodyType,
+    ContactRepResType,
+} from "@/schema/contactrep.schema";
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
 import axios from "axios";
