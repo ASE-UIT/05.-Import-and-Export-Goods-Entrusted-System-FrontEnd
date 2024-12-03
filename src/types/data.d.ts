@@ -102,7 +102,7 @@ interface Provider {
 }
 
 interface ContactRep {
-  contactrep_id: number;
+  id: string;
   name: string;
   email: string;
   phone: string;
