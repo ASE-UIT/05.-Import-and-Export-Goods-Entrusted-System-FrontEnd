@@ -1,16 +1,19 @@
 "use client";
-
 import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
+import { useGetContractDetails } from "@/hooks/use-contract";
+import { useShipment } from "@/hooks/use-shipment";
 
 import { ReactNode } from "react";
+import { DataTable } from "./data-table";
 
 export interface IShipment {
   id: string;
-  type: string;
+  contractId: string; // Add contractId here
+  shipmentType: string;
   client: string;
   price: string;
   enddate: string;
@@ -38,7 +41,7 @@ export const columns: ColumnDef<IShipment>[] = [
     cell: ({ row }) => <div>{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "type",
+    accessorKey: "shipmentType",
     header: ({ column }) => {
       return (
         <Button
@@ -51,7 +54,7 @@ export const columns: ColumnDef<IShipment>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("type")}</div>,
+    cell: ({ row }) => <div>{row.getValue("shipmentType")}</div>,
   },
   {
     accessorKey: "client",
@@ -162,17 +165,17 @@ export const columns: ColumnDef<IShipment>[] = [
 
       let linkTo: string;
 
-      if (shipment.type === "Sea Freight") {
+      if (shipment.shipmentType === "Sea Freight") {
         linkTo =
           shipment.origin === shipment.destination
             ? `/shipment/details/seaimport/` // Đường dẫn cho sea import
             : `/shipment/details/seaexport/`; // Đường dẫn cho sea export
-      } else if (shipment.type === "Air Freight") {
+      } else if (shipment.shipmentType === "Air Freight") {
         linkTo =
           shipment.origin === shipment.destination
             ? `/shipment/details/airimport/` // Đường dẫn cho air import
             : `/shipment/details/airexport/`; // Đường dẫn cho air export
-      } else if (shipment.type === "Land Freight") {
+      } else if (shipment.shipmentType === "Land Freight") {
         linkTo =
           shipment.origin === shipment.destination
             ? `/shipment/details/landimport/` // Đường dẫn cho land import

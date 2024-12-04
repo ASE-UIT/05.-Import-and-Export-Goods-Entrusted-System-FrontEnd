@@ -58,25 +58,16 @@ import {
         }
       }
     },
-    async getContractDetails(id: string | undefined) {
-      try {
-        const response = await http.get<ContractsResType>(
-          `v1/contracts?id=${id}`
-        );
-        return response.data;
-      } catch (error) {
-        if (axios.isAxiosError(error) && error.response?.data) {
-          const getContractDetailsError = error.response.data as ErrorType;
-          console.error(
-            "Error during get contract details:",
-            getContractDetailsError
-          );
-          throw getContractDetailsError;
-        } else {
-          console.error("Unexpected error during get contract details:", error);
-          throw error;
+    async getContract(id?: string) {
+      const res = await http.get<EximResponseWrapper<IShipment[]>>(
+        "v1/contracts",
+        {
+          params: {
+            id,
+          },
         }
-      }
+      );
+      return res.data;
     },
     async updateContract(
       id: string | undefined,

@@ -22,7 +22,7 @@ interface Invoice {
   total_amount: number;
 }
 
-ShipmentType = "Air Freight" | "Sea Freight" | "Land Freight";
+ShipmentType = "Air Freight" | "Sea Freight" | "FCL" | "LCL";
 
 ShipmentStatus =
   "Pending" |

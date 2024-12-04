@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Enum for shipment types
-export const shipmentTypeEnum = z.enum(["Air Freight", "Land Freight", "Sea Freight"]);
+export const shipmentTypeEnum = z.enum(["Air Freight", "Land Freight", "LCL", "FCL" ]);
 export const shipmentStatusEnum = z.enum(["Pending" ,
   "Document Verification" ,
   "Customs Clearance Pending" ,

@@ -1,6 +1,6 @@
 type IShipment={
     id: string;
-    type: string;
+    shipmentType: string;
     client: string;
     price: string;
     enddate: string;

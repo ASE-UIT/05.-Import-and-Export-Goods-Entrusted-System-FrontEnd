@@ -7,7 +7,8 @@ import { shipmentData as sampleData } from "./data/manage-shipment";
 
 export default function ShipmentManagement() {
   const { useGetAllShipment } = useShipment();
-  const { data: shipmentData, error, isPending } = useGetAllShipment();
+  const { data: shipmentData } = useGetAllShipment();
+  console.log(shipmentData);
 
   return (
     <div className="flex flex-col p-[24px] w-full">

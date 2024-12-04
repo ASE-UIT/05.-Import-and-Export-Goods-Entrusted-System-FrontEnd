@@ -1,10 +1,10 @@
 import shipmentAction from "@/apis/shipment.api";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useQuery, useQueries, useMutation } from "@tanstack/react-query";
 import {
   createShipmentData,
   updateShipmentData,
 } from "@/schema/shipment.schema";
-
+import contractAction from "@/apis/contract.api";
 export const useShipment = () => {
   const queryClient = useQueryClient();
 
@@ -16,6 +16,7 @@ export const useShipment = () => {
       },
     });
   };
+ 
 
   const useCreateShipment = () => {
     return useMutation({
@@ -24,7 +25,7 @@ export const useShipment = () => {
       onSettled: () => {
         queryClient.invalidateQueries({
           queryKey: ["shipments"],
-        });
+        }); 
       },
     });
   };
@@ -45,7 +46,7 @@ export const useShipment = () => {
     return useQuery({
       queryKey: ["shipment", id],
       queryFn: () => {
-        return shipmentAction.getShipment(id);
+        return shipmentAction.getShipment(id)
       },
     });
   };
