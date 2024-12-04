@@ -20,19 +20,25 @@ import {
 } from "@/components/ui/table";
 
 import StatusBadge, { Status } from "@/components/status-badge";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AlertCircle } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isPending: boolean;
+  error: string | undefined;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isPending,
+  error,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const loadingRows = Array(5).fill(null);
 
   const table = useReactTable({
     data,
@@ -45,6 +51,16 @@ export function DataTable<TData, TValue>({
       sorting,
     },
   });
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-[400px]">
+        <AlertCircle className="w-16 h-16 text-neutral-400" />
+        <span className="text-lg mt-4 text-neutral-400">{error}</span>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="rounded-md">
@@ -68,7 +84,17 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isPending ? (
+              loadingRows.map((_, index) => (
+                <TableRow key={index}>
+                  {columns.map((_, cellIndex) => (
+                    <TableCell key={cellIndex}>
+                      <Skeleton className="w-full h-10 bg-neutral-300" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -76,7 +102,7 @@ export function DataTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {cell.column.columnDef.accessorKey === "status" ? (
+                      {cell.column.id === "status" ? (
                         <StatusBadge status={cell.getValue() as Status} />
                       ) : (
                         flexRender(
