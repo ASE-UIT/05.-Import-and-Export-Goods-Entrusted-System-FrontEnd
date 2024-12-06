@@ -161,7 +161,9 @@ function CreateFreightForm({
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={(date) => field.onChange(date?.toISOString())}
+                        onSelect={(date) =>
+                          field.onChange(date?.toDateString())
+                        }
                         disabled={(date) =>
                           date < new Date() &&
                           date.toDateString() !== new Date().toDateString()
@@ -201,7 +203,9 @@ function CreateFreightForm({
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={(date) => field.onChange(date?.toISOString())}
+                        onSelect={(date) =>
+                          field.onChange(date?.toDateString())
+                        }
                         disabled={(date) =>
                           date < new Date() &&
                           date.toDateString() !== new Date().toDateString()

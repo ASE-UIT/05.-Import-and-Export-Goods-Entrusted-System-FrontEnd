@@ -28,7 +28,6 @@ export function DataTableFilter<TData>({
   const [currentFilter, setCurrentFilter] = useState<string>(
     filterableColumns[0]
   );
-  console.log(filterableColumns);
   return (
     <div className="flex gap-[5px] items-center">
       <div className="w-[300px] ">
@@ -53,7 +52,8 @@ export function DataTableFilter<TData>({
             {filterableColumns.map((title) => (
               <SelectItem value={title} key={title}>
                 {title
-                  .replace(/([A-Z])/g, " $1")
+                  .replace(/_/g, " ")
+                  .replace(/([a-z])([A-Z])/g, "$1 $2")
                   .toLowerCase()
                   .replace(/\b\w/g, (char) => char.toUpperCase())}
               </SelectItem>
