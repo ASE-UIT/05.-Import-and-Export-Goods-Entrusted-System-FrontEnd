@@ -14,7 +14,7 @@ const useFcl = () => {
     queryFn: fclApi.getAllFcl,
   });
 
-  const getFclById = (id: string) => {
+  const useGetFclById = (id: string) => {
     return useQuery({
       queryKey: ["fcls", id],
       queryFn: () => {
@@ -39,7 +39,7 @@ const useFcl = () => {
     },
   });
 
-  const updateFcl = (id: string, data: UpdateFclBody) => {
+  const useUpdateFcl = (id: string, data: UpdateFclBody) => {
     return useMutation({
       mutationFn: () => {
         return fclApi.updateFcl(id, data);
@@ -58,7 +58,12 @@ const useFcl = () => {
     });
   };
 
-  return { getAllFcl, getFclById, createFcl, updateFcl };
+  return {
+    getAllFcl,
+    getFclById: useGetFclById,
+    createFcl,
+    updateFcl: useUpdateFcl,
+  };
 };
 
 export default useFcl;

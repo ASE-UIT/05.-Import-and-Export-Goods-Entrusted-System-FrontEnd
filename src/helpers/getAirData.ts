@@ -1,7 +1,7 @@
 import useAirFreight from "@/hooks/use-air-freight";
 import useFreight from "@/hooks/use-freight";
 
-export const getAirData = () => {
+const useGetAirData = () => {
   const { data: allFreight } = useFreight().getAllFreight;
   const { data: allAirData } = useAirFreight().getAllAir;
   const airData = allAirData && allAirData.data ? allAirData.data : [];
@@ -14,3 +14,5 @@ export const getAirData = () => {
     .filter((item) => item !== null) as (Freight & AirFreight)[];
   return airfreightdata;
 };
+
+export { useGetAirData as getAirData };

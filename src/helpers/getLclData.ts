@@ -1,7 +1,7 @@
 import useLcl from "@/hooks/use-lcl";
 import useFreight from "@/hooks/use-freight";
 
-export const getLclData = () => {
+const useGetLclData = () => {
   const { data: allFreight } = useFreight().getAllFreight;
   const { data: allLcl } = useLcl().getAllLcl;
   const lcl = allLcl && allLcl.data ? allLcl.data : [];
@@ -12,5 +12,8 @@ export const getLclData = () => {
       return lclFreight ? { ...freight, ...lclFreight } : null;
     })
     .filter((item) => item !== null) as (Freight & LCL)[];
+
   return lclData;
 };
+
+export { useGetLclData as getLclData };

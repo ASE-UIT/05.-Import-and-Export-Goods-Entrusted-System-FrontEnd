@@ -16,7 +16,7 @@ const useAirFreight = () => {
     queryKey: ["air-freights"],
     queryFn: () => airFreightApi.getAllAirFreight(),
   });
-  const getAirById = (id: string) => {
+  const useGetAirById = (id: string) => {
     return useQuery({
       queryKey: ["air-freights", id],
       queryFn: () => {
@@ -41,7 +41,7 @@ const useAirFreight = () => {
     },
   });
 
-  const updateAirFreight = (id: string, data: UpdateAirFreightBody) => {
+  const useUpdateAirFreight = (id: string, data: UpdateAirFreightBody) => {
     return useMutation({
       mutationFn: () => {
         return airFreightApi.updateAirFreight(id, data);
@@ -59,7 +59,12 @@ const useAirFreight = () => {
       },
     });
   };
-  return { getAllAir, getAirById, createAirFreight, updateAirFreight };
+  return {
+    getAllAir,
+    getAirById: useGetAirById,
+    createAirFreight,
+    updateAirFreight: useUpdateAirFreight,
+  };
 };
 
 export default useAirFreight;
