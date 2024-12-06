@@ -1,13 +1,15 @@
+import { IShipmentResponse } from './../types/shipment.d';
 import http from "@/utils/http";
 import {
     createShipmentData,
     updateShipmentData,
     
 } from "@/schema/shipment.schema"
+import { log } from 'console';
 
 const shipmentAction={
     async getShipment(id?: string) {
-        const res = await http.get<EximResponseWrapper<IShipment[]>>(
+        const res = await http.get<EximResponseWrapper<IShipmentResponse>>(
           "/v1/shipment",
           {
             params: {

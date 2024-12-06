@@ -1,31 +1,13 @@
 "use client";
 import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
-import { useGetContractDetails } from "@/hooks/use-contract";
-import { useShipment } from "@/hooks/use-shipment";
+import { IShipmentFormat } from "@/types/shipment.d";
 
-import { ReactNode } from "react";
-import { DataTable } from "./data-table";
-
-export interface IShipment {
-  id: string;
-  contractId: string; // Add contractId here
-  shipmentType: string;
-  client: string;
-  price: string;
-  enddate: string;
-  location: string;
-  status: string;
-  origin: string;
-  destination: string;
-}
-
-export const columns: ColumnDef<IShipment>[] = [
+export const columns: ColumnDef<IShipmentFormat>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "shipmentId",
     header: ({ column }) => {
       return (
         <Button
@@ -38,7 +20,7 @@ export const columns: ColumnDef<IShipment>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("id")}</div>,
+    cell: ({ row }) => row.getValue("shipmentId"),
   },
   {
     accessorKey: "shipmentType",
@@ -89,7 +71,7 @@ export const columns: ColumnDef<IShipment>[] = [
     cell: ({ row }) => row.getValue("price"),
   },
   {
-    accessorKey: "enddate",
+    accessorKey: "endDate",
     header: ({ column }) => {
       return (
         <Button
@@ -102,7 +84,7 @@ export const columns: ColumnDef<IShipment>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("enddate"),
+    cell: ({ row }) => row.getValue("endDate"),
   },
   {
     accessorKey: "location",
@@ -161,7 +143,7 @@ export const columns: ColumnDef<IShipment>[] = [
     id: "action",
     header: "Action",
     cell: ({ row }) => {
-      const shipment = row.original as IShipment; // Ép kiểu cho row.original
+      const shipment = row.original as IShipmentFormat; // Ép kiểu cho row.original
 
       let linkTo: string;
 
@@ -181,7 +163,7 @@ export const columns: ColumnDef<IShipment>[] = [
             ? `/shipment/details/landimport/` // Đường dẫn cho land import
             : `/shipment/details/landexport/`; // Đường dẫn cho land export
       } else {
-        linkTo = `/shipment/details/other/${shipment.id}`; // Đường dẫn mặc định nếu không thuộc các loại trên
+        linkTo = `/shipment/details/other/${shipment.shipmentId}`; // Đường dẫn mặc định nếu không thuộc các loại trên
       }
 
       return (
@@ -189,7 +171,7 @@ export const columns: ColumnDef<IShipment>[] = [
           <Link href={linkTo}>
             <button
               className="text-blue-500"
-              aria-label={`Edit ${shipment.id}`}
+              aria-label={`Edit ${shipment.shipmentId}`}
             >
               View details
             </button>

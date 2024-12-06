@@ -3,12 +3,12 @@
 import { useShipment } from "@/hooks/use-shipment";
 import { DataTable } from "@/app/(pages)/shipment/components/data-table";
 import { columns } from "./components/columns";
-import { shipmentData as sampleData } from "./data/manage-shipment";
-
 export default function ShipmentManagement() {
   const { useGetAllShipment } = useShipment();
-  const { data: shipmentData } = useGetAllShipment();
-  console.log(shipmentData);
+  const data = useGetAllShipment();
+  let res = data.data ? data.data : [];
+  // let formatData = [];
+  // console.log(res);
 
   return (
     <div className="flex flex-col p-[24px] w-full">
@@ -16,7 +16,7 @@ export default function ShipmentManagement() {
         <div className="flex justify-between items-center">
           <span className="text-3xl font-bold">Shipment Management</span>
         </div>
-        <DataTable columns={columns} data={shipmentData?.data ?? sampleData} />
+        <DataTable columns={columns} data={res} />
       </div>
     </div>
   );

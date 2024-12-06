@@ -5,14 +5,31 @@ import {
   updateShipmentData,
 } from "@/schema/shipment.schema";
 import contractAction from "@/apis/contract.api";
+import { IShipment } from "@/types/shipment.d";
 export const useShipment = () => {
   const queryClient = useQueryClient();
 
   const useGetAllShipment = () => {
     return useQuery({
-      queryKey: ["shipments"],
-      queryFn: () => {
-        return shipmentAction.getShipment();
+      queryKey: ["shipments"], // query key
+      queryFn: async () => {
+        // Gọi API và trả về mảng các shipment
+        const response = await shipmentAction.getShipment();
+        return response.data?.results as IShipment[]; // Trả về mảng các shipment
+      },
+      select: (data) => {
+        // Lọc thông tin theo yêu cầu từ dữ liệu API
+        return data.map((shipment) => ({
+          shipmentId: shipment.id,
+          shipmentType: shipment.shipmentType,
+          price: shipment.contract.invoice.length > 0 ? shipment.contract.invoice[0].totalAmount : 0,
+          endDate: shipment.contract.endDate,
+          location: shipment.tracking.location,
+          origin: shipment.contract.quotation.quotationReq.quoteReqDetails.origin,
+          destination: shipment.contract.quotation.quotationReq.quoteReqDetails.destination,
+          status: shipment.tracking.status,
+          client: shipment.contract.quotation.quotationReq.customer.name
+        }));
       },
     });
   };
