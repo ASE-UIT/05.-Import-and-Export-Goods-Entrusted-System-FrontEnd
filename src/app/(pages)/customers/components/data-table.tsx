@@ -25,12 +25,13 @@ import {
 import { Button } from '../../../../components/ui/button';
 import { CirclePlus } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
-import { DataTablePagination } from '@/components/table/data-pagination';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DataTableFilter } from './data-table-filter';
+import { DataTablePagination } from './data-table-pagination';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
+  totalPages: number;
   totalPages: number;
   data: TData[];
   error: Error | null;
@@ -41,6 +42,7 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   columns,
+  totalPages,
   totalPages,
   data,
   isPending,
@@ -61,22 +63,16 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: totalPages,
-    // manualSorting: true,
-    // sortingFns: {
-    //   customerSortingFns: (rowA, rowB, columnId) => {
-    //     setQueryParams((prev) => ({
-    //       ...prev,
-    //       sortBy: customerMappingProp.get(columnId)
-    //     }))
-    //     return rowA.original.someProperty - rowB.original.someProperty
-    //   }
-    // },
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
       columnFilters,
+      pagination: {
+        pageIndex: (queryParams.page ?? 1) - 1,
+        pageSize: queryParams.limit ?? 1,
+      },
       pagination: {
         pageIndex: (queryParams.page ?? 1) - 1,
         pageSize: queryParams.limit ?? 1,
@@ -162,6 +158,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
+      <DataTablePagination table={table} setQueryParams={setQueryParams} />
       <DataTablePagination table={table} setQueryParams={setQueryParams} />
     </div>
   );
