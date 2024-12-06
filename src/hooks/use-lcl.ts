@@ -14,7 +14,7 @@ const useLcl = () => {
     queryFn: lclApi.getAllLcl,
   });
 
-  const getLclById = (id: string) => {
+  const useGetLclById = (id: string) => {
     return useQuery({
       queryKey: ["lcls", id],
       queryFn: () => {
@@ -39,7 +39,7 @@ const useLcl = () => {
     },
   });
 
-  const updateLcl = (id: string, data: UpdateLclBody) => {
+  const useUpdateLcl = (id: string, data: UpdateLclBody) => {
     return useMutation({
       mutationFn: () => {
         return lclApi.updateLcl(id, data);
@@ -58,7 +58,12 @@ const useLcl = () => {
     });
   };
 
-  return { getAllLcl, getLclById, createLcl, updateLcl };
+  return {
+    getAllLcl,
+    getLclById: useGetLclById,
+    createLcl,
+    updateLcl: useUpdateLcl,
+  };
 };
 
 export default useLcl;
