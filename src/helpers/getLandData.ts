@@ -1,7 +1,7 @@
 import useFreight from "@/hooks/use-freight";
 import useLandFreight from "@/hooks/use-land-freight";
 
-export const getLandData = () => {
+const useGetLandData = () => {
   const { data: allFreight } = useFreight().getAllFreight;
   const { data: allLandData } = useLandFreight().getAllLand;
   const freightData = allFreight && allFreight.data ? allFreight.data : [];
@@ -14,3 +14,5 @@ export const getLandData = () => {
     .filter((item) => item !== null) as (Freight & LandFreight)[];
   return landfreightdata;
 };
+
+export { useGetLandData as getLandData };

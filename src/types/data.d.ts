@@ -1,5 +1,3 @@
-import { FREIGHT_TYPE, WEEKDAY } from "@/configs/enum";
-
 PaymentStatus =
   "Pending" | "Completed" | "Cancelled" | "Failed" | "Refunded" | "On Hold";
 

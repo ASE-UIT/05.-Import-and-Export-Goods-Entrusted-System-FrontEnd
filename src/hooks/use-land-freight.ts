@@ -17,7 +17,7 @@ const useLandFreight = () => {
     queryFn: landFreightApi.getAllLandFreight,
   });
 
-  const getLandById = (id: string) => {
+  const useGetLandById = (id: string) => {
     return useQuery<EximResponseWrapper<LandFreight>, Error>({
       queryKey: ["land-freights", id],
       queryFn: () => {
@@ -43,7 +43,7 @@ const useLandFreight = () => {
     },
   });
 
-  const updateLandFreight = (id: string, data: UpdateLandFreightBody) => {
+  const useUpdateLandFreight = (id: string, data: UpdateLandFreightBody) => {
     return useMutation({
       mutationFn: () => {
         return landFreightApi.updateLandFreight(id, data);
@@ -61,7 +61,12 @@ const useLandFreight = () => {
       },
     });
   };
-  return { getAllLand, getLandById, createLandFreight, updateLandFreight };
+  return {
+    getAllLand,
+    getLandById: useGetLandById,
+    createLandFreight,
+    updateLandFreight: useUpdateLandFreight,
+  };
 };
 
 export default useLandFreight;
