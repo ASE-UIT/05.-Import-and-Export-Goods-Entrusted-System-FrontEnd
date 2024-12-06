@@ -2,6 +2,7 @@
 
 import useFreight from "@/hooks/use-freight";
 import { CreateFreightForm } from "../components/forms/base-freight-form";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function AddFreightPage() {
   return (
@@ -9,6 +10,7 @@ export default function AddFreightPage() {
       <div className="flex w-full justify-between">
         <span className="text-3xl font-bold">Add Freight</span>
       </div>
+      <Toaster />
       <CreateFreightForm onSubmit={useFreight().createFreight} />
     </div>
   );
