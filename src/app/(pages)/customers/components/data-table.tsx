@@ -9,7 +9,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
@@ -26,12 +25,13 @@ import {
 import { Button } from '../../../../components/ui/button';
 import { CirclePlus } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
-import { DataTablePagination } from '@/components/table/data-pagination';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DataTableFilter } from './data-table-filter';
+import { DataTablePagination } from './data-table-pagination';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
+  totalPages: number;
   data: TData[];
   error: Error | null;
   isPending: boolean;
@@ -41,6 +41,7 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   columns,
+  totalPages,
   data,
   isPending,
   queryParams,
@@ -58,13 +59,18 @@ export function DataTable<TData, TValue>({
     columns,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,
+    pageCount: totalPages,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
       columnFilters,
+      pagination: {
+        pageIndex: (queryParams.page ?? 1) - 1,
+        pageSize: queryParams.limit ?? 1,
+      },
     },
   });
 
@@ -146,7 +152,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination table={table} setQueryParams={setQueryParams} />
     </div>
   );
 }
