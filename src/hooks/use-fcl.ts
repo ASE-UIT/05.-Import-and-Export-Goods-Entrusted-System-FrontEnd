@@ -3,7 +3,7 @@ import { CreateFclBody, UpdateFclBody } from "@/schema/fcl.schema";
 import { useFreightStore } from "@/stores/useFreightStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast } from "./use-toast";
 
 const useFcl = () => {
   const queryClient = useQueryClient();
@@ -23,14 +23,23 @@ const useFcl = () => {
     });
   };
 
-  const { mutate: createFcl } = useMutation({
+  const { mutateAsync: createFcl } = useMutation({
     mutationFn: (data: CreateFclBody) => fclApi.createFcl(data),
     onSuccess: () => {
+      toast({
+        variant: "default",
+        title: "Success",
+        description: "FCL created successfully",
+      });
       setId("");
       router.push("/freight");
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -45,10 +54,19 @@ const useFcl = () => {
         return fclApi.updateFcl(id, data);
       },
       onSuccess: () => {
+        toast({
+          variant: "default",
+          title: "Success",
+          description: "FCL updated successfully",
+        });
         router.push("/freight");
       },
       onError: (error) => {
-        toast.error(error.message);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: error.message,
+        });
       },
       onSettled: () => {
         queryClient.invalidateQueries({

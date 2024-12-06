@@ -6,7 +6,7 @@ import {
 import { useFreightStore } from "@/stores/useFreightStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast } from "./use-toast";
 
 const useLandFreight = () => {
   const queryClient = useQueryClient();
@@ -26,15 +26,24 @@ const useLandFreight = () => {
     });
   };
 
-  const { mutate: createLandFreight } = useMutation({
+  const { mutateAsync: createLandFreight } = useMutation({
     mutationFn: (data: CreateLandFreightBody) =>
       landFreightApi.createLandFreight(data),
     onSuccess: () => {
+      toast({
+        variant: "default",
+        title: "Success",
+        description: "Land Freight created successfully",
+      });
       setId("");
       router.push("/freight");
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -49,10 +58,19 @@ const useLandFreight = () => {
         return landFreightApi.updateLandFreight(id, data);
       },
       onSuccess: () => {
+        toast({
+          variant: "default",
+          title: "Success",
+          description: "Land Freight updated successfully",
+        });
         router.push("/freight");
       },
       onError: (error) => {
-        toast.error(error.message);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: error.message,
+        });
       },
       onSettled: () => {
         queryClient.invalidateQueries({
