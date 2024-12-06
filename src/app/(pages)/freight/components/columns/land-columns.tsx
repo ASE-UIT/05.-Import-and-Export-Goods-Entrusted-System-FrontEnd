@@ -89,7 +89,8 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("validFrom"),
+    cell: ({ row }) =>
+      new Date(row.getValue("validFrom")).toLocaleDateString("en-GB"),
   },
   {
     accessorKey: "validUntil",
@@ -106,7 +107,8 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("validUntil"),
+    cell: ({ row }) =>
+      new Date(row.getValue("validUntil")).toLocaleDateString("en-GB"),
   },
   {
     accessorKey: "additionFee",
