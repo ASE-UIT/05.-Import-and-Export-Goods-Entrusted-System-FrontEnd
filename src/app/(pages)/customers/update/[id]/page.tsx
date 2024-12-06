@@ -3,7 +3,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera } from 'lucide-react';
+import { Camera, LoaderCircle } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import useCustomer from '@/hooks/use-customer';
 
@@ -80,7 +80,12 @@ export default function UpdateCustomerPage() {
   );
 
   const { useUpdateCustomer } = useCustomer();
-  const { mutate: updateCustomer } = useUpdateCustomer();
+  const {
+    mutate: updateCustomer,
+    isSuccess,
+    isError,
+    isPending,
+  } = useUpdateCustomer();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     updateCustomer({

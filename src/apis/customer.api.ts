@@ -5,10 +5,27 @@ import axios from 'axios';
 const customerAction = {
   list: async (params: CustomerQueryParams | null | undefined = null) => {
     try {
-      console.log(params);
       const response = await http.get<
         EximResponseWrapper<PaginationWrapper<CustomerResponse[]>>
       >('/v1/customers', { params });
+      return response.data.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const authError = error.response.data as ErrorType;
+        console.error('Error during login:', authError);
+        throw authError;
+      } else {
+        console.error('Unexpected error during login:', error);
+        throw error;
+      }
+    }
+  },
+
+  details: async (id: string) => {
+    try {
+      const response = await http.get<EximResponseWrapper<CustomerResponse>>(
+        `/v1/customers/${id}`
+      );
       return response.data.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
