@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import { useProvider } from "@/hooks/use-provider";
+import ProviderCell from "./provider-cell";
 
 export const landColumns: ColumnDef<Freight & LandFreight>[] = [
   {
@@ -21,22 +21,7 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("provider_name")}</div>,
-  },
-  {
-    accessorKey: "freight_type",
-    header: () => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-        >
-          Freight Type
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue("freight_type")}</div>,
+    cell: ({ row }) => <ProviderCell providerId={row.getValue("providerId")} />,
   },
   {
     accessorKey: "origin",
