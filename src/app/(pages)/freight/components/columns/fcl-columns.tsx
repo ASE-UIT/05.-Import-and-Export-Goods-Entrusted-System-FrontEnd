@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useProvider } from "@/hooks/use-provider";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
+import ProviderCell from "./provider-cell";
 
 export const fclColumns: ColumnDef<Freight & FCL>[] = [
   {
@@ -21,12 +21,7 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => {
-      const providerName =
-        useProvider().useGetProviderById(row.getValue("providerId")).data
-          ?.data?.[0]?.name || "Noname";
-      return <div>{providerName}</div>;
-    },
+    cell: ({ row }) => <ProviderCell providerId={row.getValue("providerId")} />,
   },
   {
     accessorKey: "origin",
