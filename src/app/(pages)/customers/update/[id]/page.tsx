@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera } from 'lucide-react';
+import { Camera, LoaderCircle } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import useCustomer from '@/hooks/use-customer';
 
@@ -27,7 +27,7 @@ const formSchema = z.object({
   phone: z.string(),
   tax_id: z.string(),
   address: z.string(),
-  legal_rep_name: z.string(),
+  legal_rep_name: z.string().optional(),
   file: z
     .instanceof(File)
     .refine((file) => file.size < 10000000, {
@@ -40,8 +40,20 @@ export default function UpdateCustomerPage() {
   const { id: customerId } = useParams<{ id: string }>();
   const [preview, setPreview] = useState<string | null>(null);
 
+  const { useDetailsCustomer } = useCustomer();
+  const { data: customer } = useDetailsCustomer(customerId);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    values: {
+      name: customer?.name ?? '',
+      short_name: customer?.shortName ?? '',
+      email: customer?.email ?? '',
+      phone: customer?.phone ?? '',
+      tax_id: customer?.taxId ?? '',
+      address: customer?.address ?? '',
+      legal_rep_name: customer?.legalRep.name ?? '',
+    },
   });
 
   const onPickFile = useCallback(
@@ -62,7 +74,12 @@ export default function UpdateCustomerPage() {
   );
 
   const { useUpdateCustomer } = useCustomer();
-  const { mutate: updateCustomer } = useUpdateCustomer();
+  const {
+    mutate: updateCustomer,
+    isSuccess,
+    isError,
+    isPending,
+  } = useUpdateCustomer();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     updateCustomer({
@@ -77,6 +94,16 @@ export default function UpdateCustomerPage() {
       },
     });
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      alert('Update customer successfully');
+    }
+
+    if (isError) {
+      alert('Update customer failed');
+    }
+  }, [isSuccess, isError]);
 
   return (
     <div className="flex flex-col items-center p-[24px] w-[calc(100vw-var(--sidebar-width))]">
@@ -204,6 +231,7 @@ export default function UpdateCustomerPage() {
                 )}
               />
               <FormField
+                disabled
                 control={form.control}
                 name="legal_rep_name"
                 render={({ field }) => (
@@ -230,7 +258,14 @@ export default function UpdateCustomerPage() {
                 </FormItem>
               )}
             />
-            <Button className="w-full h-14 text-lg" type="submit">
+            <Button
+              disabled={isPending}
+              className="w-full h-14 text-lg"
+              type="submit"
+            >
+              {isPending && (
+                <LoaderCircle size={20} className="mr-2 animate-spin" />
+              )}
               Submit
             </Button>
           </div>
