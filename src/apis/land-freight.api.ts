@@ -3,7 +3,6 @@ import {
   UpdateLandFreightBody,
 } from "@/schema/land-freight.schema";
 import http from "@/utils/http";
-import { get } from "http";
 
 export const landFreightApi = {
   getAllLandFreight: async () => {

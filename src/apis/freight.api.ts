@@ -1,6 +1,5 @@
 import { CreateFreightBody, UpdateFreightBody } from "@/schema/freight.schema";
 import http from "@/utils/http";
-import { get } from "http";
 
 export const freightApi = {
   getAllFreight: async () => {

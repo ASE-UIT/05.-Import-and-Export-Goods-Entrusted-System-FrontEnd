@@ -26,6 +26,7 @@ function CreateFclForm({
     defaultValues: {
       price_20dc: 0,
       price_40dc: 0,
+      price_40hc: 0,
       price_20rf: 0,
       price_40rf: 0,
       freight_id: id,
@@ -58,6 +59,20 @@ function CreateFclForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-bold">Price 40DC</FormLabel>
+                <FormControl>
+                  <Input
+                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="price_40hc"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-bold">Price 40HC</FormLabel>
                 <FormControl>
                   <Input
                     onChange={(e) => field.onChange(parseInt(e.target.value))}
@@ -116,6 +131,7 @@ function UpdateFclForm({
     defaultValues: {
       price_20dc: fcl?.price_20dc,
       price_40dc: fcl?.price_40dc,
+      price_40hc: fcl?.price_40hc,
       price_20rf: fcl?.price_20rf,
       price_40rf: fcl?.price_40rf,
     },
@@ -152,6 +168,21 @@ function UpdateFclForm({
                 <FormControl>
                   <Input
                     placeholder={fcl?.price_40dc.toString()}
+                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="price_40hc"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-bold">Price 40HC</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder={fcl?.price_40hc.toString()}
                     onChange={(e) => field.onChange(parseInt(e.target.value))}
                   />
                 </FormControl>
