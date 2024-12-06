@@ -6,10 +6,9 @@ const customerAction = {
   list: async (params: CustomerQueryParams | null | undefined = null) => {
     try {
       console.log(params);
-      const response = await http.get<EximResponseWrapper<CustomerResponse[]>>(
-        '/v1/customers',
-        { params }
-      );
+      const response = await http.get<
+        EximResponseWrapper<PaginationWrapper<CustomerResponse[]>>
+      >('/v1/customers', { params });
       return response.data.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {

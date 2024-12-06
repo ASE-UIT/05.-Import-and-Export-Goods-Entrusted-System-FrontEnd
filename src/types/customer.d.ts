@@ -2,6 +2,8 @@ type CustomerQueryParams = {
   email: ?string;
   phone: ?string;
   name: ?string;
+  page: ?number;
+  limit: ?number;
 };
 
 type CustomerResponse = {
