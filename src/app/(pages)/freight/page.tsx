@@ -10,7 +10,7 @@ import { lclColumns } from "./components/columns/lcl-columns";
 import { getAirData } from "@/helpers/getAirData";
 import { getLandData } from "@/helpers/getLandData";
 import { getFclData } from "@/helpers/getFclData";
-import { getLclData } from "@/helpers/getLclData";
+import { useGetLclData } from "@/helpers/getLclData";
 
 export default function FreightManagementPage() {
   const freightTypes = Object.values(FREIGHT_TYPE);
@@ -18,7 +18,7 @@ export default function FreightManagementPage() {
   const airfreightdata = getAirData();
   const landfreightdata = getLandData();
   const fclData = getFclData();
-  const lclData = getLclData();
+  const lclData = useGetLclData();
   return (
     <div className="flex flex-col p-[24px] w-[calc(100vw-var(--sidebar-width))]">
       <Tabs

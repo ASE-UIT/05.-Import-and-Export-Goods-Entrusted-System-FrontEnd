@@ -15,7 +15,7 @@ const useFreight = () => {
     queryFn: freightApi.getAllFreight,
   });
 
-  const getFreightById = (id: string) => {
+  const useGetFreightById = (id: string) => {
     return useQuery({
       queryKey: ["freights", id],
       queryFn: () => {
@@ -56,7 +56,12 @@ const useFreight = () => {
       });
     },
   });
-  return { getAllFreight, getFreightById, createFreight, updateFreight };
+  return {
+    getAllFreight,
+    getFreightById: useGetFreightById,
+    createFreight,
+    updateFreight,
+  };
 };
 
 export default useFreight;
