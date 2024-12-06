@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "../customers/components/data-table";
+import { DataTable } from "@/components/table/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { landColumns } from "./components/columns/land-columns";
 import { airColumns } from "./components/columns/air-columns";

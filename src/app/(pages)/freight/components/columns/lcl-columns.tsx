@@ -21,12 +21,12 @@ export const lclColumns: ColumnDef<Freight & LCL>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => (
-      <div>
-        {useProvider().useGetProviderById(row.getValue("providerId")).data
-          ?.data?.[0]?.name || "Noname"}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const providerName =
+        useProvider().useGetProviderById(row.getValue("providerId")).data
+          ?.data?.[0]?.name || "Noname";
+      return <div>{providerName}</div>;
+    },
   },
   {
     accessorKey: "origin",

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const LclBody = z.object({
-  Lcl_id: z.string().optional(),
+  lcl_id: z.string().optional(),
   cost: z.number(),
   freight_id: z.string(),
 });
