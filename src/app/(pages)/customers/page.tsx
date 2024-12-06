@@ -13,7 +13,7 @@ export default function CustomerManagementPage() {
     name: null,
     phone: null,
     page: 1,
-    limit: 1,
+    limit: 10,
   });
   const { data, isPending, error } = useListCustomer(searchParams);
   const customerList =
