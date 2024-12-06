@@ -4,7 +4,6 @@ import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from 'next/link';
 
 export interface IInvoice {
   id: string;
@@ -15,24 +14,24 @@ export interface IInvoice {
 }
 
 export const columns: ColumnDef<IInvoice>[] = [
-    {
-        id: "select",
-        header: ({ table }) => (
-        <Checkbox
-            checked={table.getIsAllPageRowsSelected()}
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-            aria-label="Select all"
-        />
-        ),
-        cell: ({ row }) => (
-        <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label="Select row"
-        />
-        ),
-    },
-    {
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+  },
+  {
     accessorKey: "id",
     header: ({ column }) => {
       return (
@@ -82,8 +81,8 @@ export const columns: ColumnDef<IInvoice>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",  
-    cell: ({ row }) => <StatusBadge status={row.getValue("status")} />
+    header: "Status",
+    cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
   },
   {
     accessorKey: "create_date",

@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -23,18 +22,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { useRouter } from "next/navigation";
 import { DataTablePagination } from "./pagination";
 import { DataTableFilter } from "./search-filter";
 import StatusBadge, { Status } from "@/components/status-badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AlertCircle } from "lucide-react";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isPending: boolean;
+  error: string | undefined;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isPending,
+  error,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -55,6 +60,17 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
   });
+
+  const loadingRows = Array(5).fill(null);
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-[400px]">
+        <AlertCircle className="w-16 h-16 text-neutral-400" />
+        <span className="text-lg mt-4 text-neutral-400">{error}</span>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -82,7 +98,17 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isPending ? (
+              loadingRows.map((_, index) => (
+                <TableRow key={index}>
+                  {columns.map((_, cellIndex) => (
+                    <TableCell key={cellIndex}>
+                      <Skeleton className="w-full h-10 bg-neutral-300" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -90,7 +116,7 @@ export function DataTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {cell.column.columnDef.accessorKey === "status" ? (
+                      {cell.column.id === "status" ? (
                         <StatusBadge status={cell.getValue() as Status} />
                       ) : (
                         flexRender(

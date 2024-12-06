@@ -1,3 +1,5 @@
+"use client";
+
 import { ReportChart } from "@/app/(pages)/dashboard/_components/report-chart";
 import {
   columns,
@@ -5,76 +7,56 @@ import {
 } from "@/app/(pages)/dashboard/_components/columns";
 import GroupButton from "@/app/(pages)/dashboard/_components/group-button";
 import GroupCard from "@/app/(pages)/dashboard/_components/group-card";
-import React from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/app/(pages)/dashboard/_components/data-table";
 import Link from "next/link";
+import useShipmentTracking from "@/hooks/use-shipment-tracking";
+import { ShipmentTracking } from "@/types/shipment-tracking.type";
+import { Shipment } from "@/types/shipment.type";
 
-async function getData(): Promise<TableShipmentTracking[]> {
-  return [
-    {
-      shipment_id: 123,
-      tracking_id: 123,
-      shipment_type: "Air Freight",
-      location: "Ho Chi Minh City",
-      status: "In Transit",
-    },
-    {
-      shipment_id: 123,
-      tracking_id: 123,
-      shipment_type: "Sea Freight",
-      location: "Ha Noi",
-      status: "Pending",
-    },
-    {
-      shipment_id: 123,
-      tracking_id: 123,
-      shipment_type: "Land Freight",
-      location: "Los Angeles",
-      status: "In Transit",
-    },
-    {
-      shipment_id: 123,
-      tracking_id: 123,
-      shipment_type: "Air Freight",
-      location: "California",
-      status: "Pending",
-    },
-    {
-      shipment_id: 123,
-      tracking_id: 123,
-      shipment_type: "Sea Freight",
-      location: "Gia Lai",
-      status: "Pending",
-    },
-    {
-      shipment_id: 123,
-      tracking_id: 123,
-      shipment_type: "Land Freight",
-      location: "Vung Tau",
-      status: "Pending",
-    },
-    {
-      shipment_id: 123,
-      tracking_id: 123,
-      shipment_type: "Air Freight",
-      location: "Da Nang City",
-      status: "Pending",
-    },
-    {
-      shipment_id: 123,
-      tracking_id: 123,
-      shipment_type: "Sea Freight",
-      location: "Quang Nam",
-      status: "Pending",
-    },
+const mergeShipmentData = (
+  trackings: ShipmentTracking[],
+  shipments: Shipment[]
+): TableShipmentTracking[] => {
+  return trackings.map((tracking) => {
+    const shipment = shipments.find((s) => s.id === tracking.shipmentId);
 
-    // ...
-  ];
-}
+    if (!shipment) {
+      throw new Error(`No shipment found for tracking ID: ${tracking.id}`);
+    }
 
-export default async function Dashboard() {
-  const data = await getData();
+    return {
+      shipment_id: tracking.shipmentId,
+      tracking_id: tracking.id,
+      shipment_type: shipment.shipmentType,
+      location: tracking.location,
+      status: tracking.status,
+    };
+  });
+};
+
+export default function Dashboard() {
+  const {
+    data: shipmentTracking,
+    isLoading: isLoadingTracking,
+    error: trackingError,
+  } = useShipmentTracking.useGetShipmentTracking();
+  const {
+    data: shipments,
+    isLoading: isLoadingShipments,
+    error: shipmentError,
+  } = useShipmentTracking.useGetShipment();
+
+  const [data, setData] = useState<TableShipmentTracking[]>([]);
+
+  useEffect(() => {
+    if (shipments && shipmentTracking) {
+      const shipmentData = mergeShipmentData(shipmentTracking, shipments);
+      setData(shipmentData);
+    }
+  }, [shipments, shipmentTracking]);
+
   return (
     <div className="p-6 space-y-4 w-full">
       <GroupCard />
@@ -92,7 +74,12 @@ export default async function Dashboard() {
           </Link>
         </div>
         <div className="container mx-auto">
-          <DataTable columns={columns} data={data} />
+          <DataTable
+            columns={columns}
+            data={data}
+            isPending={isLoadingTracking || isLoadingShipments}
+            error={trackingError?.message || shipmentError?.message}
+          />
         </div>
       </div>
     </div>
