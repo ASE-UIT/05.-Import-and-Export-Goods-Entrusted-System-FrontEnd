@@ -2,6 +2,7 @@
 
 import useFcl from "@/hooks/use-fcl";
 import { CreateFclForm } from "../../components/forms/fcl-form";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function AddFclPage() {
   return (
@@ -9,6 +10,7 @@ export default function AddFclPage() {
       <div className="flex w-full justify-between">
         <span className="text-3xl font-bold">Add FCL</span>
       </div>
+      <Toaster />
       <CreateFclForm onSubmit={useFcl().createFcl} />
     </div>
   );

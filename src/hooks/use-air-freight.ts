@@ -6,7 +6,7 @@ import {
 import { useFreightStore } from "@/stores/useFreightStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast } from "./use-toast";
 
 const useAirFreight = () => {
   const queryClient = useQueryClient();
@@ -24,15 +24,24 @@ const useAirFreight = () => {
       },
     });
   };
-  const { mutate: createAirFreight } = useMutation({
+  const { mutateAsync: createAirFreight } = useMutation({
     mutationFn: (data: CreateAirFreightBody) =>
       airFreightApi.createAirFreight(data),
     onSuccess: () => {
+      toast({
+        variant: "default",
+        title: "Success",
+        description: "Air Freight created successfully",
+      });
       setId("");
       router.push("/freight");
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -47,10 +56,19 @@ const useAirFreight = () => {
         return airFreightApi.updateAirFreight(id, data);
       },
       onSuccess: () => {
+        toast({
+          variant: "default",
+          title: "Success",
+          description: "Air Freight updated successfully",
+        });
         router.push("/freight");
       },
       onError: (error) => {
-        toast.error(error.message);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: error.message,
+        });
       },
       onSettled: () => {
         queryClient.invalidateQueries({
