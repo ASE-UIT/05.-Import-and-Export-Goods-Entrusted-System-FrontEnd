@@ -3,23 +3,13 @@ import { z } from "zod";
 export const CreateInvoiceBody = z.object({
     contractId: z.string().uuid(),
     employeeId: z.string().uuid(),
-    invoiceDate: z.date(),
-    paidDate: z.date(),
     expiredDate: z.date(),
-    status: z.string(),
-    tax: z.string(),
+    taxAmount: z.string(),
     totalAmount: z.string(),
 });
 
 export const UpdateInvoiceBody = z.object({
-    contractId: z.string().uuid(),
-    employeeId: z.string().uuid(),
-    invoiceDate: z.date(),
-    paidDate: z.date(),
-    expiredDate: z.date(),
     status: z.string(),
-    tax: z.string(),
-    totalAmount: z.string(),
 });
 
 export const InvoiceDetailsRes = z.object({
@@ -27,10 +17,10 @@ export const InvoiceDetailsRes = z.object({
     contractId: z.string().uuid(),
     employeeId: z.string().uuid(),
     invoiceDate: z.date(),
-    paidDate: z.date(),
+    paidDate: z.string(),
     expiredDate: z.date(),
     status: z.string(),
-    tax: z.string(),
+    taxAmount: z.string(),
     totalAmount: z.string(),
 });
 
@@ -52,9 +42,9 @@ export const InvoiceRes = z.object({
 });
 
 export const ContractDetailRes = z.array(ContractDetailsRes); // Array
+
 export type UpdateInvoiceType = z.TypeOf<typeof UpdateInvoiceBody>;
 export type CreateInvoiceType = z.TypeOf<typeof CreateInvoiceBody>;
 export type InvoicesResType = z.TypeOf<typeof InvoiceRes>;
 export type InvoiceDetailsType = z.TypeOf<typeof InvoiceDetailsRes>;
-export type ContractDetailsType = z.TypeOf<typeof ContractDetailsRes>; // Object
 export type ContractDetailResType = z.TypeOf<typeof ContractDetailRes>; // Array

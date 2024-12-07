@@ -25,25 +25,7 @@ import {
           throw error;
         }
       }
-    },
-
-    async getContractDetail() {
-      try {
-        const response = await http.get<ContractDetailResType>( 
-          "v1/contract?status=PENDING"
-        );
-        return response.data; 
-      } catch (error) {
-        if (axios.isAxiosError(error) && error.response?.data) {
-          const getBookedQuotationsError = error.response.data as ErrorType;
-          console.error("Error during get invoices:", getBookedQuotationsError);
-          throw getBookedQuotationsError;
-        } else {
-          console.error("Unexpected error during get invoices:", error);
-          throw error;
-        }
-      }
-    },     
+    }, 
       
     async getInvoice() {
       try {
@@ -63,7 +45,7 @@ import {
     async getInvoiceDetails(id: string | undefined) {
       try {
         const response = await http.get<InvoiceDetailsType>(
-          "v1/invoices?id=${id}"
+          `v1/invoices?id=${id}`
         );
         return response.data;
       } catch (error) {
@@ -86,7 +68,7 @@ import {
     ) {
       try {
         const response = await http.patch(
-          "v1/invoices/${id}",
+          `v1/invoices/${id}`,
           updateInvoiceBody
         );
         return response.data;

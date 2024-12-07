@@ -22,61 +22,29 @@ const useInvoice = {
         queryClient.invalidateQueries({
           queryKey: ["invoices"],
         });
-        router.push("/invoice");
+        router.push("/invoices");
       },
       onError: (error: ErrorType) => {
-        console.error("Error during update invoice:", error);
+        console.error("Error during create invoice:", error);
         throw error;
       },
     });
   },
-  useGetInvoice() {
+  useGetInvoice(id: string | undefined) {
     return useQuery({
-      queryKey: ["invoices"],
+      queryKey: ["invoiceDetails", id],
       queryFn: async () => {
         try {
           const result = await invoiceAction.getInvoice();
           return result;
         } catch (error) {
-          console.error("Error during get invoice:", error);
+          console.error("Error during get invoices:", error);
           throw error;
         }
       },
       retry: 0,
     });
   },
-
-  useGetInvoiceDetails(id: string | undefined) {
-    return useQuery({
-      queryKey: ["invoiceDetails", id],
-      queryFn: async () => {
-        try {
-          const result = await invoiceAction.getInvoiceDetails(id);
-          return result;
-        } catch (error) {
-          console.error("Error during get invoice:", error);
-          throw error;
-        }
-      },
-      retry: 0,
-    });
-  },
-
-  useGetContractDetails() {
-    return useQuery({
-      queryKey: ["contractDetails"],
-      queryFn: async () => {
-        try {
-          const result = await invoiceAction.getContractDetail();
-          return result; // Kết quả trả về là ContractDetailsType[]
-        } catch (error) {
-          console.error("Error during get contracts:", error);
-          throw error;
-        }
-      },
-      retry: 0,
-    });
-  }, 
 
   useUpdateInvoice(
     id: string | undefined,
@@ -90,7 +58,7 @@ const useInvoice = {
         queryClient.invalidateQueries({
           queryKey: ["invoiceDetails", id],
         });
-        router.push("/invoice");
+        router.push("/invoices");
       },
       onError: (error: ErrorType) => {
         console.error("Error during update invoice:", error);
