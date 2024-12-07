@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/app/(pages)/quotation/components/data-table";
+import { DataTable } from "@/app/(pages)/quotations/components/data-table";
 import { columns, IQuotation } from "./components/columns";
 import useQuotation from "@/hooks/use-quotation";
 import { useEffect, useState } from "react";
@@ -11,7 +11,7 @@ export default function QuotationManagementPage() {
   const { data, isLoading, error } = useQuotation.useGetQuotations();
 
   useEffect(() => {
-    if (data) {
+    if (data && Array.isArray(data.data)) { 
       setQuotationData(
         data.data.map((quotation: QuotationDetailsType) => ({
           id: quotation.id,
@@ -28,14 +28,17 @@ export default function QuotationManagementPage() {
           updatedAt: quotation.updatedAt,
         }))
       );
+    } else {
+      setQuotationData([]); 
     }
   }, [data]);
+  
 
   return (
     <div className="flex flex-col p-[24px] w-[calc(100vw-var(--sidebar-width))]">
       <div className="flex flex-col w-full gap-[20px]">
         <div className="flex justify-between items-center">
-          <span className="text-3xl font-bold">Quotation</span>
+          <span className="text-3xl font-bold">Quotations</span>
         </div>
         <DataTable 
           columns={columns}
