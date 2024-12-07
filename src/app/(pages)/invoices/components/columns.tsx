@@ -15,7 +15,6 @@ export interface IInvoice {
   status: string;
   tax: string;
   total: string;
-  action: string;
 }
 
 export const columns: ColumnDef<IInvoice>[] = [

@@ -6,7 +6,18 @@ import useGetInvoice from "@/hooks/use-invoice";
 import { useState, useEffect } from "react";
 import { InvoiceDetailsType } from "@/schema/invoice.schema";
 import { format } from "date-fns";
+import { z } from "zod";
 
+const formSchema = z.object({
+  contractId: z.string(),
+  employeeId: z.string(),
+  invoiceDate: z.date(),
+  paidDate: z.string(),
+  expiredDate: z.date(),
+  status: z.string(),
+  taxAmount: z.string(),
+  totalAmount: z.string(),
+});
 
 export default function InvoiceManagement() {
   const [invoiceData, setInvoiceData] = useState<IInvoice[]>([]);
@@ -17,19 +28,18 @@ export default function InvoiceManagement() {
       setInvoiceData(
         data.data.map((invoice: InvoiceDetailsType) => ({
           id: invoice.id,
-          contract_id: invoice.contractId, // Chuyển đổi sang snake_case
+          contract_id: invoice.contractId,
           employee_id: invoice.employeeId,
-          invoice_date: format(new Date(invoice.invoiceDate), "yyyy-MM-dd"),
-          paid_date: format(new Date(invoice.paidDate), "yyyy-MM-dd"),
+          paid_date: invoice.paidDate,
+          invoice_date: invoice.invoiceDate.toString(),
+          expired_date: invoice.expiredDate.toString(),
           status: invoice.status,
-          tax: invoice.tax,
+          tax: invoice.taxAmount,
           total: invoice.totalAmount,
-          action: "",
         }))
       );
     }
   }, [data]);
-  
 
   return (
     <div className="flex flex-col p-[24px] w-full">

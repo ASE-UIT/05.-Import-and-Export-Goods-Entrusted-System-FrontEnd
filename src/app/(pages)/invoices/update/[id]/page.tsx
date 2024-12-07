@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { z } from "zod";
 import Link from "next/link";
-import { format } from "date-fns"; // Import format function
+import { format, isSameDay } from "date-fns"; // Import format function
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,53 +24,76 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { useParams } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import useInvoice from "@/hooks/use-invoice";
+import { InvoiceDetailsType, UpdateInvoiceType } from "@/schema/invoice.schema";
 
 const formSchema = z.object({
-  contract_id: z.string(),
-  employee_id: z.string(),
-  invoice_date: z.date().optional(),
-  paid_date: z.date().optional(),
-  tax: z.string(),
-  total_amount: z.string(),
+  contractId: z.string().optional(),
+  employeeId: z.string().optional(),
+  expiredDate: z.date(),
+  status: z.string(),
+  taxAmount: z.string(),
+  totalAmount: z.string(),
 });
 
-export default function AddInvoice() {
+export default function UpdateInvoice() {
+  const [expiredDate, setExpiredDate] = useState<Date | undefined>(undefined);
+
+  const [invoice, setInvoice] = useState<InvoiceDetailsType>();
+  const path = usePathname();
+  const id = path.split("/").pop();
+  const { data, error } = useInvoice.useGetInvoice(id);
+
+  const router = useRouter();
+  const { mutate: updateInvoice, status } = useInvoice.useUpdateInvoice(
+    id,
+    router
+  );
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      expiredDate: invoice?.expiredDate || new Date(), // Thêm giá trị mặc định
+    },
   });
 
-  // State for invoice date and paid date
-  const [invoiceDate, setInvoiceDate] = useState<Date | undefined>(undefined);
-  const [paidDate, setPaidDate] = useState<Date | undefined>(undefined);
-
-  // Sync invoice date with form when it changes
   useEffect(() => {
-    if (invoiceDate) {
-      form.setValue("invoice_date", invoiceDate);
+    if (data && data.data.length > 0) {
+      const invoiceData = data.data.find(invoice => invoice.id === id); // Lọc theo id
+    if (invoiceData) {
+      setInvoice(invoiceData);
+      setExpiredDate(new Date(invoiceData.expiredDate));
+      form.setValue("contractId", invoiceData.contractId);
+      form.setValue("employeeId", invoiceData.employeeId);
+      form.setValue("status", invoiceData.status);
+      form.setValue("taxAmount", invoiceData.taxAmount.toString());
+      form.setValue("totalAmount", invoiceData.totalAmount.toString());
     }
-  }, [invoiceDate]);
-
-  // Sync paid date with form when it changes
-  useEffect(() => {
-    if (paidDate) {
-      form.setValue("paid_date", paidDate);
     }
-  }, [paidDate]);
+  }, [data]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Here we format the date when displaying in the console or sending to an API
-    console.log({
-      ...values,
-      invoice_date: values.invoice_date
-        ? format(values.invoice_date, "d-M-yyyy")
-        : undefined,
-      paid_date: values.paid_date ? format(values.paid_date, "d-M-yyyy") : undefined,
-    });
+    const updateInvoiceBody: Partial<UpdateInvoiceType> = {
+      ...(values.status.toUpperCase() !== invoice?.status.toUpperCase() && {
+        status: values.status.toUpperCase(),
+      }),
+    };
+  
+    if (Object.keys(updateInvoiceBody).length > 0) {
+      updateInvoice(updateInvoiceBody);
+    } else {
+      form.setError("root", {
+        type: "validate",
+        message:
+          "No changes detected. The current data is identical to the previous version.",
+      });
+    }
   }
+  
 
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
@@ -83,21 +106,18 @@ export default function AddInvoice() {
             {/* Contract ID */}
             <FormField
               control={form.control}
-              name="contract_id"
+              name="contractId"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Contract ID</FormLabel>
+                  <FormLabel className="text-[16px] font-bold">
+                    Contract ID
+                  </FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="w-full h-[60px]">
-                        <SelectValue placeholder="Select contract ID" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="01">01</SelectItem>
-                        <SelectItem value="02">02</SelectItem>
-                        <SelectItem value="03">03</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      value={invoice?.id || field.value || ""}
+                      readOnly
+                      className="w-full h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -107,21 +127,18 @@ export default function AddInvoice() {
             {/* Employee ID */}
             <FormField
               control={form.control}
-              name="employee_id"
+              name="employeeId"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Employee ID</FormLabel>
+                  <FormLabel className="text-[16px] font-bold">
+                    Employee ID
+                  </FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="w-full h-[60px]">
-                        <SelectValue placeholder="Select employee ID" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="01">01</SelectItem>
-                        <SelectItem value="02">02</SelectItem>
-                        <SelectItem value="03">03</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      value={invoice?.employeeId || field.value || ""}
+                      readOnly
+                      className="w-full h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -130,121 +147,131 @@ export default function AddInvoice() {
 
             {/* Date pickers */}
             <div className="w-full flex space-x-[12px]">
-              {/* Invoice Date */}
+              {/* Expired Date */}
               <FormField
-                control={form.control}
-                name="invoice_date"
-                render={({ field }) => (
-                  <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">Invoice Date</FormLabel>
-                    <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={`w-full h-[60px] justify-start text-left font-normal ${
-                              !invoiceDate ? "text-muted-foreground" : ""
-                            }`}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {invoiceDate ? (
-                              format(invoiceDate, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={invoiceDate}
-                            onSelect={(date) => setInvoiceDate(date)}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              control={form.control}
+              name="expiredDate"
+              render={({ field }) => (
+                <FormItem className="w-1/2">
+                  <FormLabel className="text-[16px] font-bold">Expired Date</FormLabel>
+                  <FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={`w-full h-[60px] justify-start text-left font-normal ${
+                            !expiredDate ? "text-muted-foreground" : ""
+                          }`}
+                          disabled // Vô hiệu hóa button để người dùng không thể mở popover
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {expiredDate ? (
+                            format(expiredDate, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={expiredDate}
+                          onSelect={(date) => {
+                            // Không thực hiện gì khi chọn ngày
+                          }}
+                          disabled // Vô hiệu hóa calendar để người dùng không thể chọn ngày
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              {/* Paid Date */}
-              <FormField
-                control={form.control}
-                name="paid_date"
-                render={({ field }) => (
-                  <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">Paid Date</FormLabel>
-                    <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={`w-full h-[60px] justify-start text-left font-normal ${
-                              !paidDate ? "text-muted-foreground" : ""
-                            }`}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {paidDate ? (
-                              format(paidDate, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={paidDate}
-                            onSelect={(date) => setPaidDate(date)}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
+
+            {/* Status */}
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="font-bold">Status</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={invoice?.status}
+                    >
+                      <SelectTrigger className="w-full h-[60px]">
+                        <SelectValue placeholder={invoice?.status} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Pending">PENDING</SelectItem>
+                        <SelectItem value="Refunded">REFUNDED</SelectItem>
+                        <SelectItem value="Cancelled">CANCELLED</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
 
             {/* Tax */}
             <FormField
               control={form.control}
-              name="tax"
+              name="taxAmount"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Tax</FormLabel>
                   <FormControl>
-                    <Input placeholder="Tax" {...field} />
+                    <Input
+                      placeholder="Tax"
+                      {...field}
+                      value={field.value || invoice?.taxAmount || ""} 
+                      readOnly
+                      className="bg-gray-100 text-gray-500 cursor-not-allowed"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
 
             {/* Total Amount */}
             <FormField
               control={form.control}
-              name="total_amount"
+              name="totalAmount"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Total Amount</FormLabel>
+                  <FormLabel className="font-bold">Total</FormLabel>
                   <FormControl>
-                    <Input placeholder="Total Amount" {...field} />
+                    <Input
+                      placeholder="Total"
+                      {...field}
+                      defaultValue={invoice?.totalAmount || ""} 
+                      readOnly
+                      className="bg-gray-100 text-gray-500 cursor-not-allowed"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
+              <FormMessage className="text-[14px]">
+                {form.formState.errors.root?.message}
+              </FormMessage>
             <div className="w-1/2 flex gap-2.5">
-              <Link href="/invoice" className="w-1/2 h-14">
+              <Link href="/invoices" className="w-1/2 h-14">
                 <Button className="w-full h-10 text-lg" variant={"outline"} type="button">
                   Cancel
                 </Button>
               </Link>
               <Button className="w-1/2 h-10 text-lg" type="submit">
-                Save
+                  {status === "pending" ? "Updating..." : "Save"}
               </Button>
             </div>
           </div>
