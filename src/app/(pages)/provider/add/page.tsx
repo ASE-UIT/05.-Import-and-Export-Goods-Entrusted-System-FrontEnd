@@ -219,9 +219,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { providerSchema } from "@/schema/provider.schema";
+// import { useContactRep } from "@/hooks/use-contactrep";
+import useContactRep from "@/hooks/use-contactRep";
 import { useProvider } from "@/hooks/use-provider";
-import { useContactRep } from "@/hooks/use-contactRep";
+import { providerSchema } from "@/schema/provider.schema";
 import { useRouter } from "next/navigation";
 } from "@/components/ui/select";
 import { providerSchema } from "@/schema/provider.schema";
@@ -233,10 +234,9 @@ export default function AddProvider() {
   const router = useRouter();
 
   const { useCreateProvider } = useProvider();
-  const { useGetAllContactRep } = useContactRep();
   const createProvider = useCreateProvider();
 
-  const { data: contactReps } = useGetAllContactRep();
+  const contactReps = useContactRep.useGetContactRep();
 
   const form = useForm<z.infer<typeof providerSchema>>({
     resolver: zodResolver(providerSchema),
@@ -309,14 +309,22 @@ export default function AddProvider() {
                       </SelectTrigger>
                       <SelectContent>
                         {contactReps ? (
-                          contactReps.data?.map((contactRep) => (
-                            <SelectItem
-                              key={contactRep.id}
-                              value={contactRep.id}
-                            >
-                              {contactRep.name}
-                            </SelectItem>
-                          ))
+                          contactReps.data?.map(
+                            (contactRep) => (
+                              <SelectItem
+                                key={
+                                  contactRep.id
+                                }
+                                value={
+                                  contactRep.id
+                                }
+                              >
+                                {
+                                  contactRep.name
+                                }
+                              </SelectItem>
+                            )
+                          )
                         ) : (
                           <>
                             <SelectItem value="01">
