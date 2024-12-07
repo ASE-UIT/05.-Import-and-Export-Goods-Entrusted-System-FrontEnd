@@ -42,7 +42,7 @@ const quotationAction = {
     async getBookedQuoteRequest() {
         try {
           const response = await http.get<BookedQuoteRequestType>(
-            "v1/quotation-requests?status=BOOKED"
+            "v1/quote-request-details"
           );
           return response.data;
         } catch (error) {

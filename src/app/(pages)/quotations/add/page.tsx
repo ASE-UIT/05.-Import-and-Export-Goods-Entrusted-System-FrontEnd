@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { format, isSameDay } from "date-fns";
+import { format } from "date-fns";
 
 import {
   Form,
@@ -35,160 +34,90 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import useQuotation from "@/hooks/use-quotation";
-import {
-  QuotationDetailsType,
-  UpdateQuotationType,
-} from "@/schema/quotation.schema";
+import { useRouter } from "next/navigation";
+import { CreateQuotationType } from "@/schema/quotation.schema";
+import useAuth from "@/hooks/use-auth";
 
 const formSchema = z.object({
-  quoteReqId: z.string().optional(),
-  employeeId: z.string().optional(),
-  freightId: z.string().optional(),
-  pickupDate: z.date(),
-  deliveryDate: z.date(),
-  quotationDate: z.date(),
-  expiredDate: z.date(),
-  status: z.string(),
+  quoteReqId: z.string(),
+  employeeId: z.string(),
+  freightId: z.string(),
+  pickupDate: z.string(),
+  deliveryDate: z.string(),
+  quotationDate: z.string(),
+  expiredDate: z.string(),
   totalPrice: z.number(),
 });
 
-export default function UpdateQuotationtPage() {
+export default function AddQuotationtPage() {
   const [pickupDate, setPickupDate] = useState<Date | undefined>(undefined);
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>(undefined);
   const [quotationDate, setQuotationDate] = useState<Date | undefined>(undefined);
   const [expiredDate, setExpiredDate] = useState<Date | undefined>(undefined);
-
-  const [isPickupDateOpen, setPickupDateOpen] = useState(false);
-  const [isDeliveryDateOpen, setDeliveryDateOpen] = useState(false);
-  const [isQuotationDateOpen, setQuotationDateOpen] = useState(false);
-  const [isExpiredDateOpen, setExpiredDateOpen] = useState(false);
-
-  const [quotation, setQuotation] = useState<QuotationDetailsType>();
-  const path = usePathname();
-  const id = path.split("/").pop();
-  const { data, error } = useQuotation.useGetQuotationDetails(id);
+  const [bookedQuoteRequest, setBookedQuoteRequest] = useState<string[]>();
 
   const router = useRouter();
-
-  const { mutate: updateQuotation, status } = useQuotation.useUpdateQuotation(
-    id,
-    router
-  );
+  const { data: bookedQuoteRequestData } = useQuotation.useGetBookedQuoteRequest();
+  const { mutate: createQuotation, status } =
+    useQuotation.useCreateQuotation(router);
+  const { data: sessionData } = useAuth.useGetSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  const handlePickupSelect = (date: Date) => {
-    setPickupDate(date);
-    setPickupDateOpen(false);
-  };
-
-  const handleDeliverySelect = (date: Date) => {
-    setDeliveryDate(date);
-    setDeliveryDateOpen(false);
-  };
-
-  const handleQuotationSelect = (date: Date) => {
-    setQuotationDate(date);
-    setQuotationDateOpen(false);
-  };
-
-  const handleExpiredSelect = (date: Date) => {
-    setExpiredDate(date);
-    setExpiredDateOpen(false);
-  };
-
   useEffect(() => {
-    if (data && data.data.length > 0) {
-      const quotationData = data.data[0];
-      setQuotation({
-        id: quotationData.id,
-        quoteReqId: quotationData.quoteReqId,
-        employeeId: quotationData.employeeId,
-        freightId: quotationData.freightId,
-        pickupDate: quotationData.pickupDate,
-        deliveryDate: quotationData.deliveryDate,
-        quotationDate: quotationData.quotationDate,
-        expiredDate: quotationData.expiredDate,
-        status: quotationData.status,
-        totalPrice: quotationData.totalPrice,
-        createdAt: quotationData.createdAt,
-        updatedAt: quotationData.updatedAt,
-      });
-      setPickupDate(new Date(quotationData.pickupDate));
-      setDeliveryDate(new Date(quotationData.deliveryDate));
-      setQuotationDate(new Date(quotationData.quotationDate));
-      setExpiredDate(new Date(quotationData.expiredDate));
-      form.setValue("status", quotationData.status);
-      form.setValue("quoteReqId", quotationData.quoteReqId);
-      form.setValue("employeeId", quotationData.employeeId);
-      form.setValue("freightId", quotationData.freightId);
-      form.setValue("totalPrice", quotationData.totalPrice);
+    if (sessionData) {
+      form.setValue("employeeId", sessionData.employee.id);
     }
-  }, [data]);
+  }, [sessionData]);
 
   useEffect(() => {
-    if (pickupDate) form.setValue("pickupDate", pickupDate);
+    if (bookedQuoteRequestData) {
+      const quoterequest = bookedQuoteRequestData.map((it) => it.id);
+      setBookedQuoteRequest(quoterequest);
+    }
+  }, [bookedQuoteRequestData]);
+
+  useEffect(() => {
+    if (pickupDate)
+      form.setValue("pickupDate", format(pickupDate, "yyyy-MM-dd"));
   }, [pickupDate]);
 
   useEffect(() => {
-    if (deliveryDate) form.setValue("deliveryDate", deliveryDate);
-  }, [deliveryDate]);
-
-  useEffect(() => {
-    if (quotationDate) form.setValue("quotationDate", quotationDate);
+    if (quotationDate)
+      form.setValue("quotationDate", format(quotationDate, "yyyy-MM-dd"));
   }, [quotationDate]);
 
   useEffect(() => {
-    if (expiredDate) form.setValue("expiredDate", expiredDate);
+    if (expiredDate)
+      form.setValue("expiredDate", format(expiredDate, "yyyy-MM-dd"));
   }, [expiredDate]);
 
+  useEffect(() => {
+    if (deliveryDate)
+      form.setValue("deliveryDate", format(deliveryDate, "yyyy-MM-dd"));
+  }, [deliveryDate]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const updateQuotationBody: Partial<UpdateQuotationType> = {
-      ...(!isSameDay(values.pickupDate, quotation?.pickupDate || new Date()) && {
-        pickupDate: values.pickupDate.toISOString(),
-      }),
-      ...(!isSameDay(values.deliveryDate, quotation?.deliveryDate || new Date()) && {
-        deliveryDate: values.deliveryDate.toISOString(),
-      }),
-      ...(!isSameDay(
-        values.quotationDate,
-        quotation?.quotationDate || new Date()
-      ) && {
-        quotationDate: values.quotationDate.toISOString(),
-      }),
-      ...(!isSameDay(
-        values.expiredDate,
-        quotation?.expiredDate || new Date()
-      ) && {
-        expiredDate: values.expiredDate.toISOString(),
-      }),
-      ...(values.status.toUpperCase() !== quotation?.status.toUpperCase() && {
-        status: values.status.toUpperCase(),
-      }),
-      ...(values.totalPrice !== quotation?.totalPrice && {
-        totalPrice: values.totalPrice,
-      }),      
+    const createQuotationBody: CreateQuotationType = {
+      quoteReqId: values.quoteReqId,
+      employeeId: values.employeeId,
+      freightId: values.freightId,
+      pickupDate: values.pickupDate,
+      deliveryDate: values.deliveryDate,
+      quotationDate: values.quotationDate,
+      expiredDate: values.expiredDate,
+      totalPrice: values.totalPrice,
     };
-    if (Object.keys(updateQuotationBody).length > 0) {
-      updateQuotation(updateQuotationBody);
-    } else {
-      form.setError("root", {
-        type: "validate",
-        message:
-          "No changes detected. The current data is identical to the previous version.",
-      });
-    }
+    createQuotation(createQuotationBody);
   }
+
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
-        <span className="text-3xl font-bold">Update Quotation</span>
+        <span className="text-3xl font-bold">Add Quotation</span>
       </div>
-      {error ? (
-        error.message
-      ) : (
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -205,11 +134,27 @@ export default function UpdateQuotationtPage() {
                     Quotation Request ID
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      value={quotation?.id || field.value || ""}
-                      readOnly
-                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
-                    />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-[500px] h-[60px]">
+                        <SelectValue placeholder="Select an ID" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {bookedQuoteRequest ? (
+                          bookedQuoteRequest.map((it) => (
+                            <SelectItem key={it} value={it}>
+                              {it}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            No Quote Request Available
+                          </div>
+                        )}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -225,7 +170,7 @@ export default function UpdateQuotationtPage() {
                   <FormLabel className="font-bold">Employee ID</FormLabel>
                   <FormControl>
                     <Input
-                      value={quotation?.employeeId || field.value || ""}
+                      value={field.value || ""}
                       readOnly
                       className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
                     />
@@ -244,7 +189,7 @@ export default function UpdateQuotationtPage() {
                   <FormLabel className="font-bold">Freight ID</FormLabel>
                   <FormControl>
                     <Input
-                      value={quotation?.freightId || field.value || ""}
+                      value={field.value || ""}
                       readOnly
                       className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
                     />
@@ -265,33 +210,27 @@ export default function UpdateQuotationtPage() {
                       Pickup Date
                     </FormLabel>
                     <FormControl>
-                      <Popover
-                        open={isPickupDateOpen}
-                        onOpenChange={setPickupDateOpen}
-                    >
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={`w-full h-[60px] justify-start text-left font-normal ${
-                            !pickupDate ? "text-muted-foreground" : ""
-                          }`}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {pickupDate ? (
-                            format(pickupDate, "PPP")
-                          ) : (
-                            <span>
-                              {quotation &&
-                                format(quotation.pickupDate, "PPP")}
-                            </span>
-                          )}
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={`w-full h-[60px] justify-start text-left font-normal ${
+                              !pickupDate ? "text-muted-foreground" : ""
+                            }`}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {pickupDate ? (
+                              format(pickupDate, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
                             selected={pickupDate}
-                            onSelect={(date) => handlePickupSelect(date || new Date())}
+                            onSelect={(date) => setPickupDate(date)}
                           />
                         </PopoverContent>
                       </Popover>
@@ -310,10 +249,7 @@ export default function UpdateQuotationtPage() {
                       Delivery Date
                     </FormLabel>
                     <FormControl>
-                      <Popover
-                        open={isDeliveryDateOpen}
-                        onOpenChange={setDeliveryDateOpen}
-                      >
+                      <Popover>
                         <PopoverTrigger asChild>
                           <Button
                             variant={"outline"}
@@ -325,9 +261,7 @@ export default function UpdateQuotationtPage() {
                             {deliveryDate ? (
                               format(deliveryDate, "PPP")
                             ) : (
-                              <span>
-                                {quotation && format(quotation.deliveryDate, "PPP")}
-                              </span>
+                              <span>Pick a date</span>
                             )}
                           </Button>
                         </PopoverTrigger>
@@ -335,7 +269,7 @@ export default function UpdateQuotationtPage() {
                           <Calendar
                             mode="single"
                             selected={deliveryDate}
-                            onSelect={(date) => handleDeliverySelect(date || new Date())}
+                            onSelect={(date) => setDeliveryDate(date)}
                           />
                         </PopoverContent>
                       </Popover>
@@ -357,10 +291,7 @@ export default function UpdateQuotationtPage() {
                       Quotation Date
                     </FormLabel>
                     <FormControl>
-                      <Popover
-                        open={isQuotationDateOpen}
-                        onOpenChange={setQuotationDateOpen}
-                      >
+                      <Popover>
                         <PopoverTrigger asChild>
                           <Button
                             variant={"outline"}
@@ -372,9 +303,7 @@ export default function UpdateQuotationtPage() {
                             {quotationDate ? (
                               format(quotationDate, "PPP")
                             ) : (
-                              <span>
-                                {quotation && format(quotation.quotationDate, "PPP")}
-                              </span>
+                              <span>Pick a date</span>
                             )}
                           </Button>
                         </PopoverTrigger>
@@ -382,7 +311,7 @@ export default function UpdateQuotationtPage() {
                           <Calendar
                             mode="single"
                             selected={quotationDate}
-                            onSelect={(date) => handleQuotationSelect(date || new Date())}
+                            onSelect={(date) => setQuotationDate(date)}
                           />
                         </PopoverContent>
                       </Popover>
@@ -402,10 +331,7 @@ export default function UpdateQuotationtPage() {
                       Expired Date
                     </FormLabel>
                     <FormControl>
-                      <Popover
-                        open={isExpiredDateOpen}
-                        onOpenChange={setExpiredDateOpen}
-                      >
+                      <Popover>
                         <PopoverTrigger asChild>
                           <Button
                             variant={"outline"}
@@ -417,7 +343,7 @@ export default function UpdateQuotationtPage() {
                             {expiredDate ? (
                               format(expiredDate, "PPP")
                             ) : (
-                              <span>{quotation && format(quotation.expiredDate, "PPP")}</span>
+                              <span>Pick a date</span>
                             )}
                           </Button>
                         </PopoverTrigger>
@@ -425,7 +351,7 @@ export default function UpdateQuotationtPage() {
                           <Calendar
                             mode="single"
                             selected={expiredDate}
-                            onSelect={(date) => handleExpiredSelect(date || new Date())}
+                            onSelect={(date) => setExpiredDate(date)}
                           />
                         </PopoverContent>
                       </Popover>
@@ -444,53 +370,17 @@ export default function UpdateQuotationtPage() {
                 <FormItem className="w-[500px]">
                   <FormLabel className="font-bold">Total Price</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      defaultValue={quotation?.totalPrice}
-                      type="number" 
-                      className="w-[500px] h-[60px]" 
-                    />
+                    <Input placeholder="Total Price" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            {/* Status */}
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-bold">Status</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={quotation?.status}
-                    >
-                      <SelectTrigger className="w-[500px] h-[60px]">
-                        <SelectValue placeholder={quotation?.status} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Draft">Draft</SelectItem>
-                        <SelectItem value="Accepted">Accepted</SelectItem>
-                        <SelectItem value="Rejected">Rejected</SelectItem>
-                        <SelectItem value="Expired">Expired</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormMessage className="text-[14px]">
-              {form.formState.errors.root?.message}
-            </FormMessage>
           </div>
           {/* Button */}
           <div className="flex justify-center mt-6">
             <div className="w-1/2 flex gap-2.5">
-              <Link href="/quotation" className="w-1/2 h-14">
+              <Link href="/quotations" className="w-1/2 h-14">
                 <Button
                   className="w-full h-10 text-lg"
                   variant={"outline"}
@@ -500,13 +390,12 @@ export default function UpdateQuotationtPage() {
                 </Button>
               </Link>
               <Button className="w-1/2 h-10 text-lg" type="submit">
-                {status === "pending" ? "Updating..." : "Save"}
+                {status === "pending" ? "Adding..." : "Save"}
               </Button>
             </div>
           </div>
         </form>
       </Form>
-      )}
     </div>
   );
 }
