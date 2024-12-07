@@ -1,60 +1,115 @@
+// import contactRepAction from "@/apis/contactRep.api";
+// import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
+// import {
+//   createContactRepData,
+//   updateContactRepData,
+// } from "@/schema/contactRep.schema";
+
+// export const useContactRep = () => {
+//   const queryClient = useQueryClient();
+
+//   const useGetAllContactRep = () => {
+//     return useQuery({
+//       queryKey: ["contactReps"],
+//       queryFn: () => {
+//         return contactRepAction.getContactRep();
+//       },
+//     });
+//   };
+
+//   const useCreateContactRep = () => {
+//     return useMutation({
+//       mutationFn: (data: createContactRepData) =>
+//         contactRepAction.createContactRep(data),
+//       onSettled: () => {
+//         queryClient.invalidateQueries({
+//           queryKey: ["contactReps"],
+//         });
+//       },
+//     });
+//   };
+
+//   const useUpdateContactRep = () => {
+//     return useMutation({
+//       mutationFn: ({ id, data }: { id: string; data: updateContactRepData }) =>
+//         contactRepAction.updateContactRep(id, data),
+//       onSettled: () => {
+//         queryClient.invalidateQueries({
+//           queryKey: ["contactReps"],
+//         });
+//       },
+//     });
+//   };
+
+//   const useGetContactRepById = (id: string) => {
+//     return useQuery({
+//       queryKey: ["contactRep", id],
+//       queryFn: () => {
+//         return contactRepAction.getContactRep(id);
+//       },
+//     });
+//   };
+
+//   return {
+//     queryClient,
+//     useGetAllContactRep,
+//     useCreateContactRep,
+//     useUpdateContactRep,
+//     useGetContactRepById,
+//   };
+// };
+
 import contactRepAction from "@/apis/contactRep.api";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
-import {
-  createContactRepData,
-  updateContactRepData,
-} from "@/schema/contactRep.schema";
+import { ContactRepBodyType } from "@/schema/contactRep.schema";
+import { ErrorType } from "@/types/error.type";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useContactRep = () => {
-  const queryClient = useQueryClient();
-
-  const useGetAllContactRep = () => {
+const useContactRep = {
+  useGetContactRep() {
     return useQuery({
-      queryKey: ["contactReps"],
-      queryFn: () => {
-        return contactRepAction.getContactRep();
+      queryKey: ["contact-rep"],
+      queryFn: async () => {
+        try {
+          const result = await contactRepAction.getContactRep();
+          return result.data;
+        } catch (error) {
+          throw error;
+        }
       },
+      retry: 0,
     });
-  };
+  },
 
-  const useCreateContactRep = () => {
+  useCreateContactRep() {
+    const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: (data: createContactRepData) =>
-        contactRepAction.createContactRep(data),
-      onSettled: () => {
+      mutationFn: (contactRepDetails: ContactRepBodyType) =>
+        contactRepAction.createContactRep(contactRepDetails),
+      onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ["contactReps"],
+          queryKey: ["contact-rep"],
         });
       },
+      onError: (error: ErrorType) => {
+        throw error;
+      },
     });
-  };
+  },
 
-  const useUpdateContactRep = () => {
+  useUpdateContactRep() {
+    const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: ({ id, data }: { id: string; data: updateContactRepData }) =>
-        contactRepAction.updateContactRep(id, data),
-      onSettled: () => {
+      mutationFn: (contactRepDetails: ContactRep) =>
+        contactRepAction.updateContractRep(contactRepDetails),
+      onSuccess: (data) => {
         queryClient.invalidateQueries({
-          queryKey: ["contactReps"],
+          queryKey: ["contact-rep", data.id],
         });
       },
-    });
-  };
-
-  const useGetContactRepById = (id: string) => {
-    return useQuery({
-      queryKey: ["contactRep", id],
-      queryFn: () => {
-        return contactRepAction.getContactRep(id);
+      onError: (error: ErrorType) => {
+        throw error;
       },
     });
-  };
-
-  return {
-    queryClient,
-    useGetAllContactRep,
-    useCreateContactRep,
-    useUpdateContactRep,
-    useGetContactRepById,
-  };
+  },
 };
+export default useContactRep;
