@@ -4,7 +4,7 @@ type CustomerQueryParams = {
   name: ?string;
   page: ?number;
   limit: ?number;
-};
+} & Sort<'id' | 'name' | 'shortName' | 'email' | 'phone' | 'address' | 'taxId'>;
 
 type CustomerResponse = {
   id: string;

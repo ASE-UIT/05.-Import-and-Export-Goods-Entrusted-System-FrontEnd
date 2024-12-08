@@ -110,19 +110,7 @@ export const columns: ColumnDef<ICustomer>[] = [
   },
   {
     accessorKey: 'legal_rep_name',
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: 'transparent' }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Legal Rep Name
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
+    header: 'Legal Rep Name',
     cell: ({ row }) => row.getValue('legal_rep_name'),
   },
   {

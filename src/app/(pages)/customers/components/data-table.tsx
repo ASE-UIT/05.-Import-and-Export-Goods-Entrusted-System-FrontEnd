@@ -28,6 +28,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DataTableFilter } from './data-table-filter';
 import { DataTablePagination } from './data-table-pagination';
+// import { customerMappingProp, CustomerMappingProp } from '.';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -63,6 +64,16 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: totalPages,
+    // manualSorting: true,
+    // sortingFns: {
+    //   customerSortingFns: (rowA, rowB, columnId) => {
+    //     setQueryParams((prev) => ({
+    //       ...prev,
+    //       sortBy: customerMappingProp.get(columnId)
+    //     }))
+    //     return rowA.original.someProperty - rowB.original.someProperty
+    //   }
+    // },
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
