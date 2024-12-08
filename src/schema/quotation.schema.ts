@@ -17,7 +17,6 @@ export const UpdateQuotationBody = z.object({
     quotationDate: z.string().optional(),
     expiredDate: z.string().optional(),
     status: z.string().optional(),
-    totalPrice: z.number().optional(),
     quoteReqId: z.string().optional(),
     employeeId: z.string().optional(),
     freightId: z.string().optional(),
@@ -49,7 +48,7 @@ export const QuoteRequestDetailsRes =  z.object({
     status: z.string(),
     customerId: z.string().uuid(),
     createdAt: z.date(),
-    updatedAt: z.date(),
+    updatedAt: z.date()
 });
 
 export const FreightDetailsRes = z.object({
@@ -66,12 +65,13 @@ export const FreightDetailsRes = z.object({
     providerId: z.string().uuid(),
 });
 
-export const QuoteRequestDetailRes = z.array(QuoteRequestDetailsRes);
+
+export const BookedQuoteRequestRes = z.array(QuoteRequestDetailsRes);
 export const FreightDetailRes = z.array(FreightDetailsRes);
 
 export type UpdateQuotationType = z.TypeOf<typeof UpdateQuotationBody>;
 export type CreateQuotationType = z.TypeOf<typeof CreateQuotationBody>;
-export type QuotationResType = z.TypeOf<typeof QuotationsRes>;
+export type QuotationResType = QuotationDetailsType[];
 export type QuotationDetailsType = z.TypeOf<typeof QuotationDetailsRes>;
-export type QuoteRequestDetailResType = z.TypeOf<typeof QuoteRequestDetailRes>;
+export type BookedQuoteRequestType = z.TypeOf<typeof BookedQuoteRequestRes>;
 export type FreightDetailResType = z.TypeOf<typeof FreightDetailRes>;
