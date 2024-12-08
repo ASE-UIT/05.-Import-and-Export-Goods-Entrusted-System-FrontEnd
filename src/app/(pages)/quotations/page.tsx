@@ -2,18 +2,34 @@
 
 import { DataTable } from "@/app/(pages)/quotations/components/data-table";
 import { columns, IQuotation } from "./components/columns";
-import useGetQuotations from "@/hooks/use-quotation";
+import useQuotation from "@/hooks/use-quotation";
 import { useEffect, useState } from "react";
 import { QuotationDetailsType } from "@/schema/quotation.schema";
+import { z } from "zod";
+
+const formSchema = z.object({
+  quoteReqId: z.string(),
+  employeeId: z.string(),
+  freightId: z.string(),
+  pickupDate: z.string(),
+  deliveryDate: z.string(),
+  quotationDate: z.string(),
+  expiredDate: z.string(),
+  status: z.string(),
+  totalPrice: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
 
 export default function QuotationManagementPage() {
   const [quotationData, setQuotationData] = useState<IQuotation[]>([]);
-  const { data, isLoading, error } = useGetQuotations.useGetQuotations();
+  const { data, isLoading, error } = useQuotation.useGetQuotations();
+
 
   useEffect(() => {
-    if (data && Array.isArray(data.data)) { 
+    if (data) {
       setQuotationData(
-        data.data.map((quotation: QuotationDetailsType) => ({
+        data.map((quotation: QuotationDetailsType) => ({
           id: quotation.id,
           quoteReqId: quotation.quoteReqId,
           employeeId: quotation.employeeId,
@@ -28,8 +44,6 @@ export default function QuotationManagementPage() {
           updatedAt: quotation.updatedAt,
         }))
       );
-    } else {
-      setQuotationData([]); 
     }
   }, [data]);
   
@@ -38,7 +52,7 @@ export default function QuotationManagementPage() {
     <div className="flex flex-col p-[24px] w-[calc(100vw-var(--sidebar-width))]">
       <div className="flex flex-col w-full gap-[20px]">
         <div className="flex justify-between items-center">
-          <span className="text-3xl font-bold">Quotations</span>
+          <span className="text-3xl font-bold">Quotation</span>
         </div>
         <DataTable 
           columns={columns}

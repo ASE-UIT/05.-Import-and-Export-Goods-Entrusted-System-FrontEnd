@@ -28,23 +28,6 @@ export interface IQuotation {
 
 export const columns: ColumnDef<IQuotation>[] = [
   {
-    id: "checkbox",
-    cell: ({ row }) => (
-      <div className="flex justify-center">
-        <Checkbox 
-          className="h-4 w-4"
-          onCheckedChange={(checked) => {
-            if (checked) {
-              console.log(`Selected row with ID: ${row.getValue("id")}`);
-            } else {
-              console.log(`Deselected row with ID: ${row.getValue("id")}`);
-            }
-          }} 
-        />
-      </div>
-    ),
-  },
-  {
     accessorKey: "id",
     header: ({ column }) => {
       return (

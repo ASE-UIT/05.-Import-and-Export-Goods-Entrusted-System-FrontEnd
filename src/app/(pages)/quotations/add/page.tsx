@@ -58,7 +58,7 @@ export default function AddQuotationtPage() {
   const [freights, setFreight] = useState<string[]>();
 
   const router = useRouter();
-  const { data: quoteRequestData } = useQuotation.useGetQuoteRequest();
+  const { data: quoteRequestData } = useQuotation.useGetBookedQuoteRequest();
   const { data: freightData } = useQuotation.useGetFreight();
   const { mutate: createQuotation, status } =
     useQuotation.useCreateQuotation(router);

@@ -49,7 +49,6 @@ const formSchema = z.object({
   quotationDate: z.date(),
   expiredDate: z.date(),
   status: z.string(),
-  totalPrice: z.number(),
 });
 
 export default function UpdateQuotationtPage() {
@@ -100,22 +99,29 @@ export default function UpdateQuotationtPage() {
   };
 
   useEffect(() => {
-    if (data && data.data.length > 0) {
-      const quotationData = data.data.find(quotation => quotation.id === id);
+    if (data && data.length > 0) {
+      // Lọc phần tử theo `id`
+      const quotationData = data.find((quotation) => quotation.id === id);
+  
       if (quotationData) {
         setQuotation(quotationData);
         setPickupDate(new Date(quotationData.pickupDate));
         setDeliveryDate(new Date(quotationData.deliveryDate));
         setQuotationDate(new Date(quotationData.quotationDate));
         setExpiredDate(new Date(quotationData.expiredDate));
+  
+        // Đặt giá trị cho form
         form.setValue("status", quotationData.status);
         form.setValue("quoteReqId", quotationData.quoteReqId);
         form.setValue("employeeId", quotationData.employeeId);
         form.setValue("freightId", quotationData.freightId);
-        form.setValue("totalPrice", quotationData.totalPrice);
+      } else {
+        console.warn("Selected quotation not found!");
       }
     }
-  }, [data]);
+  }, [data, id]);
+  
+  
 
   useEffect(() => {
     if (pickupDate) form.setValue("pickupDate", pickupDate);
@@ -155,10 +161,7 @@ export default function UpdateQuotationtPage() {
       }),
       ...(values.status.toUpperCase() !== quotation?.status.toUpperCase() && {
         status: values.status.toUpperCase(),
-      }),
-      ...(values.totalPrice !== quotation?.totalPrice && {
-        totalPrice: values.totalPrice,
-      }),      
+      }),     
     };
     if (Object.keys(updateQuotationBody).length > 0) {
       updateQuotation(updateQuotationBody);
@@ -195,7 +198,7 @@ export default function UpdateQuotationtPage() {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      value={quotation?.id || field.value || ""}
+                      value={quotation?.quoteReqId || field.value || ""}
                       readOnly
                       className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
                     />
@@ -338,75 +341,75 @@ export default function UpdateQuotationtPage() {
             <div className="w-[500px] flex space-x-[12px]">
               {/* Quotation Date */}
               <FormField
-                control={form.control}
-                name="quotationDate"
-                render={() => (
-                  <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">
-                      Quotation Date
-                    </FormLabel>
-                    <FormControl>
-                      <Popover
-                        open={isQuotationDateOpen}
-                        onOpenChange={setQuotationDateOpen}
-                      >
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={`w-full h-[60px] justify-start text-left font-normal ${
-                              !quotationDate ? "text-muted-foreground" : ""
-                            }`}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {quotationDate ? (
-                              format(quotationDate, "PPP")
-                            ) : (
-                              <span>
-                                {quotation && format(quotation.quotationDate, "PPP")}
-                              </span>
-                            )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={quotationDate}
-                            onSelect={(date) => handleQuotationSelect(date || new Date())}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              control={form.control}
+              name="quotationDate"
+              render={() => (
+                <FormItem className="w-1/2">
+                  <FormLabel className="text-[16px] font-bold">
+                    Quotation Date
+                  </FormLabel>
+                  <FormControl>
+                    <Popover
+                      open={isQuotationDateOpen}
+                      onOpenChange={setQuotationDateOpen}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={`w-full h-[60px] justify-start text-left font-normal ${
+                            !quotationDate ? "text-muted-foreground" : ""
+                          }`}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {quotationDate ? (
+                            format(quotationDate, "PPP")
+                          ) : (
+                            <span>
+                              {quotation && format(quotation.quotationDate, "PPP")}
+                            </span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={quotationDate}
+                          onSelect={(date) => handleQuotationSelect(date || new Date())}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              {/* Expired Date */}
-              <FormField
-                control={form.control}
-                name="expiredDate"
-                render={() => (
-                  <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">
-                      Expired Date
-                    </FormLabel>
-                    <FormControl>
-                      <Popover
-                        open={isExpiredDateOpen}
-                        onOpenChange={setExpiredDateOpen}
-                      >
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={`w-full h-[60px] justify-start text-left font-normal ${
-                              !expiredDate ? "text-muted-foreground" : ""
-                            }`}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {expiredDate ? (
-                              format(expiredDate, "PPP")
-                            ) : (
-                              <span>{quotation && format(quotation.expiredDate, "PPP")}</span>
+            {/* Expired Date */}
+            <FormField
+              control={form.control}
+              name="expiredDate"
+              render={() => (
+                <FormItem className="w-1/2">
+                  <FormLabel className="text-[16px] font-bold">
+                    Expired Date
+                  </FormLabel>
+                  <FormControl>
+                    <Popover
+                      open={isExpiredDateOpen}
+                      onOpenChange={setExpiredDateOpen}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={`w-full h-[60px] justify-start text-left font-normal ${
+                            !expiredDate ? "text-muted-foreground" : ""
+                          }`}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {expiredDate ? (
+                            format(expiredDate, "PPP")
+                          ) : (
+                            <span>{quotation && format(quotation.expiredDate, "PPP")}</span>
                             )}
                           </Button>
                         </PopoverTrigger>
@@ -424,26 +427,6 @@ export default function UpdateQuotationtPage() {
                 )}
               />
             </div>
-
-            {/* Price */}
-            <FormField
-              control={form.control}
-              name="totalPrice"
-              render={({ field }) => (
-                <FormItem className="w-[500px]">
-                  <FormLabel className="font-bold">Total Price</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      defaultValue={quotation?.totalPrice}
-                      type="number" 
-                      className="w-[500px] h-[60px]" 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             {/* Status */}
             <FormField

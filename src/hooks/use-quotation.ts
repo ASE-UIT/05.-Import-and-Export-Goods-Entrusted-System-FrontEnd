@@ -44,12 +44,12 @@ const useQuotation = {
           retry: 0,
         });
     },
-    useGetQuoteRequest() {
+    useGetBookedQuoteRequest() {
         return useQuery({
           queryKey: ["quote-request"],
           queryFn: async () => {
             try {
-              const result = await quotationAction.getQuoteRequest();
+              const result = await quotationAction.getBookedQuoteRequest();
               return result;
             } catch (error) {
               console.error("Error during get quotation:", error);

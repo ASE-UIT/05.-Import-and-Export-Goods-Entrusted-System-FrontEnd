@@ -22,7 +22,7 @@ export function DataTableFilter<TData>({
 }: DataTableToolbarProps<TData>) {
   const filterableColumns = table
     .getAllColumns()
-    .filter((column) => !["action", "checkbox"].includes(column.id))
+    .filter((column) => !["action"].includes(column.id))
     .map((column) => column.id);
 
   const [currentFilter, setCurrentFilter] = useState<string>(
