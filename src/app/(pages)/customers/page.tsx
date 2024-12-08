@@ -14,6 +14,8 @@ export default function CustomerManagementPage() {
     phone: null,
     page: 1,
     limit: 10,
+    sortBy: 'name',
+    sortOrder: 'ASC',
   });
   const { data, isPending, error } = useListCustomer(searchParams);
   const customerList =
