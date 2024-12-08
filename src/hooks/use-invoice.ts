@@ -46,6 +46,22 @@ const useInvoice = {
     });
   },
 
+  useGetInvoiceDetail() {
+    return useQuery({
+      queryKey: ["invoices"],
+      queryFn: async () => {
+        try {
+          const result = await invoiceAction.getInvoice();
+          return result;
+        } catch (error) {
+          console.error("Error during get invoice:", error);
+          throw error;
+        }
+      },
+      retry: 0,
+    });
+  },
+
   useUpdateInvoice(
     id: string | undefined,
     router: ReturnType<typeof useRouter>

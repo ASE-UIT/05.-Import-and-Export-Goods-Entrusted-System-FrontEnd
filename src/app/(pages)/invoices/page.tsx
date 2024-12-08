@@ -21,7 +21,7 @@ const formSchema = z.object({
 
 export default function InvoiceManagement() {
   const [invoiceData, setInvoiceData] = useState<IInvoice[]>([]);
-  const { data, isLoading, error } = useGetInvoice.useGetInvoice();
+  const { data, isLoading, error } = useGetInvoice.useGetInvoiceDetail();
 
   useEffect(() => {
     if (data) {
