@@ -19,3 +19,13 @@ export interface ICustomerRequest {
   address: string;
   legal_rep_name: string;
 }
+
+export const customerMappingProp = new Map<string, string>([
+  ['id', 'id'],
+  ['name', 'name'],
+  ['short_name', 'shortName'],
+  ['email', 'email'],
+  ['phone', 'phone'],
+  ['tax_id', 'taxId'],
+  ['address', 'address'],
+]);
