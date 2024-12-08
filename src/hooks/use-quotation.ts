@@ -21,7 +21,7 @@ const useQuotation = {
           queryClient.invalidateQueries({
             queryKey: ["quotations"],
           });
-          router.push("/quotation");
+          router.push("/quotations");
         },
         onError: (error: ErrorType) => {
           console.error("Error during create quotation:", error);
@@ -44,12 +44,12 @@ const useQuotation = {
           retry: 0,
         });
     },
-    useGetBookedQuoteRequest() {
+    useGetQuoteRequest() {
         return useQuery({
-          queryKey: ["bookedQuoteRequest"],
+          queryKey: ["quote-request"],
           queryFn: async () => {
             try {
-              const result = await quotationAction.getBookedQuoteRequest();
+              const result = await quotationAction.getQuoteRequest();
               return result;
             } catch (error) {
               console.error("Error during get quotation:", error);
@@ -59,6 +59,21 @@ const useQuotation = {
           retry: 0,
         });
     },
+    useGetFreight() {
+      return useQuery({
+        queryKey: ["freights"],
+        queryFn: async () => {
+          try {
+            const result = await quotationAction.getFreight();
+            return result;
+          } catch (error) {
+            console.error("Error during get quotation:", error);
+            throw error;
+          }
+        },
+        retry: 0,
+      });
+  },
     useGetQuotationDetails(id: string | undefined) {
         return useQuery({
           queryKey: ["quotationDetails", id],
@@ -86,7 +101,7 @@ const useQuotation = {
             queryClient.invalidateQueries({
               queryKey: ["quotationDetails", id],
             });
-            router.push("/quotation");
+            router.push("/quotations");
           },
           onError: (error: ErrorType) => {
             console.error("Error during update quotation:", error);

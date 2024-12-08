@@ -2,13 +2,13 @@
 
 import { DataTable } from "@/app/(pages)/quotations/components/data-table";
 import { columns, IQuotation } from "./components/columns";
-import useQuotation from "@/hooks/use-quotation";
+import useGetQuotations from "@/hooks/use-quotation";
 import { useEffect, useState } from "react";
 import { QuotationDetailsType } from "@/schema/quotation.schema";
 
 export default function QuotationManagementPage() {
   const [quotationData, setQuotationData] = useState<IQuotation[]>([]);
-  const { data, isLoading, error } = useQuotation.useGetQuotations();
+  const { data, isLoading, error } = useGetQuotations.useGetQuotations();
 
   useEffect(() => {
     if (data && Array.isArray(data.data)) { 

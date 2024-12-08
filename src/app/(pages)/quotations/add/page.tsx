@@ -54,10 +54,12 @@ export default function AddQuotationtPage() {
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>(undefined);
   const [quotationDate, setQuotationDate] = useState<Date | undefined>(undefined);
   const [expiredDate, setExpiredDate] = useState<Date | undefined>(undefined);
-  const [bookedQuoteRequest, setBookedQuoteRequest] = useState<string[]>();
+  const [quoteRequest, setQuoteRequest] = useState<string[]>();
+  const [freights, setFreight] = useState<string[]>();
 
   const router = useRouter();
-  const { data: bookedQuoteRequestData } = useQuotation.useGetBookedQuoteRequest();
+  const { data: quoteRequestData } = useQuotation.useGetQuoteRequest();
+  const { data: freightData } = useQuotation.useGetFreight();
   const { mutate: createQuotation, status } =
     useQuotation.useCreateQuotation(router);
   const { data: sessionData } = useAuth.useGetSession();
@@ -73,11 +75,18 @@ export default function AddQuotationtPage() {
   }, [sessionData]);
 
   useEffect(() => {
-    if (bookedQuoteRequestData) {
-      const quoterequest = bookedQuoteRequestData.map((it) => it.id);
-      setBookedQuoteRequest(quoterequest);
+    if (quoteRequestData) {
+      const quoteRequest = quoteRequestData.map((it) => it.id);
+      setQuoteRequest(quoteRequest);
     }
-  }, [bookedQuoteRequestData]);
+  }, [quoteRequestData]);
+
+  useEffect(() => {
+    if (freightData) {
+      const freights = freightData.map((it) => it.id);
+      setFreight(freights);
+    }
+  }, [freightData]);
 
   useEffect(() => {
     if (pickupDate)
@@ -142,8 +151,8 @@ export default function AddQuotationtPage() {
                         <SelectValue placeholder="Select an ID" />
                       </SelectTrigger>
                       <SelectContent>
-                        {bookedQuoteRequest ? (
-                          bookedQuoteRequest.map((it) => (
+                        {quoteRequest ? (
+                          quoteRequest.map((it) => (
                             <SelectItem key={it} value={it}>
                               {it}
                             </SelectItem>
@@ -188,11 +197,27 @@ export default function AddQuotationtPage() {
                 <FormItem>
                   <FormLabel className="font-bold">Freight ID</FormLabel>
                   <FormControl>
-                    <Input
-                      value={field.value || ""}
-                      readOnly
-                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
-                    />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-[500px] h-[60px]">
+                        <SelectValue placeholder="Select an ID" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {freights ? (
+                          freights.map((it) => (
+                            <SelectItem key={it} value={it}>
+                              {it}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            No Freight Available
+                          </div>
+                        )}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

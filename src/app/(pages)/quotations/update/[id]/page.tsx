@@ -101,30 +101,19 @@ export default function UpdateQuotationtPage() {
 
   useEffect(() => {
     if (data && data.data.length > 0) {
-      const quotationData = data.data[0];
-      setQuotation({
-        id: quotationData.id,
-        quoteReqId: quotationData.quoteReqId,
-        employeeId: quotationData.employeeId,
-        freightId: quotationData.freightId,
-        pickupDate: quotationData.pickupDate,
-        deliveryDate: quotationData.deliveryDate,
-        quotationDate: quotationData.quotationDate,
-        expiredDate: quotationData.expiredDate,
-        status: quotationData.status,
-        totalPrice: quotationData.totalPrice,
-        createdAt: quotationData.createdAt,
-        updatedAt: quotationData.updatedAt,
-      });
-      setPickupDate(new Date(quotationData.pickupDate));
-      setDeliveryDate(new Date(quotationData.deliveryDate));
-      setQuotationDate(new Date(quotationData.quotationDate));
-      setExpiredDate(new Date(quotationData.expiredDate));
-      form.setValue("status", quotationData.status);
-      form.setValue("quoteReqId", quotationData.quoteReqId);
-      form.setValue("employeeId", quotationData.employeeId);
-      form.setValue("freightId", quotationData.freightId);
-      form.setValue("totalPrice", quotationData.totalPrice);
+      const quotationData = data.data.find(quotation => quotation.id === id);
+      if (quotationData) {
+        setQuotation(quotationData);
+        setPickupDate(new Date(quotationData.pickupDate));
+        setDeliveryDate(new Date(quotationData.deliveryDate));
+        setQuotationDate(new Date(quotationData.quotationDate));
+        setExpiredDate(new Date(quotationData.expiredDate));
+        form.setValue("status", quotationData.status);
+        form.setValue("quoteReqId", quotationData.quoteReqId);
+        form.setValue("employeeId", quotationData.employeeId);
+        form.setValue("freightId", quotationData.freightId);
+        form.setValue("totalPrice", quotationData.totalPrice);
+      }
     }
   }, [data]);
 

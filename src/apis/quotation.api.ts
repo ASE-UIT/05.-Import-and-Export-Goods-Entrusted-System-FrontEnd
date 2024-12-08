@@ -1,8 +1,9 @@
 import {
-    BookedQuoteRequestType,
+    QuoteRequestDetailResType,
     QuotationResType,
     CreateQuotationType,
     UpdateQuotationType,
+    FreightDetailResType,
 } from "@/schema/quotation.schema";
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
@@ -39,23 +40,40 @@ const quotationAction = {
           }
         }
     },
-    async getBookedQuoteRequest() {
+    async getQuoteRequest() {
         try {
-          const response = await http.get<BookedQuoteRequestType>(
-            "v1/quote-request-details"
+          const response = await http.get<QuoteRequestDetailResType>(
+            "v1/quotation-requests"
           );
           return response.data;
         } catch (error) {
           if (axios.isAxiosError(error) && error.response?.data) {
-            const getBookedQuoteRequestError = error.response.data as ErrorType;
-            console.error("Error during get quotations:", getBookedQuoteRequestError);
-            throw getBookedQuoteRequestError;
+            const getQuoteRequestError = error.response.data as ErrorType;
+            console.error("Error during get quotations:", getQuoteRequestError);
+            throw getQuoteRequestError;
           } else {
             console.error("Unexpected error during get quotations:", error);
             throw error;
           }
         }
     },
+    async getFreight() {
+      try {
+        const response = await http.get<FreightDetailResType>(
+          "v1/freights"
+        );
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+          const getFreightError = error.response.data as ErrorType;
+          console.error("Error during get quotations:", getFreightError);
+          throw getFreightError;
+        } else {
+          console.error("Unexpected error during get quotations:", error);
+          throw error;
+        }
+      }
+  },
     async getQuotationDetails(id: string | undefined) {
         try {
           const response = await http.get<QuotationResType>(
