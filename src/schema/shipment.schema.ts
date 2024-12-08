@@ -1,24 +1,26 @@
 import { z } from "zod";
 
 // Enum for shipment types
-export const shipmentTypeEnum = z.enum(["Air Freight", "Land Freight", "LCL", "FCL" ]);
-export const shipmentStatusEnum = z.enum(["Pending" ,
-  "Document Verification" ,
-  "Customs Clearance Pending" ,
-  "Customs Cleared" ,
-  "Processing at Origin Port" ,
-  "Loaded on Vessel" ,
-  "In Transit" ,
-  "Arrive at Destination Port" ,
-  "Customs Clearance at Destination" ,
-  "Processing at Destination Warehouse" ,
-  "Delivered" ,
-  "Out for Delivery" ,
-  "Failed Delivery Attempt" ,
-  "Held at Customs" ,
-  "Returned to Sender" ,
-  "On Hold"
+export const shipmentTypeEnum = z.enum(["AIR", "LAND", "LCL", "FCL" ]);
+export const shipmentStatusEnum = z.enum([
+  "PENDING",
+  "DOCUMENT_VERIFICATION",
+  "CUSTOMS_CLEARANCE_PENDING",
+  "CUSTOMS_CLEARED",
+  "PROCESSING_AT_ORIGIN_PORT",
+  "LOADED_ON_VESSEL",
+  "IN_TRANSIT",
+  "ARRIVE_AT_DESTINATION_PORT",
+  "CUSTOMS_CLEARANCE_AT_DESTINATION",
+  "PROCESSING_AT_DESTINATION_WAREHOUSE",
+  "DELIVERED",
+  "OUT_FOR_DELIVERY",
+  "FAILED_DELIVERY_ATTEMPT",
+  "HELD_AT_CUSTOMS",
+  "RETURNED_TO_SENDER",
+  "ON_HOLD"
 ]);
+
 
 export const shipmentSchema = z.object({
   shipmentType: shipmentTypeEnum, // Shipment type, must be one of the enum values

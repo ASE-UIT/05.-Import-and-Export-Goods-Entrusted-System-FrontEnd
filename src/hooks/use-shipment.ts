@@ -22,7 +22,7 @@ export const useShipment = () => {
         return data.map((shipment) => ({
           shipmentId: shipment.id,
           shipmentType: shipment.shipmentType,
-          price: shipment.contract.invoice.length > 0 ? shipment.contract.invoice[0].totalAmount : 0,
+          price: shipment.contract.quotation.totalPrice,
           endDate: shipment.contract.endDate,
           location: shipment.tracking.location,
           origin: shipment.contract.quotation.quotationReq.quoteReqDetails.origin,

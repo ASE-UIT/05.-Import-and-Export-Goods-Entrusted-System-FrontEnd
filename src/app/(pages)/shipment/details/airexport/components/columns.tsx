@@ -16,20 +16,20 @@ export interface IShipmentDetails {
 }
 
 export const columns: ColumnDef<IShipmentDetails>[] = [
-  {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <Button
-        className="pl-0"
-        variant="ghost"
-        style={{ backgroundColor: "transparent" }}
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Document ID
-      </Button>
-    ),
-    cell: ({ row }) => <div>{row.getValue("id")}</div>,
-  },
+  // {
+  //   accessorKey: "id",
+  //   header: ({ column }) => (
+  //     <Button
+  //       className="pl-0"
+  //       variant="ghost"
+  //       style={{ backgroundColor: "transparent" }}
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //     >
+  //       Number
+  //     </Button>
+  //   ),
+  //   cell: ({ row }) => <div>{row.getValue("id")}</div>,
+  // },
   {
     accessorKey: "type",
     header: ({ column }) => (
@@ -107,11 +107,6 @@ export const columns: ColumnDef<IShipmentDetails>[] = [
       </Button>
     ),
     cell: ({ row }) => row.getValue("updated_at"),
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
   },
   {
     id: "action",

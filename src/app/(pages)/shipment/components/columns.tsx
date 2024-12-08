@@ -147,17 +147,17 @@ export const columns: ColumnDef<IShipmentFormat>[] = [
 
       let linkTo: string;
 
-      if (shipment.shipmentType === "Sea Freight") {
+      if (shipment.shipmentType === "LCL" || shipment.shipmentType === "FCL") {
         linkTo =
           shipment.origin === shipment.destination
             ? `/shipment/details/seaimport/` // Đường dẫn cho sea import
             : `/shipment/details/seaexport/`; // Đường dẫn cho sea export
-      } else if (shipment.shipmentType === "Air Freight") {
+      } else if (shipment.shipmentType === "AIR") {
         linkTo =
           shipment.origin === shipment.destination
             ? `/shipment/details/airimport/` // Đường dẫn cho air import
             : `/shipment/details/airexport/`; // Đường dẫn cho air export
-      } else if (shipment.shipmentType === "Land Freight") {
+      } else if (shipment.shipmentType === "LAND") {
         linkTo =
           shipment.origin === shipment.destination
             ? `/shipment/details/landimport/` // Đường dẫn cho land import

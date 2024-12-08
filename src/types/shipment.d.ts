@@ -5,7 +5,7 @@ export interface  IShipment {
   contract: {
     endDate: string;
     quotation: quotation;
-    invoice: invoiceElement[];
+    // invoice: invoiceElement[];
     quotationId: string;
   };
   
@@ -28,9 +28,9 @@ export interface IShipmentFormat {
   contractId: string
 }
 
-interface  invoiceElement {
-  totalAmount: number;
-}
+// interface  invoiceElement {
+//   totalAmount: number;
+// }
 
 export interface  IShipmentResponse {
   results: IShipment[];
@@ -64,5 +64,6 @@ interface  quoteReqDetails {
 
 interface  quotation {
   quotationReq: quotationReq;
+  totalPrice: number
   quoteReqId: string;
 };

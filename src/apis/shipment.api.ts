@@ -19,11 +19,23 @@ const shipmentAction={
         );
         return res.data;
       },
+
+      
     
 
-    async createShipment(data: createShipmentData){
-        const res =await http.post<EximResponseWrapper>(`/v1/shipment`,data);
+    // async createShipment(data: createShipmentData){
+    //     const res =await http.post<EximResponseWrapper>(`/v1/shipment`,data);
+    //     return res.data;
+    // },
+    
+    async createShipment(data: createShipmentData) {
+      try {
+        const res = await http.post<EximResponseWrapper>(`/v1/shipment`, data);
         return res.data;
+      } catch (error) {
+        console.error("Error creating shipment:", error);
+        throw error; // Ném lỗi ra để các phần khác xử lý
+      }
     },
     
 
