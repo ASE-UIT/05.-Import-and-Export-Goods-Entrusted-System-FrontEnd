@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import { ISeaFreight } from "..";
+import ProviderCell from "./provider-cell";
 
-export const seaColumns: ColumnDef<ISeaFreight>[] = [
+export const lclColumns: ColumnDef<Freight & LCL>[] = [
   {
-    accessorKey: "provider_name",
+    accessorKey: "providerId",
     header: ({ column }) => {
       return (
         <Button
@@ -16,27 +16,12 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Provider Name
+          Provider
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("provider_name")}</div>,
-  },
-  {
-    accessorKey: "freight_type",
-    header: () => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-        >
-          Freight Type
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue("freight_type")}</div>,
+    cell: ({ row }) => <ProviderCell providerId={row.getValue("providerId")} />,
   },
   {
     accessorKey: "origin",
@@ -73,7 +58,7 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
     cell: ({ row }) => row.getValue("destination"),
   },
   {
-    accessorKey: "transit_time",
+    accessorKey: "transitTime",
     header: ({ column }) => {
       return (
         <Button
@@ -87,27 +72,10 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("transit_time"),
+    cell: ({ row }) => row.getValue("transitTime"),
   },
   {
-    accessorKey: "transit",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Transit
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("transit"),
-  },
-  {
-    accessorKey: "valid_from",
+    accessorKey: "validFrom",
     header: ({ column }) => {
       return (
         <Button
@@ -121,10 +89,11 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("valid_from"),
+    cell: ({ row }) =>
+      new Date(row.getValue("validFrom")).toLocaleDateString("en-GB"),
   },
   {
-    accessorKey: "valid_until",
+    accessorKey: "validUntil",
     header: ({ column }) => {
       return (
         <Button
@@ -138,10 +107,11 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("valid_until"),
+    cell: ({ row }) =>
+      new Date(row.getValue("validUntil")).toLocaleDateString("en-GB"),
   },
   {
-    accessorKey: "note",
+    accessorKey: "additionFee",
     header: () => {
       return (
         <Button
@@ -149,14 +119,51 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
           variant="ghost"
           style={{ backgroundColor: "transparent" }}
         >
-          Note
+          <p className="text-ellipsis overflow-hidden w-[100px]">
+            Addition Fee
+          </p>
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("note"),
+    cell: ({ row }) => row.getValue("additionFee"),
   },
   {
-    accessorKey: "free_time",
+    accessorKey: "addition_fee_breakdown",
+    header: () => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+        >
+          <p className="text-ellipsis overflow-hidden w-[100px]">
+            Addition Fee Breakdown
+          </p>
+        </Button>
+      );
+    },
+    cell: ({ row }) =>
+      row.getValue("addition_fee_breakdown")
+        ? row.getValue("addition_fee_breakdown")
+        : "N/A",
+  },
+  {
+    accessorKey: "schedule",
+    header: () => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+        >
+          Schedule
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("schedule"),
+  },
+  {
+    accessorKey: "cost",
     header: ({ column }) => {
       return (
         <Button
@@ -165,96 +172,11 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Free Time
+          Cost
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("free_time"),
-  },
-  {
-    accessorKey: "twenty_DC",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          20DC
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("twenty_DC"),
-  },
-  {
-    accessorKey: "forty_DC",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          40DC
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("forty_DC"),
-  },
-  {
-    accessorKey: "forty_HC",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          40HC
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("forty_HC"),
-  },
-  {
-    accessorKey: "twenty_RF",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          20RF
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("twenty_RF"),
-  },
-  {
-    accessorKey: "forty_RF",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          40RF
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("forty_RF"),
+    cell: ({ row }) => row.getValue("cost"),
   },
 ];

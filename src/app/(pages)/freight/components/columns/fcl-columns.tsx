@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import ProviderCell from "./provider-cell";
 
-export const airColumns: ColumnDef<Freight & AirFreight>[] = [
+export const fclColumns: ColumnDef<Freight & FCL>[] = [
   {
     accessorKey: "providerId",
     header: ({ column }) => {
@@ -163,7 +163,7 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
     cell: ({ row }) => row.getValue("schedule"),
   },
   {
-    accessorKey: "price_0K",
+    accessorKey: "price_20dc",
     header: ({ column }) => {
       return (
         <Button
@@ -172,15 +172,15 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          0K
+          20DC
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_0K"),
+    cell: ({ row }) => row.getValue("price_20dc"),
   },
   {
-    accessorKey: "price_45K",
+    accessorKey: "price_40dc",
     header: ({ column }) => {
       return (
         <Button
@@ -189,15 +189,15 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          45K
+          40DC
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_45K"),
+    cell: ({ row }) => row.getValue("price_40dc"),
   },
   {
-    accessorKey: "price_100K",
+    accessorKey: "price_40hc",
     header: ({ column }) => {
       return (
         <Button
@@ -206,15 +206,15 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          100K
+          40HC
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_100K"),
+    cell: ({ row }) => row.getValue("price_40hc"),
   },
   {
-    accessorKey: "price_300K",
+    accessorKey: "price_20rf",
     header: ({ column }) => {
       return (
         <Button
@@ -223,15 +223,15 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          300K
+          20RF
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_300K"),
+    cell: ({ row }) => row.getValue("price_20rf"),
   },
   {
-    accessorKey: "price_500K",
+    accessorKey: "price_40rf",
     header: ({ column }) => {
       return (
         <Button
@@ -240,11 +240,11 @@ export const airColumns: ColumnDef<Freight & AirFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          500K
+          40RF
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("price_500K"),
+    cell: ({ row }) => row.getValue("price_40rf"),
   },
 ];
