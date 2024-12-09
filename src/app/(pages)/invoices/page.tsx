@@ -17,6 +17,9 @@ const formSchema = z.object({
   status: z.string(),
   taxAmount: z.string(),
   totalAmount: z.string(),
+  paidAmount: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export default function InvoiceManagement() {
@@ -30,12 +33,15 @@ export default function InvoiceManagement() {
           id: invoice.id,
           contract_id: invoice.contractId,
           employee_id: invoice.employeeId,
-          paid_date: invoice.paidDate,
-          invoice_date: invoice.invoiceDate.toString(),
-          expired_date: invoice.expiredDate.toString(),
+          paid_date: format(new Date(invoice.paidDate), 'dd/MM/yyyy'),
+          invoice_date: format(new Date(invoice.invoiceDate), 'dd/MM/yyyy'),
+          expired_date: format(new Date(invoice.expiredDate), 'dd/MM/yyyy'),
           status: invoice.status,
           tax: invoice.taxAmount,
           total: invoice.totalAmount,
+          paid_amount: invoice.paidAmount,
+          created_at: format(new Date(invoice.createdAt), 'dd/MM/yyyy HH:mm:ss'),
+          updated_at: format(new Date(invoice.updatedAt), 'dd/MM/yyyy HH:mm:ss'),
         }))
       );
     }

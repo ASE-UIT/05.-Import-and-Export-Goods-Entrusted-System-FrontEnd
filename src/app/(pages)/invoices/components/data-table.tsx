@@ -65,14 +65,19 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex w-full justify-between pb-[10px]">
         <DataTableFilter table={table} />
-        <Button variant="default" onClick={() => router.push(`${path}/add`)}>
-          <CirclePlus className="mr-2" />
-          <span>
-            Add{" "}
-            {path.slice(1).charAt(0).toUpperCase() +
-              path.slice(2).replace(/s$/, "")}
-          </span>
-        </Button>
+        <div className="flex gap-[20px]">
+          <Button variant="default" onClick={() => router.push(`${path}/add`)}>
+            <CirclePlus className="mr-2" />
+            <span>
+              Add{" "}
+              {path.slice(1).charAt(0).toUpperCase() +
+                path.slice(2).replace(/s$/, "")}
+            </span>
+          </Button>
+          <Button variant={"outline"} onClick={() => router.push("/payment")}>
+            View Payment
+          </Button>
+        </div>
       </div>
       <div className="rounded-md">
         {isLoading ? (

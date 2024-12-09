@@ -29,8 +29,8 @@ export default function PaymentManagement() {
           invoice_id: payment.invoiceId,
           amount: payment.amountPaid,
           status: payment.status,
-          create_date: payment.createdAt.toString(),
-          update_date: payment.updatedAt.toString(),
+          create_date: format(new Date(payment.createdAt), 'dd/MM/yyyy HH:mm:ss'),
+          update_date: format(new Date(payment.updatedAt), 'dd/MM/yyyy HH:mm:ss'),
         }))
       );
     }

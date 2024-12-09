@@ -15,6 +15,9 @@ export interface IInvoice {
   status: string;
   tax: string;
   total: string;
+  paid_amount: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export const columns: ColumnDef<IInvoice>[] = [
@@ -151,6 +154,54 @@ export const columns: ColumnDef<IInvoice>[] = [
       );
     },
     cell: ({ row }) => row.getValue("total"),
+  },
+  {
+    accessorKey: "paid_amount",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Paid Amount
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("paid_amount"),
+  },
+  {
+    accessorKey: "created_at",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Created At
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("created_at"),
+  },
+  {
+    accessorKey: "updated_at",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Updated At
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("created_at"),
   },
   {
     id: "action",

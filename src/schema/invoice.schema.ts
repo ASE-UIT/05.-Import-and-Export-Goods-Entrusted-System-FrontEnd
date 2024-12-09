@@ -22,6 +22,9 @@ export const InvoiceDetailsRes = z.object({
     status: z.string(),
     taxAmount: z.string(),
     totalAmount: z.string(),
+    paidAmount: z.string(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
 });
 
 export const ContractDetailsRes = z.object({
