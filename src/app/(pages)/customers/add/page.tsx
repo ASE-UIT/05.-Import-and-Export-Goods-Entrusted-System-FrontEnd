@@ -284,7 +284,7 @@ export default function AddCustomerPage() {
                         </FormControl>
                       </SelectTrigger>
                       <SelectContent>
-                        {availableLegalReps?.map((rep) => (
+                        {availableLegalReps?.results?.map((rep) => (
                           <SelectItem key={rep.id} value={rep.id}>
                             {rep.name}
                           </SelectItem>
