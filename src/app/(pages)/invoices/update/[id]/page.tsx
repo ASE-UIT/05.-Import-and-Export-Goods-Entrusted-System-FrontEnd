@@ -188,15 +188,12 @@ export default function UpdateInvoice() {
                 </FormItem>
               )}
             />
-
-            </div>
-
-            {/* Status */}
-            <FormField
+{/* Status */}
+<FormField
               control={form.control}
               name="status"
               render={({ field }) => (
-                <FormItem className="w-full">
+                <FormItem className="w-1/2">
                   <FormLabel className="font-bold">Status</FormLabel>
                   <FormControl>
                     <Select
@@ -217,6 +214,9 @@ export default function UpdateInvoice() {
                 </FormItem>
               )}
             />
+            </div>
+
+            
 
 
             {/* Tax */}
