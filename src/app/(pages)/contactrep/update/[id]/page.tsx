@@ -21,6 +21,10 @@ import { useForm } from "react-hook-form";
 import useContactRep from "@/hooks/use-contactRep";
 import { useEffect } from "react";
 
+import { toast } from "@/hooks/use-toast";
+
+
+
 export default function UpdateContactRep() {
   const form = useForm<ContactRepBodyType>({
     resolver: zodResolver(ContactRepBody),
@@ -49,7 +53,13 @@ export default function UpdateContactRep() {
       {
         onSuccess: () => {
           router.push("/contactrep");
-          alert("ContactRep updated successfully");
+          // alert("ContactRep updated successfully");
+
+          toast({
+            title: "Success",
+            description: "ContactRep updated successfully",
+            variant: "default",
+          });
         },
         onError: (error) => {
           const { field, message } = (error as any).errors[0];
