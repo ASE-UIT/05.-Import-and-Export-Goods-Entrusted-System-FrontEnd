@@ -37,6 +37,13 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   isPending: boolean;
   error: string | undefined;
+  queryParams: { limit: number; page: number };
+  setQueryParams: React.Dispatch<
+    React.SetStateAction<{
+      limit: number;
+      page: number;
+    }>
+  >;
 }
 
 export function DataTable<TData, TValue>({
@@ -45,6 +52,8 @@ export function DataTable<TData, TValue>({
   data,
   isPending,
   error,
+  queryParams,
+  setQueryParams,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

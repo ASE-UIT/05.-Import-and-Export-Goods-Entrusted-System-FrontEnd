@@ -7,9 +7,9 @@ import Link from "next/link";
 
 export type ShipmentTrackingTable = {
   shipment_id: string;
-  tracking_id: string;
   shipment_type: string;
   location: string;
+  client: string;
   status: string;
 };
 
@@ -32,23 +32,23 @@ export const columns: ColumnDef<ShipmentTrackingTable>[] = [
     },
     cell: ({ row }) => <div>{row.getValue("shipment_id")}</div>,
   },
-  {
-    accessorKey: "tracking_id",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Tracking ID
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("tracking_id"),
-  },
+  // {
+  //   accessorKey: "tracking_id",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         className="pl-0"
+  //         variant="ghost"
+  //         style={{ backgroundColor: "transparent" }}
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Tracking ID
+  //         <ArrowUpDown className="ml-2 size-4" />
+  //       </Button>
+  //     );
+  //   },
+  //   cell: ({ row }) => row.getValue("tracking_id"),
+  // },
   {
     accessorKey: "shipment_type",
     header: ({ column }) => {
@@ -66,23 +66,23 @@ export const columns: ColumnDef<ShipmentTrackingTable>[] = [
     },
     cell: ({ row }) => <div>{row.getValue("shipment_type")}</div>,
   },
-  // {
-  //   accessorKey: "client",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         className="pl-0"
-  //         variant="ghost"
-  //         style={{ backgroundColor: "transparent" }}
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //       >
-  //         Client
-  //         <ArrowUpDown className="ml-2 size-4" />
-  //       </Button>
-  //     );
-  //   },
-  //   cell: ({ row }) => row.getValue("client"),
-  // },
+  {
+    accessorKey: "client",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Client
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("client"),
+  },
   {
     accessorKey: "location",
     header: ({ column }) => {
