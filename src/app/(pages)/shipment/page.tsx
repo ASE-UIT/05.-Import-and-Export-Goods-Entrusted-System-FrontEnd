@@ -8,7 +8,7 @@ export default function ShipmentManagement() {
   const data = useGetAllShipment();
   let res = data.data ? data.data : [];
   // let formatData = [];
-  // console.log(res);
+  console.log(data);
 
   return (
     <div className="flex flex-col p-[24px] w-full">

@@ -15,6 +15,8 @@ export const useShipment = () => {
       queryFn: async () => {
         // Gọi API và trả về mảng các shipment
         const response = await shipmentAction.getShipment();
+        let a: IShipment[] | undefined = response.data?.results
+        console.log(a)
         return response.data?.results as IShipment[]; // Trả về mảng các shipment
       },
       select: (data) => {
@@ -22,13 +24,13 @@ export const useShipment = () => {
         return data.map((shipment) => ({
           shipmentId: shipment.id,
           shipmentType: shipment.shipmentType,
-          price: shipment.contract.quotation.totalPrice,
-          endDate: shipment.contract.endDate,
-          location: shipment.tracking.location,
-          origin: shipment.contract.quotation.quotationReq.quoteReqDetails.origin,
-          destination: shipment.contract.quotation.quotationReq.quoteReqDetails.destination,
-          status: shipment.tracking.status,
-          client: shipment.contract.quotation.quotationReq.customer.name
+          price: shipment.contract?.quotation?.totalPrice,
+          endDate: shipment.contract?.endDate,
+          location: shipment.tracking?.location,
+          origin: shipment.contract?.quotation?.quotationReq?.quoteReqDetails?.origin,
+          destination: shipment.contract?.quotation?.quotationReq?.quoteReqDetails?.destination,
+          status: shipment.tracking?.status,
+          client: shipment.contract?.quotation?.quotationReq?.customer?.name
         }));
       },
     });

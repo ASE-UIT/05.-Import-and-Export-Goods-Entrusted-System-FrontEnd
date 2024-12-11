@@ -4,6 +4,19 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { IShipmentFormat } from "@/types/shipment.d";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import ImportExportForm from "./im_export.form";
 
 export const columns: ColumnDef<IShipmentFormat>[] = [
   {
@@ -145,37 +158,73 @@ export const columns: ColumnDef<IShipmentFormat>[] = [
     cell: ({ row }) => {
       const shipment = row.original as IShipmentFormat; // Ép kiểu cho row.original
 
-      let linkTo: string;
+      // let linkTo: string;
 
-      if (shipment.shipmentType === "LCL" || shipment.shipmentType === "FCL") {
-        linkTo =
-          shipment.origin === shipment.destination
-            ? `/shipment/details/seaimport/` // Đường dẫn cho sea import
-            : `/shipment/details/seaexport/`; // Đường dẫn cho sea export
-      } else if (shipment.shipmentType === "AIR") {
-        linkTo =
-          shipment.origin === shipment.destination
-            ? `/shipment/details/airimport/` // Đường dẫn cho air import
-            : `/shipment/details/airexport/`; // Đường dẫn cho air export
-      } else if (shipment.shipmentType === "LAND") {
-        linkTo =
-          shipment.origin === shipment.destination
-            ? `/shipment/details/landimport/` // Đường dẫn cho land import
-            : `/shipment/details/landexport/`; // Đường dẫn cho land export
-      } else {
-        linkTo = `/shipment/details/other/${shipment.shipmentId}`; // Đường dẫn mặc định nếu không thuộc các loại trên
-      }
+      // if (shipment.shipmentType === "LCL" || shipment.shipmentType === "FCL") {
+      //   linkTo =
+      //     shipment.origin === shipment.destination
+      //       ? `/shipment/details/seaimport/` // Đường dẫn cho sea import
+      //       : `/shipment/details/seaexport/`; // Đường dẫn cho sea export
+      // } else if (shipment.shipmentType === "AIR") {
+      //   linkTo =
+      //     shipment.origin === shipment.destination
+      //       ? `/shipment/details/airimport/` // Đường dẫn cho air import
+      //       : `/shipment/details/airexport/`; // Đường dẫn cho air export
+      // } else if (shipment.shipmentType === "LAND") {
+      //   linkTo =
+      //     shipment.origin === shipment.destination
+      //       ? `/shipment/details/landimport/` // Đường dẫn cho land import
+      //       : `/shipment/details/landexport/`; // Đường dẫn cho land export
+      // } else {
+      //   linkTo = `/shipment/details/other/${shipment.shipmentId}`; // Đường dẫn mặc định nếu không thuộc các loại trên
+      // }
 
       return (
         <div>
-          <Link href={linkTo}>
+          {/* <Link href={linkTo}>
             <button
               className="text-blue-500"
               aria-label={`Edit ${shipment.shipmentId}`}
             >
               View details
             </button>
-          </Link>
+          </Link> */}
+          <Dialog>
+            <DialogTrigger>
+              <button>View</button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[1025px]">
+              <DialogHeader>
+                <DialogTitle>Inport/Export form</DialogTitle>
+                <ImportExportForm />
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="name" className="text-right">
+                    Name
+                  </Label>
+                  <Input
+                    id="name"
+                    defaultValue="Pedro Duarte"
+                    className="col-span-3"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="username" className="text-right">
+                    Username
+                  </Label>
+                  <Input
+                    id="username"
+                    defaultValue="@peduarte"
+                    className="col-span-3"
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button type="submit">Save changes</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       );
     },
