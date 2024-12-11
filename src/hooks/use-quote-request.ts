@@ -1,7 +1,7 @@
 import quoteRequestAction from "@/apis/quote-request.api";
-import { CreateQuoteRequestType } from "@/schema/quote-request.schema";
+import { CreateQuoteRequestType, UpdateQuoteRequestType } from "@/schema/quote-request.schema";
 import { ErrorType } from "@/types/error.type";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 const useQuoteRequest ={
     useCreateQuoteRequest(router: ReturnType<typeof useRouter>) {
@@ -21,6 +21,27 @@ const useQuoteRequest ={
         },
         });
     },
+
+    useUpdateQuoteRequest(
+    id: string,
+    router: ReturnType<typeof useRouter>
+  ): UseMutationResult<unknown, ErrorType, Partial<UpdateQuoteRequestType>> {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: (updateQuoteRequestBody: Partial<UpdateQuoteRequestType>) =>
+        quoteRequestAction.updateQuoteRequest(id, updateQuoteRequestBody),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+            queryKey: ["quote-request"],
+            });
+            router.push("/quote-request");
+        },
+        onError: (error: ErrorType) => {
+            console.error("Error during update:", error);
+            throw error;
+        },
+    });
+  },
 
     useGetQuoteRequest() {
         return useQuery({
@@ -43,6 +64,21 @@ const useQuoteRequest ={
         queryFn: async () => {
             try {
             const result = await quoteRequestAction.getQuoteRequestDetails(quoteRequestId);
+            return result;
+            } catch (error) {
+            console.error("Error during get quote request:", error);
+            throw error;
+            }
+        },
+        retry: 0,
+        });
+    },
+    useGetFullQuoteRequestDetail(quoteRequestId: string) {
+        return useQuery({
+        queryKey: ["quote-request-full-detail", quoteRequestId],
+        queryFn: async () => {
+            try {
+            const result = await quoteRequestAction.getFullQuoteRequestDetails(quoteRequestId);
             return result;
             } catch (error) {
             console.error("Error during get quote request:", error);

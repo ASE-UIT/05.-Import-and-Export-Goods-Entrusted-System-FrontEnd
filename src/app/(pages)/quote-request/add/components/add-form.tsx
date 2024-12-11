@@ -45,6 +45,7 @@ const formSchema = z.object({
   origin: z.string(),
   destination: z.string(),
   packageType: z.string(),
+  shipmentType: z.string(),
   shipmentReadyDate: z.string(),
   shipmentDeadline: z.string(),
   weight: z.string(),
@@ -61,6 +62,12 @@ export default function QuoteRequestAddForm() {
     undefined
   );
   const [requestDate, setRequestDate] = useState<Date | undefined>(undefined);
+  const [selectedPackageType, setSelectedPackageType] = useState<string | null>(
+    null
+  );
+  const [selectedShipmentType, setSelectedShipmentType] = useState<
+    string | null
+  >(null);
 
   const router = useRouter();
 
@@ -113,6 +120,7 @@ export default function QuoteRequestAddForm() {
       origin: values.origin,
       destination: values.destination,
       packageType: values.packageType,
+      shipmentType: values.shipmentType,
       shipmentReadyDate: values.shipmentReadyDate,
       shipmentDeadline: values.shipmentDeadline,
       weight: values.weight ? parseInt(values.weight, 10) : 0,
@@ -146,8 +154,8 @@ export default function QuoteRequestAddForm() {
                         <SelectValue placeholder="Select customer" />
                       </SelectTrigger>
                       <SelectContent>
-                        {customerData?.data ? (
-                          customerData.data.map((it) => (
+                        {customerData?.data.results ? (
+                          customerData.data.results.map((it) => (
                             <SelectItem key={it.id} value={it.id}>
                               {it.name}
                             </SelectItem>
@@ -373,9 +381,11 @@ export default function QuoteRequestAddForm() {
             render={({ field }) => (
               <FormItem>
                 <div className="flex items-center space-x-2">
-                  <DropdownMenuCustom
-                    selectedOption={field.value}
-                    setSelectedOption={field.onChange}
+                  <DropdownMenuCustom<z.infer<typeof formSchema>>
+                    options={["DRY", "SEA", "FREEZE"]}
+                    label="Package Type"
+                    selectedOption={selectedPackageType}
+                    setSelectedOption={setSelectedPackageType}
                     field={field}
                   />
                 </div>
@@ -383,6 +393,28 @@ export default function QuoteRequestAddForm() {
               </FormItem>
             )}
           />
+          <div className="flex justify-between items-center">
+            <span className="text-1xl font-bold">Shipment Type :</span>
+          </div>
+          <FormField
+            control={form.control}
+            name="shipmentType"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center space-x-2">
+                  <DropdownMenuCustom<z.infer<typeof formSchema>>
+                    options={["AIR", "LAND", "FCL", "LCL"]}
+                    label="Shipment Type"
+                    selectedOption={selectedShipmentType}
+                    setSelectedOption={setSelectedShipmentType}
+                    field={field}
+                  />
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <div className="flex w-full gap-2.5">
             <div className="flex-1">
               <FormField
