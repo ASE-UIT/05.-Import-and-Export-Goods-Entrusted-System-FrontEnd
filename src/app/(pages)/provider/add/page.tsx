@@ -236,7 +236,8 @@ export default function AddProvider() {
   const { useCreateProvider } = useProvider();
   const createProvider = useCreateProvider();
 
-  const contactReps = useContactRep.useGetContactRep();
+  const { useListContactRep } = useContactRep();
+  const contactReps = useListContactRep();
 
   const form = useForm<z.infer<typeof providerSchema>>({
     resolver: zodResolver(providerSchema),
@@ -309,22 +310,24 @@ export default function AddProvider() {
                       </SelectTrigger>
                       <SelectContent>
                         {contactReps ? (
-                          contactReps.data?.map(
-                            (contactRep) => (
-                              <SelectItem
-                                key={
-                                  contactRep.id
-                                }
-                                value={
-                                  contactRep.id
-                                }
-                              >
-                                {
-                                  contactRep.name
-                                }
-                              </SelectItem>
+                          contactReps.data
+                            ?.results
+                            ?.map(
+                              (contactRep) => (
+                                <SelectItem
+                                  key={
+                                    contactRep.id
+                                  }
+                                  value={
+                                    contactRep.id
+                                  }
+                                >
+                                  {
+                                    contactRep.name
+                                  }
+                                </SelectItem>
+                              )
                             )
-                          )
                         ) : (
                           <>
                             <SelectItem value="01">
