@@ -7,7 +7,9 @@ const useShipmentTracking = {
   useGetShipmentTracking(
     shipmentId?: string,
     location?: string,
-    status?: string
+    status?: string,
+    page?: number,
+    limit?: number
   ) {
     return useQuery({
       queryKey: ["shipment-tracking"],
@@ -16,9 +18,11 @@ const useShipmentTracking = {
           const result = await shipmentTrackingAction.getShipmentTracking(
             shipmentId,
             location,
-            status
+            status,
+            page,
+            limit
           );
-          return result.data;
+          return result;
         } catch (error) {
           console.error("Error during shipment tracking retrieval:", error);
           throw error;
@@ -54,16 +58,23 @@ const useShipmentTracking = {
     });
   },
 
-  useGetShipment(contractId?: string, shipmentType?: string) {
+  useGetShipment(
+    contractId?: string,
+    shipmentType?: string,
+    page?: number,
+    limit?: number
+  ) {
     return useQuery({
-      queryKey: ["shipment"],
+      queryKey: ["shipment", contractId, shipmentType, page, limit],
       queryFn: async () => {
         try {
           const result = await shipmentTrackingAction.getShipment(
             contractId,
-            shipmentType
+            shipmentType,
+            page,
+            limit
           );
-          return result.data;
+          return result;
         } catch (error) {
           console.error("Error during shipment retrieval:", error);
           throw error;
