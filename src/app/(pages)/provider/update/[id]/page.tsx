@@ -250,7 +250,8 @@ export default function UpdateProvider() {
   const { useGetProviderById, useUpdateProvider } = useProvider();
 
   const updateMutation = useUpdateProvider();
-  const contactReps = useContactRep.useGetContactRep();
+  const { useListContactRep } = useContactRep();
+  const contactReps = useListContactRep();
 
   const form = useForm<z.infer<typeof providerSchema>>({
     resolver: zodResolver(providerSchema),
@@ -333,22 +334,23 @@ export default function UpdateProvider() {
                       </SelectTrigger>
                       <SelectContent>
                         {contactReps ? (
-                          contactReps.data?.map(
-                            (contactRep) => (
-                              <SelectItem
-                                key={
-                                  contactRep.id
-                                }
-                                value={
-                                  contactRep.id
-                                }
-                              >
-                                {
-                                  contactRep.name
-                                }
-                              </SelectItem>
+                          contactReps.data
+                            ?.results?.map(
+                              (contactRep) => (
+                                <SelectItem
+                                  key={
+                                    contactRep.id
+                                  }
+                                  value={
+                                    contactRep.id
+                                  }
+                                >
+                                  {
+                                    contactRep.name
+                                  }
+                                </SelectItem>
+                              )
                             )
-                          )
                         ) : (
                           <>
                             <SelectItem value="01">
