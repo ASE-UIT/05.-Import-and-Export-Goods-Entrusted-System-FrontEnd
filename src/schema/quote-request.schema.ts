@@ -14,6 +14,7 @@ export const createQuoteRequestBody = z
     length: z.number(),
     width: z.number(),
     height: z.number(),
+    status: z.string().optional(), 
   });
 
 export const getQuoteRequest = z.array(
