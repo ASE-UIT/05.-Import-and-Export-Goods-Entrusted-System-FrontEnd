@@ -1,5 +1,6 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
-import nullEmptyString from './nullEmptyString';
+import axios, { AxiosError, AxiosInstance } from "axios";
+import nullEmptyString from "./nullEmptyString";
+
 
 class Http {
   instance: AxiosInstance;
