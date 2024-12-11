@@ -1,146 +1,3 @@
-// "use client";
-
-// import * as React from "react";
-
-// import {
-//   ColumnDef,
-//   ColumnFiltersState,
-//   SortingState,
-//   flexRender,
-//   getCoreRowModel,
-//   getFilteredRowModel,
-//   getPaginationRowModel,
-//   getSortedRowModel,
-//   useReactTable,
-// } from "@tanstack/react-table";
-
-// import {
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableHead,
-//   TableHeader,
-//   TableRow,
-// } from "@/components/ui/table";
-
-// import { Button } from "../../../../components/ui/button";
-// import * as dataTableFilter from "@/components/table/data-filter";
-// import { CirclePlus } from "lucide-react";
-// import { useRouter, usePathname } from "next/navigation";
-// import { DataTablePagination } from "@/components/table/data-pagination";
-// import { Skeleton } from "@/components/ui/skeleton";
-
-// interface DataTableProps<TData, TValue> {
-//   columns: ColumnDef<TData, TValue>[];
-//   data: TData[];
-//   error: Error | null;
-//   isPending: boolean;
-// }
-
-// export function DataTable<TData, TValue>({
-//   columns,
-//   data,
-//   isPending,
-// }: DataTableProps<TData, TValue>) {
-//   const [sorting, setSorting] = React.useState<SortingState>([]);
-//   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-//     []
-//   );
-//   const router = useRouter();
-//   const path = usePathname();
-
-//   const table = useReactTable({
-//     data,
-//     columns,
-//     onSortingChange: setSorting,
-//     getCoreRowModel: getCoreRowModel(),
-//     getPaginationRowModel: getPaginationRowModel(),
-//     getSortedRowModel: getSortedRowModel(),
-//     onColumnFiltersChange: setColumnFilters,
-//     getFilteredRowModel: getFilteredRowModel(),
-//     state: {
-//       sorting,
-//       columnFilters,
-//     },
-//   });
-
-//   return (
-//     <div className="w-full">
-//       <div className="flex w-full justify-between pb-[10px] mb-[20px]">
-//         <dataTableFilter.DataTableFilter table={table} />
-//         <div className="flex gap-3">
-//           <Button variant="outline" onClick={() => router.push(`/provider`)}>
-//             View Provider
-//           </Button>
-//           <Button variant="default" onClick={() => router.push(`${path}/add`)}>
-//             <CirclePlus className="mr-2" />
-//             <span>Add {path.slice(1, path.length)}</span>
-//           </Button>
-//         </div>
-//       </div>
-//       <div className="rounded-md">
-//         <Table>
-//           <TableHeader>
-//             {table.getHeaderGroups().map((headerGroup) => (
-//               <TableRow key={headerGroup.id}>
-//                 {headerGroup.headers.map((header) => {
-//                   return (
-//                     <TableHead key={header.id}>
-//                       {header.isPlaceholder
-//                         ? null
-//                         : flexRender(
-//                             header.column.columnDef.header,
-//                             header.getContext()
-//                           )}
-//                     </TableHead>
-//                   );
-//                 })}
-//               </TableRow>
-//             ))}
-//           </TableHeader>
-//           <TableBody>
-//             {table.getRowModel().rows?.length ? (
-//               table.getRowModel().rows.map((row) => (
-//                 <TableRow
-//                   key={row.id}
-//                   data-state={row.getIsSelected() && "selected"}
-//                 >
-//                   {row.getVisibleCells().map((cell) => (
-//                     <React.Fragment key={cell.id}>
-//                       {isPending ? (
-//                         <TableCell>
-//                           <Skeleton className="w-full h-10 bg-neutral-300" />
-//                         </TableCell>
-//                       ) : (
-//                         <TableCell>
-//                           {flexRender(
-//                             cell.column.columnDef.cell,
-//                             cell.getContext()
-//                           )}
-//                         </TableCell>
-//                       )}
-//                     </React.Fragment>
-//                   ))}
-//                 </TableRow>
-//               ))
-//             ) : (
-//               <TableRow>
-//                 <TableCell
-//                   colSpan={columns.length}
-//                   className="h-24 text-center"
-//                 >
-//                   No results.
-//                 </TableCell>
-//               </TableRow>
-//             )}
-//           </TableBody>
-//         </Table>
-//       </div>
-//       <DataTablePagination table={table} />
-//     </div>
-//   );
-// }
-
 "use client";
 
 import * as React from "react";
@@ -152,7 +9,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -166,28 +22,33 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Button } from "../../../../components/ui/button";
-import { Input } from "../../../../components/ui/input";
-import * as dataTableFilter from "./data-filter";
+import { Skeleton } from "@/components/ui/skeleton";
 import { CirclePlus } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
-import { PATH_NAME } from "@/configs";
-import { Pagination } from "@/components/ui/pagination";
+import { usePathname, useRouter } from "next/navigation";
+import { Button } from "../../../../components/ui/button";
+import { DataTableFilter } from "./data-filter";
 import { DataTablePagination } from "./data-pagination";
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
+  totalPages: number;
   data: TData[];
+  error: Error | null;
+  isPending: boolean;
+  queryParams: ContactRepQueryParams;
+  setQueryParams: React.Dispatch<React.SetStateAction<ContactRepQueryParams>>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
+  totalPages,
   data,
+  isPending,
+  queryParams,
+  setQueryParams,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
+  const [columnFilters, setColumnFilters] =
+    React.useState<ColumnFiltersState>([]);
   const router = useRouter();
   const path = usePathname();
 
@@ -196,33 +57,47 @@ export function DataTable<TData, TValue>({
     columns,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,
+    pageCount: totalPages,
+
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
       columnFilters,
+      pagination: {
+        pageIndex: (queryParams.page ?? 1) - 1,
+        pageSize: queryParams.limit ?? 1,
+      },
     },
   });
+
+  const filterableColumns = queryParams ? Object.keys(queryParams) : [];
 
   return (
     <div className="w-full">
       <div className="flex w-full justify-between pb-[10px] mb-[20px]">
-        <dataTableFilter.DataTableFilter table={table} />
+        <DataTableFilter
+          filterableColumns={filterableColumns}
+          setQueryParams={setQueryParams}
+          table={table}
+        />
         <div className="flex gap-3">
           <Button
-            variant="outline" onClick={() => router.push(`/provider`)}
+            variant="outline"
+            onClick={() => router.push(`/provider`)}
           >
             View Provider
           </Button>
-          <Button variant="default" onClick={() => router.push(`${path}/add`)}>
+          <Button
+            variant="default"
+            onClick={() => router.push(`${path}/add`)}
+          >
             <CirclePlus className="mr-2" />
             <span>Add {path.slice(1, path.length)}</span>
           </Button>
         </div>
-
-
       </div>
       <div className="rounded-md">
         <Table>
@@ -235,7 +110,8 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
+                          header.column.columnDef
+                            .header,
                           header.getContext()
                         )}
                     </TableHead>
@@ -249,15 +125,26 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={
+                    row.getIsSelected() && "selected"
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                    <React.Fragment key={cell.id}>
+                      {isPending ? (
+                        <TableCell>
+                          <Skeleton className="w-full h-10 bg-neutral-300" />
+                        </TableCell>
+                      ) : (
+                        <TableCell>
+                          {flexRender(
+                            cell.column.columnDef
+                              .cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
                       )}
-                    </TableCell>
+                    </React.Fragment>
                   ))}
                 </TableRow>
               ))
@@ -274,7 +161,10 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination
+        table={table}
+        setQueryParams={setQueryParams}
+      />
     </div>
   );
 }
