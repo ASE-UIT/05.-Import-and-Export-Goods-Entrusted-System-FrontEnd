@@ -44,7 +44,6 @@ const formSchema = z.object({
   origin: z.string(),
   destination: z.string(),
   packageType: z.string(),
-  status: z.string(),
   shipmentType: z.string(),
   shipmentReadyDate: z.string(),
   shipmentDeadline: z.string(),
@@ -89,7 +88,6 @@ export default function QuoteRequestUpdateForm() {
       destination: "",
       shipmentReadyDate: "",
       shipmentDeadline: "",
-      status: "",
       packageType: "",
       shipmentType: "",
       cargoInsurance: false,
@@ -120,7 +118,6 @@ export default function QuoteRequestUpdateForm() {
               "yyyy-MM-dd"
             )
           : "",
-        status: getFullDetails.status || "",
         packageType:
           getFullDetails.quoteReqDetails?.packageDetails?.packageType || "",
         cargoInsurance: getFullDetails.quoteReqDetails?.cargoInsurance || false,
@@ -182,7 +179,6 @@ export default function QuoteRequestUpdateForm() {
       destination: values.destination,
       packageType: values.packageType,
       shipmentType: values.shipmentType,
-      status: values.status,
       shipmentReadyDate: values.shipmentReadyDate,
       shipmentDeadline: values.shipmentDeadline,
       weight: values.weight ? parseInt(values.weight, 10) : 0,
@@ -433,84 +429,50 @@ export default function QuoteRequestUpdateForm() {
             />
 
             <div className="flex flex-col gap-2.5 p-2.5 rounded-md border">
-              <div className="flex w-full gap-2.5">
-                <div className="flex-1">
-                  <div className="flex justify-between items-center">
-                    <span className="text-1xl font-bold">
-                      Package Information :
-                    </span>
-                  </div>
-                  <FormField
-                    control={form.control}
-                    name="packageType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="flex items-center space-x-2">
-                          <DropdownMenuCustom<z.infer<typeof formSchema>>
-                            options={["DRY", "SEA", "FREEZE"]}
-                            label="Package Type"
-                            selectedOption={field.value}
-                            setSelectedOption={field.onChange}
-                            field={field}
-                          />
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-center">
-                    <span className="text-1xl font-bold">Shipment Type :</span>
-                  </div>
-                  <FormField
-                    control={form.control}
-                    name="shipmentType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="flex items-center space-x-2">
-                          <DropdownMenuCustom<z.infer<typeof formSchema>>
-                            options={["AIR", "LAND", "FCL", "LCL"]}
-                            label="Shipment Type"
-                            selectedOption={field.value}
-                            setSelectedOption={field.onChange}
-                            field={field}
-                          />
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-center">
-                    <span className="text-1xl font-bold">Status :</span>
-                  </div>
-                  <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="flex items-center space-x-2">
-                          <DropdownMenuCustom<z.infer<typeof formSchema>>
-                            options={[
-                              "PENDING",
-                              "INPROGRESS",
-                              "COMPLETED",
-                              "CANCELLED",
-                            ]}
-                            label="Status"
-                            selectedOption={field.value}
-                            setSelectedOption={field.onChange}
-                            field={field}
-                          />
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              <div className="flex justify-between items-center">
+                <span className="text-1xl font-bold">
+                  Package Information :
+                </span>
               </div>
+              <FormField
+                control={form.control}
+                name="packageType"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center space-x-2">
+                      <DropdownMenuCustom<z.infer<typeof formSchema>>
+                        options={["DRY", "SEA", "FREEZE"]}
+                        label="Package Type"
+                        selectedOption={field.value}
+                        setSelectedOption={field.onChange}
+                        field={field}
+                      />
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-between items-center">
+                <span className="text-1xl font-bold">Shipment Type :</span>
+              </div>
+              <FormField
+                control={form.control}
+                name="shipmentType"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center space-x-2">
+                      <DropdownMenuCustom<z.infer<typeof formSchema>>
+                        options={["AIR", "LAND", "FCL", "LCL"]}
+                        label="Shipment Type"
+                        selectedOption={field.value}
+                        setSelectedOption={field.onChange}
+                        field={field}
+                      />
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="flex w-full gap-2.5">
                 <div className="flex-1">
                   <FormField

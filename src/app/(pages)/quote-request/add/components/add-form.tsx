@@ -32,60 +32,80 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import useQuoteRequest from "@/hooks/use-quote-request";
-import {  CreateQuoteRequestType } from "@/schema/quote-request.schema";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-const formSchema = z
-  .object({
-    requestDate: z.string(),
-    customerId: z.string(),
-    cargoInsurance: z.boolean(),
-    origin: z.string(),
-    destination: z.string(),
-    packageType: z.string(),
-    shipmentReadyDate: z.string(),
-    shipmentDeadline: z.string(),
-    weight: z.string(),
-    height: z.string(),
-    width: z.string(),
-    length: z.string(),
-  })
+import { CreateQuoteRequestType } from "@/schema/quote-request.schema";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+const formSchema = z.object({
+  requestDate: z.string(),
+  customerId: z.string(),
+  cargoInsurance: z.boolean(),
+  origin: z.string(),
+  destination: z.string(),
+  packageType: z.string(),
+  shipmentType: z.string(),
+  shipmentReadyDate: z.string(),
+  shipmentDeadline: z.string(),
+  weight: z.string(),
+  height: z.string(),
+  width: z.string(),
+  length: z.string(),
+});
 
 export default function QuoteRequestAddForm() {
-  
-  const [shipmentReadyDate, setShipmentReadyDate] = useState<Date | undefined>(undefined);
-  const [shipmentDeadline, setShipmentDeadline] = useState<Date | undefined>(undefined);
+  const [shipmentReadyDate, setShipmentReadyDate] = useState<Date | undefined>(
+    undefined
+  );
+  const [shipmentDeadline, setShipmentDeadline] = useState<Date | undefined>(
+    undefined
+  );
   const [requestDate, setRequestDate] = useState<Date | undefined>(undefined);
-
+  const [selectedPackageType, setSelectedPackageType] = useState<string | null>(
+    null
+  );
+  const [selectedShipmentType, setSelectedShipmentType] = useState<
+    string | null
+  >(null);
 
   const router = useRouter();
 
-  const {mutate: CreateQuoteRequest} = useQuoteRequest.useCreateQuoteRequest(router);
-  const {data: customerData}= useQuoteRequest.useGetCustomerInfo();
+  const { mutate: CreateQuoteRequest } =
+    useQuoteRequest.useCreateQuoteRequest(router);
+  const { data: customerData } = useQuoteRequest.useGetCustomerInfo();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-    customerId: "",
-    requestDate: "",
-    origin: "",
-    destination: "",
-    shipmentReadyDate: "",
-    shipmentDeadline: "",
-    packageType: "",
-    cargoInsurance: false,
-    weight: "",
-    height: "",
-    length: "",
-    width: "",
+      customerId: "",
+      requestDate: "",
+      origin: "",
+      destination: "",
+      shipmentReadyDate: "",
+      shipmentDeadline: "",
+      packageType: "",
+      cargoInsurance: false,
+      weight: "",
+      height: "",
+      length: "",
+      width: "",
     },
   });
 
   useEffect(() => {
-    if (shipmentReadyDate) form.setValue("shipmentReadyDate", format(shipmentReadyDate, "yyyy-MM-dd"));
+    if (shipmentReadyDate)
+      form.setValue(
+        "shipmentReadyDate",
+        format(shipmentReadyDate, "yyyy-MM-dd")
+      );
   }, [shipmentReadyDate]);
 
   useEffect(() => {
-    if (shipmentDeadline) form.setValue("shipmentDeadline", format(shipmentDeadline, "yyyy-MM-dd"));
+    if (shipmentDeadline)
+      form.setValue("shipmentDeadline", format(shipmentDeadline, "yyyy-MM-dd"));
   }, [shipmentDeadline]);
 
   useEffect(() => {
@@ -94,14 +114,15 @@ export default function QuoteRequestAddForm() {
   }, [requestDate]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-      console.log(values);
-      const createQuoteRequest: CreateQuoteRequestType = {
+    console.log(values);
+    const createQuoteRequest: CreateQuoteRequestType = {
       requestDate: values.requestDate,
       customerId: values.customerId,
       cargoInsurance: values.cargoInsurance,
       origin: values.origin,
       destination: values.destination,
       packageType: values.packageType,
+      shipmentType: values.shipmentType,
       shipmentReadyDate: values.shipmentReadyDate,
       shipmentDeadline: values.shipmentDeadline,
       weight: values.weight ? parseInt(values.weight, 10) : 0,
@@ -109,8 +130,8 @@ export default function QuoteRequestAddForm() {
       width: values.weight ? parseInt(values.width, 10) : 0,
       length: values.weight ? parseInt(values.length, 10) : 0,
     };
-      console.log(createQuoteRequest)
-      CreateQuoteRequest(createQuoteRequest);
+    console.log(createQuoteRequest);
+    CreateQuoteRequest(createQuoteRequest);
   }
   return (
     <Form {...form}>
@@ -136,8 +157,8 @@ export default function QuoteRequestAddForm() {
                         <SelectValue placeholder="Select customer" />
                       </SelectTrigger>
                       <SelectContent>
-                        {customerData?.data ? (
-                          customerData.data.map((it) => (
+                        {customerData?.data.results ? (
+                          customerData.data.results.map((it) => (
                             <SelectItem key={it.id} value={it.id}>
                               {it.name}
                             </SelectItem>
@@ -189,7 +210,6 @@ export default function QuoteRequestAddForm() {
                         mode="single"
                         selected={new Date(field.value)}
                         onSelect={(date) => setRequestDate(date)}
-                        
                       />
                     </PopoverContent>
                   </Popover>
@@ -199,7 +219,7 @@ export default function QuoteRequestAddForm() {
             />
           </div>
         </div>
-        
+
         <div className="flex w-full gap-2.5">
           <div className="flex-1">
             <FormField
@@ -279,7 +299,6 @@ export default function QuoteRequestAddForm() {
                         mode="single"
                         selected={new Date(field.value)}
                         onSelect={(date) => setShipmentReadyDate(date)}
-                        
                       />
                     </PopoverContent>
                   </Popover>
@@ -324,7 +343,6 @@ export default function QuoteRequestAddForm() {
                         mode="single"
                         selected={new Date(field.value)}
                         onSelect={(date) => setShipmentDeadline(date)}
-                        
                       />
                     </PopoverContent>
                   </Popover>
@@ -335,41 +353,73 @@ export default function QuoteRequestAddForm() {
           </div>
         </div>
 
-        <FormField control={form.control} name="cargoInsurance" render={({ field }) => (
-          <FormItem>
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="terms"
-                checked={field.value}
-                onCheckedChange={(checked) => field.onChange(checked)}
-              />
-              <label
-                htmlFor="terms"
-                className="text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Cargo Insurance
-              </label>
-            </div>
-            <FormMessage />
-          </FormItem>
-        )} />
-        
+        <FormField
+          control={form.control}
+          name="cargoInsurance"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="terms"
+                  checked={field.value}
+                  onCheckedChange={(checked) => field.onChange(checked)}
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Cargo Insurance
+                </label>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="flex flex-col gap-2.5 p-2.5 rounded-md border">
           <div className="flex justify-between items-center">
             <span className="text-1xl font-bold">Package Information :</span>
           </div>
-          <FormField control={form.control} name="packageType" render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center space-x-2">
-                <DropdownMenuCustom
-                    selectedOption={field.value}  
-                    setSelectedOption={field.onChange} 
-                    field={field}  
-                />
-              </div>
-              <FormMessage />
-            </FormItem>
-            )} />
+          <FormField
+            control={form.control}
+            name="packageType"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center space-x-2">
+                  <DropdownMenuCustom<z.infer<typeof formSchema>>
+                    options={["DRY", "SEA", "FREEZE"]}
+                    label="Package Type"
+                    selectedOption={selectedPackageType}
+                    setSelectedOption={setSelectedPackageType}
+                    field={field}
+                  />
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex justify-between items-center">
+            <span className="text-1xl font-bold">Shipment Type :</span>
+          </div>
+          <FormField
+            control={form.control}
+            name="shipmentType"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center space-x-2">
+                  <DropdownMenuCustom<z.infer<typeof formSchema>>
+                    options={["AIR", "LAND", "FCL", "LCL"]}
+                    label="Shipment Type"
+                    selectedOption={selectedShipmentType}
+                    setSelectedOption={setSelectedShipmentType}
+                    field={field}
+                  />
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <div className="flex w-full gap-2.5">
             <div className="flex-1">
               <FormField
