@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 
 import {
   ColumnDef,
@@ -9,10 +9,9 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table';
 
 import {
   Table,
@@ -21,22 +20,33 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 
-import { Button } from "../../../../components/ui/button";
-import { DataTableFilter } from "./data-table-filter";
-import { CirclePlus } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
-import { DataTablePagination } from "./data-table-pagination";
+import { Button } from '../../../../components/ui/button';
+import { CirclePlus } from 'lucide-react';
+import { useRouter, usePathname } from 'next/navigation';
+import { Skeleton } from '@/components/ui/skeleton';
+import { DataTableFilter } from './data-table-filter';
+import { DataTablePagination } from './data-table-pagination';
+// import { customerMappingProp, CustomerMappingProp } from '.';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
+  totalPages: number;
   data: TData[];
+  error: Error | null;
+  isPending: boolean;
+  queryParams: CustomerQueryParams;
+  setQueryParams: React.Dispatch<React.SetStateAction<CustomerQueryParams>>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
+  totalPages,
   data,
+  isPending,
+  queryParams,
+  setQueryParams,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -50,24 +60,50 @@ export function DataTable<TData, TValue>({
     columns,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,
+    pageCount: totalPages,
+    // manualSorting: true,
+    // sortingFns: {
+    //   customerSortingFns: (rowA, rowB, columnId) => {
+    //     setQueryParams((prev) => ({
+    //       ...prev,
+    //       sortBy: customerMappingProp.get(columnId)
+    //     }))
+    //     return rowA.original.someProperty - rowB.original.someProperty
+    //   }
+    // },
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
       columnFilters,
+      pagination: {
+        pageIndex: (queryParams.page ?? 1) - 1,
+        pageSize: queryParams.limit ?? 1,
+      },
     },
   });
 
+  const filterableColumns = queryParams ? Object.keys(queryParams) : [];
+
   return (
-    <div>
-      <div className="flex w-full justify-between pb-[10px]">
-        <DataTableFilter table={table} />
-        <Button variant="default" onClick={() => router.push(`${path}/add`)}>
-          <CirclePlus className="mr-2" />
-          <span>Add {path.slice(1, path.length)}</span>
-        </Button>
+    <div className="w-full">
+      <div className="flex w-full justify-between pb-[10px] mb-[20px]">
+        <DataTableFilter
+          filterableColumns={filterableColumns}
+          setQueryParams={setQueryParams}
+          table={table}
+        />
+        <div className="flex gap-3">
+          <Button variant="outline" onClick={() => router.push(`/provider`)}>
+            View Provider
+          </Button>
+          <Button variant="default" onClick={() => router.push(`${path}/add`)}>
+            <CirclePlus className="mr-2" />
+            <span>Add {path.slice(1, path.length)}</span>
+          </Button>
+        </div>
       </div>
       <div className="rounded-md">
         <Table>
@@ -94,15 +130,23 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                    <React.Fragment key={cell.id}>
+                      {isPending ? (
+                        <TableCell>
+                          <Skeleton className="w-full h-10 bg-neutral-300" />
+                        </TableCell>
+                      ) : (
+                        <TableCell>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
                       )}
-                    </TableCell>
+                    </React.Fragment>
                   ))}
                 </TableRow>
               ))
@@ -119,7 +163,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination table={table} setQueryParams={setQueryParams} />
     </div>
   );
 }

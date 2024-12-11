@@ -1,14 +1,15 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import nullEmptyString from "./nullEmptyString";
 
+
 class Http {
   instance: AxiosInstance;
   constructor() {
     this.instance = axios.create({
-      baseURL: "https://api.entrustexim.com",
+      baseURL: 'https://api.entrustexim.com',
       timeout: 10000,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       withCredentials: true,
     });
@@ -24,9 +25,9 @@ class Http {
       (response) => response,
       (error: AxiosError) => {
         if (error.response?.data) {
-          console.error("HTTP error:", error.response.data);
+          console.error('HTTP error:', error.response.data);
         } else {
-          console.error("Unexpected HTTP error:", error);
+          console.error('Unexpected HTTP error:', error);
         }
         return Promise.reject(error);
       }
