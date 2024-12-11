@@ -1,5 +1,5 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
-import nullEmptyString from './nullEmptyString';
+import axios, { AxiosError, AxiosInstance } from "axios";
+import nullEmptyString from "./nullEmptyString";
 
 class Http {
   instance: AxiosInstance;
@@ -11,13 +11,6 @@ class Http {
         'Content-Type': 'application/json',
       },
       withCredentials: true,
-    });
-
-    this.instance.interceptors.request.use((request) => {
-      const queryParams = request.params;
-      // null all params having empty string in value
-      request.params = nullEmptyString(queryParams);
-      return request;
     });
 
     this.instance.interceptors.request.use((request) => {

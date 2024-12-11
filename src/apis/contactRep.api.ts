@@ -1,104 +1,79 @@
-// import http from "@/utils/http";
-// import {
-//   createContactRepData,
-//   updateContactRepData,
-// } from "@/schema/contactRep.schema";
-
-// const contactRepAction = {
-//   async getContactRep(id?: string) {
-//     const res = await http.get<EximResponseWrapper<ContractRepType[]>>(
-//       "v1/contact-representatives",
-//       {
-//         params: {
-//           id,
-//         },
-//       }
-//     );
-//     return res.data;
-//   },
-//   async createContactRep(data: createContactRepData) {
-//     const res = await http.post<EximResponseWrapper>(
-//       `v1/contact-representatives`,
-//       data
-//     );
-//     return res.data;
-//   },
-//   async updateContactRep(id: string, data: updateContactRepData) {
-//     const res = await http.patch<EximResponseWrapper>(
-//       `v1/contact-representatives/${id}`,
-//       data
-//     );
-//     return res.data;
-//   },
-// };
-
-// export default contactRepAction;
-
-
-import {
-  ContactRepBodyType,
-  ContactRepResType,
-} from "@/schema/contactRep.schema";
+import { ContactRepBodyType } from "@/schema/contactRep.schema";
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
 import axios from "axios";
 
 const contactRepAction = {
-  getContactRep: async () => {
+  list: async (params: ContactRepQueryParams | null | undefined = null) => {
     try {
-      const response = await http.get<ContactRepResType>(
-        "v1/contact-representatives"
-      );
-      return response.data;
+      const response = await http.get<
+        EximResponseWrapper<PaginationWrapper<ContactRepResponse[]>>
+      >("v1/contact-representatives", { params });
+
+      return response.data.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
-        const contactRepError = error.response.data as ErrorType;
-        console.error(
-          "Error during get contact representative:",
-          contactRepError
-        );
-        throw contactRepError;
+        const authError = error.response.data as ErrorType;
+        console.error("Error during login:", authError);
+        throw authError;
       } else {
-        console.error(
-          "Unexpected error during get contact representative:",
-          error
-        );
+        console.error("Unexpected error during login:", error);
         throw error;
       }
     }
   },
 
-  createContactRep: async (contactRepDetails: ContactRepBodyType) => {
+  details: async (id: string) => {
+    try {
+      const response = await http.get<
+        EximResponseWrapper<PaginationWrapper<ContactRepResponse[]>>
+      >(`v1/contact-representatives?id=${id}`);
+      return response.data.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const authError = error.response.data as ErrorType;
+        console.error("Error during login:", authError);
+        throw authError;
+      } else {
+        console.error("Unexpected error during login:", error);
+        throw error;
+      }
+    }
+  },
+
+  create: async (body: ContactRepBodyType) => {
     try {
       const response = await http.post(
         "v1/contact-representatives",
-        contactRepDetails
+        body
       );
       return response.data as ContactRep;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
-        const contactRepError = error.response.data as ErrorType;
-
-        throw { ...contactRepError, statusCode: error.status };
+        const authError = error.response.data as ErrorType;
+        console.error("Error during login:", authError);
+        throw authError;
       } else {
+        console.error("Unexpected error during login:", error);
         throw error;
       }
     }
   },
 
-  updateContractRep: async (contactRepDetails: ContactRep) => {
+  update: async (id: string, body: ContactRepBodyType) => {
     try {
       const response = await http.patch(
-        `v1/contact-representatives/${contactRepDetails.id}`,
-        contactRepDetails
+        `v1/contact-representatives/${id}`,
+        body
       );
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
-        const contactRepError = error.response.data as ErrorType;
-
-        throw { ...contactRepError, statusCode: error.status };
+        const authError = error.response.data as ErrorType;
+        console.error("Error during login:", authError);
+        throw authError;
       } else {
+        console.error("Unexpected error during login:", error);
         throw error;
       }
     }
