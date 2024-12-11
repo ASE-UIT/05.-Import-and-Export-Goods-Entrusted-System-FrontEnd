@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Button } from "../../../../components/ui/button";
 import { CirclePlus } from "lucide-react";
@@ -36,20 +34,21 @@ interface DataTableProps {
   data: QuoteRequest[];
 }
 
-export function DataTable({
-  columns,
-  data,
-}: DataTableProps) {
+export function DataTable({ columns, data }: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
   const [isPopupOpen, setIsPopupOpen] = React.useState(false);
-  const [quoteRequestId, setQuoteRequestId] = React.useState<string | null>(null);
+  const [quoteRequestId, setQuoteRequestId] = React.useState<string | null>(
+    null
+  );
   const router = useRouter();
-   const handleRowClick = async (row : Row<QuoteRequest>) => {
+  const handleRowClick = async (row: Row<QuoteRequest>) => {
     const id = row.original.quote_request_id;
     setQuoteRequestId(id);
     setIsPopupOpen(true);
-   }
+  };
   const table = useReactTable<QuoteRequest>({
     data,
     columns,
@@ -145,7 +144,7 @@ export function DataTable({
       </div>
       {isPopupOpen && quoteRequestId && (
         <CustomDialog
-          quoteRequestId={quoteRequestId} 
+          quoteRequestId={quoteRequestId}
           setIsPopupOpen={setIsPopupOpen}
         />
       )}
