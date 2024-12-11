@@ -1,4 +1,4 @@
-export const contactrepData: ContractRepType[] = [
+export const contactrepData: ContactRep[] = [
   {
     id: "01",
     name: "Nguyen Van A",
