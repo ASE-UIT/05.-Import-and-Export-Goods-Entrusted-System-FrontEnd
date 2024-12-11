@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/table";
 
 import { useRouter } from "next/navigation";
-import { DataTablePagination } from "../../shipment/tracking/components/pagination";
+import { DataTablePagination } from "./data-table-pagination";
 import { DataTableFilter } from "./filter";
 import StatusBadge, { Status } from "@/components/status-badge";
 import { CustomDialog } from "./popup";
