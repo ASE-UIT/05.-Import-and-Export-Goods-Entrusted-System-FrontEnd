@@ -104,10 +104,10 @@ function mapToQuoteRequest(data: z.infer<typeof getQuoteRequest>): QuoteRequest[
   return data.map((data) => ({
     quote_request_id: data.id,                
     customer_id: data.customerId,             
-    request_date: new Date(data.requestDate).toDateString(),     
+    request_date: new Date(data.requestDate).toLocaleDateString("en-GB"),     
     status: data.status,
-    create_at: new Date(data.createdAt).toDateString(),          
-    update_at: new Date(data.updatedAt).toDateString()           
+    create_at: new Date(data.createdAt).toLocaleDateString("en-GB"),          
+    update_at: new Date(data.updatedAt).toLocaleDateString("en-GB")          
   }));
 }
 

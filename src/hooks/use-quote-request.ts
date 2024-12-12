@@ -3,6 +3,7 @@ import { CreateQuoteRequestType, UpdateQuoteRequestType } from "@/schema/quote-r
 import { ErrorType } from "@/types/error.type";
 import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from "./use-toast";
 const useQuoteRequest ={
     useCreateQuoteRequest(router: ReturnType<typeof useRouter>) {
         const queryClient = useQueryClient();
@@ -13,10 +14,21 @@ const useQuoteRequest ={
             queryClient.invalidateQueries({
             queryKey: ["quote-request"],
             });
+            toast({
+                title: "Create success",
+                description: "Quote request created successfully",
+                duration: 10000
+            });
             router.push("/quote-request");
         },
         onError: (error: ErrorType) => {
             console.error("Error during create:", error);
+            toast({
+            title: "Create failed",
+            description: "An error occurred while creating quote request",
+            variant: "destructive",
+            duration: 5000,
+          });
             throw error;
         },
         });
@@ -34,10 +46,21 @@ const useQuoteRequest ={
             queryClient.invalidateQueries({
             queryKey: ["quote-request"],
             });
+            toast({
+                title: "Update success",
+                description: "Quote request updated successfully",
+                duration: 10000
+            });
             router.push("/quote-request");
         },
         onError: (error: ErrorType) => {
             console.error("Error during update:", error);
+            toast({
+            title: "Update failed",
+            description: "An error occurred while updating quote request",
+            variant: "destructive",
+            duration: 5000,
+          });
             throw error;
         },
     });
