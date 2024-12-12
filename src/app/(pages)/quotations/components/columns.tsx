@@ -1,17 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import Link from "next/link";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Pencil, Trash2 } from "lucide-react";
+import { ArrowUpDown} from "lucide-react";
 import StatusBadge from '@/components/status-badge';
-import { useState } from "react";
-import {
-  Dialog,
-  DialogFooter,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { format } from "date-fns";
 
 export interface IQuotation {
   id: string;
@@ -127,7 +121,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("pickupDate"),
+    cell: ({ row }) => format(row.getValue("pickupDate"), "yyyy-MM-dd"),
+    sortingFn: (a, b) =>
+      new Date(a.original.pickupDate).getTime() -
+      new Date(b.original.pickupDate).getTime(),
   },
   {
     accessorKey: "deliveryDate",
@@ -144,7 +141,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("deliveryDate"),
+    cell: ({ row }) => format(row.getValue("deliveryDate"), "yyyy-MM-dd"),
+    sortingFn: (a, b) =>
+      new Date(a.original.deliveryDate).getTime() -
+      new Date(b.original.deliveryDate).getTime(),
   },
   {
     accessorKey: "quotationDate",
@@ -161,7 +161,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("quotationDate"),
+    cell: ({ row }) => format(row.getValue("quotationDate"), "yyyy-MM-dd"),
+    sortingFn: (a, b) =>
+      new Date(a.original.quotationDate).getTime() -
+      new Date(b.original.quotationDate).getTime(),
   },
   {
     accessorKey: "expiredDate",
@@ -178,7 +181,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("expiredDate"),
+    cell: ({ row }) => format(row.getValue("expiredDate"), "yyyy-MM-dd"),
+    sortingFn: (a, b) =>
+      new Date(a.original.expiredDate).getTime() -
+      new Date(b.original.expiredDate).getTime(),
   },
   {
     accessorKey: "status",
@@ -187,52 +193,13 @@ export const columns: ColumnDef<IQuotation>[] = [
   },
   {
     id: "action",
-    cell: ({ row }) => {
-      const id = row.original.id;
-      const [open, setOpen] = useState(false);
-
-      const handleEdit = () => {
-        window.location.href = `${window.location.pathname}/update/${id}`;
-      };
-
-      const handleDelete = () => {
-        console.log("Delete clicked for ID:", id);
-      };
-
-      return (
-        <div className="flex space-x-2">
-          <Button
-            variant="default"
-            className="aspect-square p-[6px] h-auto w-auto"
-            onClick={handleEdit}
-          >
-            <Pencil className=" aspect-square w-5 h-5"></Pencil>
-          </Button>
-
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button
-                className="aspect-square p-[6px] h-auto w-auto"
-                variant="destructive"
-                onClick={handleDelete}
-              >
-                <Trash2 className=" aspect-square w-5 h-5"></Trash2>
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <p>Are you sure you want to delete this quotation?</p>
-              <DialogFooter>
-                <Button variant="ghost" onClick={() => setOpen(false)}>
-                  Cancel
-                </Button>
-                <Button variant="destructive" onClick={handleDelete}>
-                  Confirm Delete
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-      );
-    },
+    header: "Action",
+    cell: ({ row }) => (
+      <div>
+        <Link href={`/quotations/update/${row.getValue("id")}`}>
+          <button className="text-blue-500">Edit</button>
+        </Link>
+      </div>
+    ),
   },
 ];

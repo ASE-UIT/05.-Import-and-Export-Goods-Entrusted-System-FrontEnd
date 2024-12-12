@@ -1,3 +1,4 @@
+import { Phone } from "lucide-react";
 import { z } from "zod";
 
 export const CreateQuotationBody = z.object({
@@ -65,9 +66,22 @@ export const FreightDetailsRes = z.object({
     providerId: z.string().uuid(),
 });
 
+export const EmployeeDetailsRes = z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    email: z.string(),
+    phone: z.string(),
+    address: z.string(),
+    position: z.string(),
+    dob: z.date(),
+    coefficientSalary: z.number(),
+    baseSalary: z.number(),
+});
+
 
 export const BookedQuoteRequestRes = z.array(QuoteRequestDetailsRes);
 export const FreightDetailRes = z.array(FreightDetailsRes);
+export const EmployeeDetailRes = z.array(EmployeeDetailsRes);
 
 export type UpdateQuotationType = z.TypeOf<typeof UpdateQuotationBody>;
 export type CreateQuotationType = z.TypeOf<typeof CreateQuotationBody>;
@@ -75,3 +89,4 @@ export type QuotationResType = QuotationDetailsType[];
 export type QuotationDetailsType = z.TypeOf<typeof QuotationDetailsRes>;
 export type BookedQuoteRequestType = z.TypeOf<typeof BookedQuoteRequestRes>;
 export type FreightDetailResType = z.TypeOf<typeof FreightDetailRes>;
+export type EmployeeDetailResType = z.TypeOf<typeof EmployeeDetailRes>;

@@ -4,6 +4,7 @@ import {
   CreateQuotationType,
   UpdateQuotationType,
   FreightDetailResType,
+  EmployeeDetailResType,
 } from "@/schema/quotation.schema";
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
@@ -43,7 +44,7 @@ const quotationAction = {
   async getBookedQuoteRequest() {
       try {
         const response = await http.get<BookedQuoteRequestType>(
-          "v1/quotation-requests?status=BOOKED"
+          "v1/quotation-requests?"
         );
         return response.data;
       } catch (error) {
@@ -94,6 +95,25 @@ const quotationAction = {
       }
     }
 },
+
+async getEmployee() {
+  try {
+    const response = await http.get<EmployeeDetailResType>(
+      "v1/employees"
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const getEmployeeError = error.response.data as ErrorType;
+      console.error("Error during get quotations:", getEmployeeError);
+      throw getEmployeeError;
+    } else {
+      console.error("Unexpected error during get quotations:", error);
+      throw error;
+    }
+  }
+},
+
   async updateQuotation(
       id: string | undefined,
       updateQuotationBody: Partial<UpdateQuotationType>

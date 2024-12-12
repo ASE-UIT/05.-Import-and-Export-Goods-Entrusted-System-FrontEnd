@@ -56,6 +56,10 @@ export default function UpdateQuotationtPage() {
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>(undefined);
   const [quotationDate, setQuotationDate] = useState<Date | undefined>(undefined);
   const [expiredDate, setExpiredDate] = useState<Date | undefined>(undefined);
+  const [quoteRequest, setQuoteRequest] = useState<string[]>();
+  const [freights, setFreight] = useState<string[]>();
+  const [employees, setEmployee] = useState<string[]>();
+  
 
   const [isPickupDateOpen, setPickupDateOpen] = useState(false);
   const [isDeliveryDateOpen, setDeliveryDateOpen] = useState(false);
@@ -97,6 +101,30 @@ export default function UpdateQuotationtPage() {
     setExpiredDate(date);
     setExpiredDateOpen(false);
   };
+
+  const { data: quoteRequestData } = useQuotation.useGetBookedQuoteRequest();
+  useEffect(() => {
+    if (quoteRequestData) {
+      const quoteRequest = quoteRequestData.map((it) => it.id);
+      setQuoteRequest(quoteRequest);
+    }
+  }, [quoteRequestData]);
+
+  const { data: freightData } = useQuotation.useGetFreight();
+  useEffect(() => {
+    if (freightData) {
+      const freights = freightData.map((it) => it.id);
+      setFreight(freights);
+    }
+  }, [freightData]);
+
+  const { data: employeeData } = useQuotation.useGetEmployee();
+  useEffect(() => {
+    if (employeeData) {
+      const employees = employeeData.map((it) => it.id);
+      setEmployee(employees);
+    }
+  }, [employeeData]);
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -141,6 +169,15 @@ export default function UpdateQuotationtPage() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const updateQuotationBody: Partial<UpdateQuotationType> = {
+      ...(values.quoteReqId !== quotation?.quoteReqId && {
+        quoteReqId: values.quoteReqId,
+      }),
+      ...(values.employeeId !== quotation?.employeeId && {
+        employeeId: values.employeeId,
+      }),
+      ...(values.freightId !== quotation?.freightId && {
+        freightId: values.freightId,
+      }),
       ...(!isSameDay(values.pickupDate, quotation?.pickupDate || new Date()) && {
         pickupDate: values.pickupDate.toISOString(),
       }),
@@ -197,16 +234,38 @@ export default function UpdateQuotationtPage() {
                     Quotation Request ID
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      value={quotation?.quoteReqId || field.value || ""}
-                      readOnly
-                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value); 
+                      }}
+                    defaultValue={quotation?.quoteReqId || field.value || ""}
+                  >
+                    <SelectTrigger className="w-[500px] h-[60px]">
+                      <SelectValue
+                        placeholder={
+                          quotation?.quoteReqId || field.value || ""
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {quoteRequest && quoteRequest.length > 0 ? (
+                        quoteRequest.map((it) => (
+                          <SelectItem key={it} value={it}>
+                            {it}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <div className="flex items-center justify-center">
+                          No Quote Request Available
+                        </div>
+                      )}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
             {/* Employee ID */}
             <FormField
@@ -214,18 +273,41 @@ export default function UpdateQuotationtPage() {
               name="employeeId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-bold">Employee ID</FormLabel>
+                  <FormLabel className="text-[16px] font-bold">
+                    Employee ID
+                  </FormLabel>
                   <FormControl>
-                    <Input
-                      value={quotation?.employeeId || field.value || ""}
-                      readOnly
-                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value); 
+                      }}
+                    defaultValue={quotation?.employeeId || field.value || ""}
+                  >
+                    <SelectTrigger className="w-[500px] h-[60px]">
+                      <SelectValue
+                        placeholder={
+                          quotation?.employeeId || field.value || ""
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {employees && employees.length > 0 ? (
+                        employees.map((it) => (
+                          <SelectItem key={it} value={it}>
+                            {it}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <div className="flex items-center justify-center">  
+                        </div>
+                      )}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
             {/* Freight ID */}
             <FormField
@@ -233,18 +315,41 @@ export default function UpdateQuotationtPage() {
               name="freightId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-bold">Freight ID</FormLabel>
+                  <FormLabel className="text-[16px] font-bold">
+                    Freight ID
+                  </FormLabel>
                   <FormControl>
-                    <Input
-                      value={quotation?.freightId || field.value || ""}
-                      readOnly
-                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value); 
+                      }}
+                    defaultValue={quotation?.freightId || field.value || ""}
+                  >
+                    <SelectTrigger className="w-[500px] h-[60px]">
+                      <SelectValue
+                        placeholder={
+                          quotation?.freightId || field.value || ""
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {freights && freights.length > 0 ? (
+                        freights.map((it) => (
+                          <SelectItem key={it} value={it}>
+                            {it}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <div className="flex items-center justify-center">  
+                        </div>
+                      )}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
             <div className="w-[500px] flex space-x-[12px]">
               {/* Pickup Date */}
@@ -444,10 +549,8 @@ export default function UpdateQuotationtPage() {
                         <SelectValue placeholder={quotation?.status} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Draft">Draft</SelectItem>
-                        <SelectItem value="Accepted">Accepted</SelectItem>
-                        <SelectItem value="Rejected">Rejected</SelectItem>
-                        <SelectItem value="Expired">Expired</SelectItem>
+                        <SelectItem value="Draft">DRAFT</SelectItem>
+                        <SelectItem value="Booked">BOOKED</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
