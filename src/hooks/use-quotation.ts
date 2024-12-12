@@ -73,7 +73,22 @@ const useQuotation = {
         },
         retry: 0,
       });
-  },
+    },
+    useGetEmployee() {
+      return useQuery({
+        queryKey: ["employees"],
+        queryFn: async () => {
+          try {
+            const result = await quotationAction.getEmployee();
+            return result;
+          } catch (error) {
+            console.error("Error during get quotation:", error);
+            throw error;
+          }
+        },
+        retry: 0,
+      });
+    },
     useGetQuotationDetails(id: string | undefined) {
         return useQuery({
           queryKey: ["quotationDetails", id],
