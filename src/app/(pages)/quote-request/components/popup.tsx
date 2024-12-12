@@ -12,10 +12,12 @@ import useQuoteRequest from "@/hooks/use-quote-request";
 import { PackageDetails } from "./package-details";
 import { PATH_NAME } from "@/configs";
 import { useRouter } from "next/navigation";
+
 interface CustomDialogProps {
   quoteRequestId: string;
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 export function CustomDialog({
   quoteRequestId,
   setIsPopupOpen,
@@ -24,48 +26,84 @@ export function CustomDialog({
   const { data } = useQuoteRequest.useGetQuoteRequestDetail(
     quoteRequestId || ""
   );
-  const closePopup = () => {
-    setIsPopupOpen(false);
-  };
+  const closePopup = () => setIsPopupOpen(false);
+
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString("en-GB");
+
   return (
     <Dialog open={true} onOpenChange={closePopup}>
-      <DialogContent>
+      <DialogContent className="max-w-xl p-6">
         <DialogHeader>
-          <DialogTitle>Additional Information</DialogTitle>
+          <DialogTitle className="text-lg font-bold">
+            Additional Information
+          </DialogTitle>
           <DialogDescription>
             {data && data.length > 0 ? (
-              <div>
-                <p>Origin: {data[0].origin}</p>
-                <p>Destination: {data[0].destination}</p>
-                <p>
-                  Shipment Ready Date:{" "}
-                  {new Date(data[0].shipmentReadyDate).toDateString()}
-                </p>
-                <p>
-                  Shipment Deadline:{" "}
-                  {new Date(data[0].shipmentDeadline).toDateString()}
-                </p>
-                <p>Cargo Insurance: {String(data[0].cargoInsurance)}</p>
-                <p>Quote Request Id: {data[0].quoteReqId}</p>
-                <p>Updated At: {new Date(data[0].updatedAt).toDateString()}</p>
-                <p>Create At: {new Date(data[0].createdAt).toDateString()}</p>
-                <PackageDetails quoteRequestDetailsId={data[0].id} />
+              <div className="space-y-4">
+                <section className="space-y-1">
+                  <h3 className="text-black font-extrabold">
+                    General Information:
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2 text-sm border border-black-300 rounded-md p-4 ">
+                    <p>
+                      <strong>Origin:</strong> {data[0].origin}
+                    </p>
+                    <p>
+                      <strong>Destination:</strong> {data[0].destination}
+                    </p>
+                    <p>
+                      <strong>Shipment Ready Date:</strong>{" "}
+                      {formatDate(data[0].shipmentReadyDate.toString())}
+                    </p>
+                    <p>
+                      <strong>Shipment Deadline:</strong>{" "}
+                      {formatDate(data[0].shipmentDeadline.toString())}
+                    </p>
+                    <p>
+                      <strong>Cargo Insurance:</strong>{" "}
+                      {data[0].cargoInsurance ? "Yes" : "No"}
+                    </p>
+                    <p>
+                      <strong>Quote Request Id:</strong> {data[0].quoteReqId}
+                    </p>
+                  </div>
+                </section>
+
+                <section className="space-y-1">
+                  <h3 className="text-black font-extrabold">Timestamps:</h3>
+                  <div className="grid grid-cols-2 gap-2 text-sm border border-black-300 rounded-md p-4">
+                    <p>
+                      <strong>Updated At:</strong>{" "}
+                      {formatDate(data[0].updatedAt.toString())}
+                    </p>
+                    <p>
+                      <strong>Created At:</strong>{" "}
+                      {formatDate(data[0].createdAt.toString())}
+                    </p>
+                  </div>
+                </section>
+
+                <section>
+                  <PackageDetails quoteRequestDetailsId={data[0].id} />
+                </section>
               </div>
             ) : (
-              <p>Loading...</p>
+              <p className="text-center text-gray-500">Loading...</p>
             )}
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
+        <DialogFooter className="flex justify-end gap-2">
           <Button
-            variant="outline"
             onClick={() =>
               router.push(`${PATH_NAME.QUOTE_REQUEST}/update/` + quoteRequestId)
             }
           >
             Edit
           </Button>
-          <Button onClick={closePopup}>Close</Button>
+          <Button onClick={closePopup} variant="outline">
+            Close
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
