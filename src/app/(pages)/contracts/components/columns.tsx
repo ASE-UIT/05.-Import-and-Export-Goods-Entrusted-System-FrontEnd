@@ -6,6 +6,7 @@ import { ArrowUpDown } from "lucide-react";
 import StatusBadge from "@/components/status-badge";
 import Link from "next/link";
 import { format } from "date-fns";
+import TransportContractModal from "./forwarder_provider.form";
 
 export interface IContract {
   id: string;
@@ -142,6 +143,15 @@ export const columns: ColumnDef<IContract>[] = [
         <Link href={`/contracts/update/${row.getValue("id")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
+      </div>
+    ),
+  },
+  {
+    id: "viewContract",
+    header: "View Contract",
+    cell: ({ row }) => (
+      <div>
+        <TransportContractModal />
       </div>
     ),
   },
