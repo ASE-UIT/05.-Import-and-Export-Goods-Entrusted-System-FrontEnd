@@ -15,17 +15,27 @@ export function PackageDetails({ quoteRequestDetailsId }: PackageProps) {
       <div className="gap-2 text-sm border border-black-300 rounded-md p-4">
         {data && data.length > 0 ? (
           <div>
-            <p>Package Type: {data[0].packageType}</p>
-            <p>Weight: {data[0].weight}</p>
-            <p>Length: {data[0].length}</p>
-            <p>Width: {data[0].width}</p>
-            <p>Height: {data[0].height}</p>
             <p>
-              Updated At:{" "}
+              <strong>Package Type:</strong> {data[0].packageType}
+            </p>
+            <p>
+              <strong>Weight:</strong> {data[0].weight}
+            </p>
+            <p>
+              <strong>Length:</strong> {data[0].length}
+            </p>
+            <p>
+              <strong>Width:</strong> {data[0].width}
+            </p>
+            <p>
+              <strong>Height:</strong> {data[0].height}
+            </p>
+            <p>
+              <strong>Updated At:</strong>{" "}
               {new Date(data[0].updatedAt).toLocaleDateString("en-GB")}
             </p>
             <p>
-              Create At:{" "}
+              <strong>Create At:</strong>{" "}
               {new Date(data[0].createdAt).toLocaleDateString("en-GB")}
             </p>
           </div>
