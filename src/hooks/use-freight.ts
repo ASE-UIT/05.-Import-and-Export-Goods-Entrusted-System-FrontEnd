@@ -1,5 +1,5 @@
 import { freightApi } from "@/apis/freight.api";
-import { CreateFreightBody, UpdateFreightBody } from "@/schema/freight.schema";
+import { FreightBody } from "@/schema/freight.schema";
 import { useFreightStore } from "@/stores/useFreightStore";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "./use-toast";
@@ -18,13 +18,14 @@ const useFreight = () => {
   const useGetFreightById = (id: string) => {
     return useQuery({
       queryKey: ["freights", id],
-      queryFn: () => {
-        return freightApi.getFreight(id);
+      queryFn: async () => {
+        const result = await freightApi.getFreight(id);
+        return result;
       },
     });
   };
   const { mutateAsync: createFreight } = useMutation({
-    mutationFn: (data: CreateFreightBody) => freightApi.createFreight(data),
+    mutationFn: (data: FreightBody) => freightApi.createFreight(data),
     onSuccess: (data) => {
       toast({
         variant: "default",
@@ -48,28 +49,21 @@ const useFreight = () => {
     },
   });
 
-  const { mutateAsync: updateFreight } = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdateFreightBody }) =>
-      freightApi.updateFreight(id, data),
-
-    onSuccess: (data) => {
+  const useUpdateFreight = useMutation({
+    mutationFn: ({ id, body }: { id: string; body: FreightBody }) =>
+      freightApi.updateFreight(id, body),
+    onError: (error) => {
+      console.log(error.message);
+      throw error;
+    },
+    onSuccess: (_, req) => {
       toast({
         variant: "default",
         title: "Success",
         description: "Freight updated successfully",
       });
-      router.push(`${path}/${data.data.freightType.toLowerCase()}`);
-    },
-    onError: (error) => {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
-    },
-    onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["freights"],
+        queryKey: ["freights", req.id],
       });
     },
   });
@@ -77,7 +71,7 @@ const useFreight = () => {
     getAllFreight,
     getFreightById: useGetFreightById,
     createFreight,
-    updateFreight,
+    useUpdateFreight,
   };
 };
 

@@ -1,8 +1,5 @@
 import { airFreightApi } from "@/apis/air-freight.api";
-import {
-  CreateAirFreightBody,
-  UpdateAirFreightBody,
-} from "@/schema/air-freight.schema";
+import { AirFreightBody } from "@/schema/air-freight.schema";
 import { useFreightStore } from "@/stores/useFreightStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -25,8 +22,7 @@ const useAirFreight = () => {
     });
   };
   const { mutateAsync: createAirFreight } = useMutation({
-    mutationFn: (data: CreateAirFreightBody) =>
-      airFreightApi.createAirFreight(data),
+    mutationFn: (data: AirFreightBody) => airFreightApi.createAirFreight(data),
     onSuccess: () => {
       toast({
         variant: "default",
@@ -50,12 +46,15 @@ const useAirFreight = () => {
     },
   });
 
-  const useUpdateAirFreight = (id: string, data: UpdateAirFreightBody) => {
+  const useUpdateAirFreight = () => {
     return useMutation({
-      mutationFn: () => {
-        return airFreightApi.updateAirFreight(id, data);
+      mutationFn: ({ id, body }: { id: string; body: AirFreightBody }) => {
+        return airFreightApi.updateAirFreight(id, body);
       },
-      onSuccess: () => {
+      onSuccess: (_, req) => {
+        queryClient.invalidateQueries({
+          queryKey: ["air-freights", req.id],
+        });
         toast({
           variant: "default",
           title: "Success",
@@ -70,18 +69,13 @@ const useAirFreight = () => {
           description: error.message,
         });
       },
-      onSettled: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["air-freights"],
-        });
-      },
     });
   };
   return {
     getAllAir,
     getAirById: useGetAirById,
     createAirFreight,
-    updateAirFreight: useUpdateAirFreight,
+    useUpdateAirFreight,
   };
 };
 

@@ -1,8 +1,5 @@
 import { landFreightApi } from "@/apis/land-freight.api";
-import {
-  CreateLandFreightBody,
-  UpdateLandFreightBody,
-} from "@/schema/land-freight.schema";
+import { LandFreightBody } from "@/schema/land-freight.schema";
 import { useFreightStore } from "@/stores/useFreightStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -14,20 +11,18 @@ const useLandFreight = () => {
   const router = useRouter();
   const getAllLand = useQuery({
     queryKey: ["land-freights"],
-    queryFn: landFreightApi.getAllLandFreight,
+    queryFn: () => landFreightApi.getAllLandFreight(),
   });
-
   const useGetLandById = (id: string) => {
-    return useQuery<EximResponseWrapper<LandFreight>, Error>({
+    return useQuery({
       queryKey: ["land-freights", id],
       queryFn: () => {
         return landFreightApi.getLandFreight(id);
       },
     });
   };
-
   const { mutateAsync: createLandFreight } = useMutation({
-    mutationFn: (data: CreateLandFreightBody) =>
+    mutationFn: (data: LandFreightBody) =>
       landFreightApi.createLandFreight(data),
     onSuccess: () => {
       toast({
@@ -52,12 +47,15 @@ const useLandFreight = () => {
     },
   });
 
-  const useUpdateLandFreight = (id: string, data: UpdateLandFreightBody) => {
+  const useUpdateLandFreight = () => {
     return useMutation({
-      mutationFn: () => {
-        return landFreightApi.updateLandFreight(id, data);
+      mutationFn: ({ id, body }: { id: string; body: LandFreightBody }) => {
+        return landFreightApi.updateLandFreight(id, body);
       },
-      onSuccess: () => {
+      onSuccess: (_, req) => {
+        queryClient.invalidateQueries({
+          queryKey: ["land-freights", req.id],
+        });
         toast({
           variant: "default",
           title: "Success",
@@ -72,18 +70,13 @@ const useLandFreight = () => {
           description: error.message,
         });
       },
-      onSettled: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["land-freights"],
-        });
-      },
     });
   };
   return {
     getAllLand,
     getLandById: useGetLandById,
     createLandFreight,
-    updateLandFreight: useUpdateLandFreight,
+    useUpdateLandFreight,
   };
 };
 
