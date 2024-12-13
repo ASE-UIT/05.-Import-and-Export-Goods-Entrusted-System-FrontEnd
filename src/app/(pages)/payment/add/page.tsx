@@ -77,16 +77,16 @@ export default function AddInvoice() {
           name="invoiceId"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className="font-bold">Contract ID</FormLabel>
+              <FormLabel className="font-bold">Invoice ID</FormLabel>
               <FormControl>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <SelectTrigger className="w-full h-[60px]">
-                    <SelectValue placeholder="Select contract ID" />
+                    <SelectValue placeholder="Select invoice ID" />
                   </SelectTrigger>
                   <SelectContent>
                     {isLoading ? (
                       <div className="flex items-center justify-center">
-                        Loading Contracts...
+                        Loading Invoices...
                       </div>
                     ) : invoiceIds.length > 0 ? (
                       invoiceIds.map((id) => (
@@ -96,7 +96,7 @@ export default function AddInvoice() {
                       ))
                     ) : (
                       <div className="flex items-center justify-center">
-                        No Contract Available
+                        No Invoice Available
                       </div>
                     )}
                   </SelectContent>
