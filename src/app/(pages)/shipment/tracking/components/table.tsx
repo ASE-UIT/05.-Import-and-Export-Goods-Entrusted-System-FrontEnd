@@ -30,16 +30,27 @@ import { AlertCircle } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
+  totalPages: number;
   data: TData[];
   isPending: boolean;
   error: string | undefined;
+  queryParams: { limit: number; page: number };
+  setQueryParams: React.Dispatch<
+    React.SetStateAction<{
+      limit: number;
+      page: number;
+    }>
+  >;
 }
 
 export function DataTable<TData, TValue>({
   columns,
+  totalPages,
   data,
   isPending,
   error,
+  queryParams,
+  setQueryParams,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -55,9 +66,15 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    manualPagination: true,
+    pageCount: totalPages,
     state: {
       sorting,
       columnFilters,
+      pagination: {
+        pageIndex: (queryParams.page ?? 1) - 1,
+        pageSize: queryParams.limit ?? 1,
+      },
     },
   });
 
@@ -141,7 +158,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination table={table} setQueryParams={setQueryParams} />
     </div>
   );
 }

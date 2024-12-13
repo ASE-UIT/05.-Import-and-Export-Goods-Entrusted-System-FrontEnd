@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { Table } from '@tanstack/react-table';
-import { Input } from '@/components/ui/input';
-import { SetStateAction, useState } from 'react';
+import { Input } from "@/components/ui/input";
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectGroup,
   SelectItem,
-} from '@/components/ui/select';
-import { Search } from 'lucide-react';
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Table } from "@tanstack/react-table";
+import { Search } from "lucide-react";
+import { SetStateAction, useState } from "react";
 
 interface DataTableToolbarProps<TData> {
-  setQueryParams: React.Dispatch<SetStateAction<CustomerQueryParams>>;
+  setQueryParams: React.Dispatch<SetStateAction<ContactRepQueryParams>>;
   filterableColumns: string[];
   table: Table<TData>;
 }
@@ -28,7 +28,7 @@ export function DataTableFilter<TData>({
   );
   const handleAssignFilter = (value: string) => {
     setTimeout(() => {
-      setQueryParams((prev) => ({
+      setQueryParams((prev: ContactRepQueryParams) => ({
         ...prev,
         [currentFilter]: value,
       }));
@@ -43,7 +43,9 @@ export function DataTableFilter<TData>({
           <Input
             type="search"
             placeholder="Search"
-            onChange={(event) => handleAssignFilter(event.target.value)}
+            onChange={(event) =>
+              handleAssignFilter(event.target.value)
+            }
             className="pl-8 h-2.25"
           />
         </div>
@@ -60,10 +62,12 @@ export function DataTableFilter<TData>({
             {filterableColumns.map((title) => (
               <SelectItem value={title} key={title}>
                 {title
-                  .split('_')
-                  .join(' ')
+                  .split("_")
+                  .join(" ")
                   .toLowerCase()
-                  .replace(/\b\w/g, (char) => char.toUpperCase())}
+                  .replace(/\b\w/g, (char) =>
+                    char.toUpperCase()
+                  )}
               </SelectItem>
             ))}
           </SelectGroup>
