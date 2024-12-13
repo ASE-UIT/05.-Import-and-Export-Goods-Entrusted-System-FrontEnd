@@ -56,23 +56,27 @@ export default function AddQuotationtPage() {
   const [expiredDate, setExpiredDate] = useState<Date | undefined>(undefined);
   const [quoteRequest, setQuoteRequest] = useState<string[]>();
   const [freights, setFreight] = useState<string[]>();
+  const [employees, setEmployee] = useState<string[]>();
 
   const router = useRouter();
   const { data: quoteRequestData } = useQuotation.useGetBookedQuoteRequest();
   const { data: freightData } = useQuotation.useGetFreight();
+  const { data: employeeData } = useQuotation.useGetEmployee();
   const { mutate: createQuotation, status } =
     useQuotation.useCreateQuotation(router);
-  const { data: sessionData } = useAuth.useGetSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
   useEffect(() => {
-    if (sessionData) {
-      form.setValue("employeeId", sessionData.employee.id);
+    if (employeeData?.data?.results) {
+        const employees = employeeData.data.results.map((it) => it.id);
+        setEmployee(employees);
+    } else {
+        console.error("Employee data is not valid:", employeeData);
     }
-  }, [sessionData]);
+}, [employeeData]);
 
   useEffect(() => {
     if (quoteRequestData) {
@@ -82,11 +86,13 @@ export default function AddQuotationtPage() {
   }, [quoteRequestData]);
 
   useEffect(() => {
-    if (freightData) {
-      const freights = freightData.map((it) => it.id);
-      setFreight(freights);
-    }
-  }, [freightData]);
+     if (freightData?.data?.results) {
+         const freights = freightData.data.results.map((it) => it.id);
+         setFreight(freights);
+     } else {
+         console.error("Freight data is not valid:", freightData);
+     }
+ }, [freightData]);
 
   useEffect(() => {
     if (pickupDate)
@@ -178,11 +184,27 @@ export default function AddQuotationtPage() {
                 <FormItem>
                   <FormLabel className="font-bold">Employee ID</FormLabel>
                   <FormControl>
-                    <Input
-                      value={field.value || ""}
-                      readOnly
-                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
-                    />
+                  <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-[500px] h-[60px]">
+                        <SelectValue placeholder="Select an ID" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {employees ? (
+                          employees.map((it) => (
+                            <SelectItem key={it} value={it}>
+                              {it}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            No Employee Available
+                          </div>
+                        )}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

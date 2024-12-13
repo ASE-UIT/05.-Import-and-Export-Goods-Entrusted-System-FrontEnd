@@ -1,4 +1,3 @@
-import { Phone } from "lucide-react";
 import { z } from "zod";
 
 export const CreateQuotationBody = z.object({
@@ -66,6 +65,13 @@ export const FreightDetailsRes = z.object({
     providerId: z.string().uuid(),
 });
 
+export const FreightDetailRes = z.object({
+    message: z.string(),
+    data: z.object({
+        results: z.array(FreightDetailsRes),
+    }),
+});
+
 export const EmployeeDetailsRes = z.object({
     id: z.string().uuid(),
     name: z.string(),
@@ -78,10 +84,14 @@ export const EmployeeDetailsRes = z.object({
     baseSalary: z.number(),
 });
 
+export const EmployeeDetailRes = z.object({
+    message: z.string(),
+    data: z.object({
+        results: z.array(EmployeeDetailsRes),
+    }),
+});
 
 export const BookedQuoteRequestRes = z.array(QuoteRequestDetailsRes);
-export const FreightDetailRes = z.array(FreightDetailsRes);
-export const EmployeeDetailRes = z.array(EmployeeDetailsRes);
 
 export type UpdateQuotationType = z.TypeOf<typeof UpdateQuotationBody>;
 export type CreateQuotationType = z.TypeOf<typeof CreateQuotationBody>;

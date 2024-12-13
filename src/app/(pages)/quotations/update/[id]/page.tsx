@@ -112,19 +112,24 @@ export default function UpdateQuotationtPage() {
 
   const { data: freightData } = useQuotation.useGetFreight();
   useEffect(() => {
-    if (freightData) {
-      const freights = freightData.map((it) => it.id);
-      setFreight(freights);
+    if (freightData?.data?.results) {
+        const freights = freightData.data.results.map((it) => it.id);
+        setFreight(freights);
+    } else {
+        console.error("Freight data is not valid:", freightData);
     }
-  }, [freightData]);
+}, [freightData]);
 
   const { data: employeeData } = useQuotation.useGetEmployee();
   useEffect(() => {
-    if (employeeData) {
-      const employees = employeeData.map((it) => it.id);
-      setEmployee(employees);
+    if (employeeData?.data?.results) {
+        const employees = employeeData.data.results.map((it) => it.id);
+        setEmployee(employees);
+    } else {
+        console.error("Employee data is not valid:", employeeData);
     }
-  }, [employeeData]);
+}, [employeeData]);
+
 
   useEffect(() => {
     if (data && data.length > 0) {
