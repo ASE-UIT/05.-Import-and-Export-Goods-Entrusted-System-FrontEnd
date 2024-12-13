@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import ProviderCell from "./provider-cell";
+import ActionCell from "./action-cell";
 
 export const fclColumns: ColumnDef<Freight & FCL>[] = [
   {
@@ -246,5 +247,11 @@ export const fclColumns: ColumnDef<Freight & FCL>[] = [
       );
     },
     cell: ({ row }) => row.getValue("price_40rf"),
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => (
+      <ActionCell freightId={row.original.id} extraId={row.original.fcl_id} />
+    ),
   },
 ];

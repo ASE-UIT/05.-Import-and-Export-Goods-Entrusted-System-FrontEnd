@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useFreightStore } from "@/stores/useFreightStore";
+import { Button } from "@/components/ui/button";
 
 const ActionCell = ({
   freightId,
@@ -20,12 +21,9 @@ const ActionCell = ({
 
   return (
     <div className="flex justify-center">
-      <span
-        className="cursor-pointer text-blue-500"
-        onClick={handleUpdateClick}
-      >
+      <Button onClick={handleUpdateClick} variant="default" className="mr-2">
         Update
-      </span>
+      </Button>
     </div>
   );
 };

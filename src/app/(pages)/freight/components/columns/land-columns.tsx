@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import ProviderCell from "./provider-cell";
+import ActionCell from "./action-cell";
 
 export const landColumns: ColumnDef<Freight & LandFreight>[] = [
   {
@@ -263,5 +264,14 @@ export const landColumns: ColumnDef<Freight & LandFreight>[] = [
       );
     },
     cell: ({ row }) => row.getValue("price_10000"),
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => (
+      <ActionCell
+        freightId={row.original.id}
+        extraId={row.original.land_freight_id}
+      />
+    ),
   },
 ];
