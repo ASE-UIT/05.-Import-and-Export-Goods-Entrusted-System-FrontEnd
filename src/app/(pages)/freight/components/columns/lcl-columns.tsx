@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import ProviderCell from "./provider-cell";
-
+import ActionCell from "./action-cell";
 export const lclColumns: ColumnDef<Freight & LCL>[] = [
   {
     accessorKey: "providerId",
@@ -178,5 +178,11 @@ export const lclColumns: ColumnDef<Freight & LCL>[] = [
       );
     },
     cell: ({ row }) => row.getValue("cost"),
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => (
+      <ActionCell freightId={row.original.id} extraId={row.original.lcl_id} />
+    ),
   },
 ];

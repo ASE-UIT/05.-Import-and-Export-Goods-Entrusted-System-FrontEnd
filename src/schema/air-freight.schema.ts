@@ -9,7 +9,4 @@ export const airFreightBody = z.object({
   freight_id: z.string(),
 });
 
-export type CreateAirFreightBody = z.TypeOf<typeof airFreightBody>;
-export type UpdateAirFreightBody = z.TypeOf<
-  ReturnType<typeof airFreightBody.partial>
->;
+export type AirFreightBody = z.TypeOf<typeof airFreightBody>;

@@ -4,8 +4,8 @@ import useLandFreight from "@/hooks/use-land-freight";
 const useGetLandData = () => {
   const { data: allFreight } = useFreight().getAllFreight;
   const { data: allLandData } = useLandFreight().getAllLand;
-  const freightData = allFreight && allFreight.data ? allFreight.data : [];
-  const landData = allLandData && allLandData.data ? allLandData.data : [];
+  const freightData = allFreight ? allFreight.results : [];
+  const landData = allLandData ? allLandData.results : [];
   const landfreightdata: (Freight & LandFreight)[] = freightData
     .map((freight) => {
       const land = landData.find((a) => a.freight_id === freight.id);

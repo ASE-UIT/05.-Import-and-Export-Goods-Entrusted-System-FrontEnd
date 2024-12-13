@@ -1,5 +1,5 @@
 import { fclApi } from "@/apis/fcl.api";
-import { CreateFclBody, UpdateFclBody } from "@/schema/fcl.schema";
+import { FclBody } from "@/schema/fcl.schema";
 import { useFreightStore } from "@/stores/useFreightStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -9,22 +9,21 @@ const useFcl = () => {
   const queryClient = useQueryClient();
   const setId = useFreightStore((state) => state.setId);
   const router = useRouter();
+
   const getAllFcl = useQuery({
     queryKey: ["fcls"],
-    queryFn: fclApi.getAllFcl,
+    queryFn: () => fclApi.getAllFcl(),
   });
 
   const useGetFclById = (id: string) => {
     return useQuery({
       queryKey: ["fcls", id],
-      queryFn: () => {
-        return fclApi.getFcl(id);
-      },
+      queryFn: () => fclApi.getFcl(id),
     });
   };
 
   const { mutateAsync: createFcl } = useMutation({
-    mutationFn: (data: CreateFclBody) => fclApi.createFcl(data),
+    mutationFn: (data: FclBody) => fclApi.createFcl(data),
     onSuccess: () => {
       toast({
         variant: "default",
@@ -48,12 +47,15 @@ const useFcl = () => {
     },
   });
 
-  const useUpdateFcl = (id: string, data: UpdateFclBody) => {
+  const useUpdateFcl = () => {
     return useMutation({
-      mutationFn: () => {
-        return fclApi.updateFcl(id, data);
+      mutationFn: ({ id, body }: { id: string; body: FclBody }) => {
+        return fclApi.updateFcl(id, body);
       },
-      onSuccess: () => {
+      onSuccess: (_, req) => {
+        queryClient.invalidateQueries({
+          queryKey: ["fcls", req.id],
+        });
         toast({
           variant: "default",
           title: "Success",
@@ -68,11 +70,6 @@ const useFcl = () => {
           description: error.message,
         });
       },
-      onSettled: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["fcls"],
-        });
-      },
     });
   };
 
@@ -80,7 +77,7 @@ const useFcl = () => {
     getAllFcl,
     getFclById: useGetFclById,
     createFcl,
-    updateFcl: useUpdateFcl,
+    useUpdateFcl,
   };
 };
 

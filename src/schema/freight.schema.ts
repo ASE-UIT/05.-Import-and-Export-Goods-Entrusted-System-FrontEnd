@@ -12,8 +12,11 @@ export const freightBody = z.object({
   addition_fee_breakdown: z.string(),
   schedule: z.nativeEnum(WEEKDAY),
   providerId: z.string().uuid(),
+  provider: z
+    .object({
+      status: z.string(),
+    })
+    .optional(),
 });
-export type CreateFreightBody = z.TypeOf<typeof freightBody>;
-export type UpdateFreightBody = z.TypeOf<
-  ReturnType<typeof freightBody.partial>
->;
+
+export type FreightBody = z.TypeOf<typeof freightBody>;
