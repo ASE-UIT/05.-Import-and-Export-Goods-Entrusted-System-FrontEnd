@@ -199,7 +199,7 @@ export const columns: ColumnDef<IShipmentFormat>[] = [
                 <ImportExportForm />
               </DialogHeader>
               <DialogFooter>
-                <Button type="submit">Save changes</Button>
+                <Button type="submit">Request</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
