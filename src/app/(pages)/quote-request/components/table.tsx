@@ -76,14 +76,6 @@ export function DataTable({ columns, data }: DataTableProps) {
             <CirclePlus className="mr-2" />
             <span>Create quote request</span>
           </Button>
-          <Button
-            variant="default"
-            onClick={() => router.push(`${PATH_NAME.QUOTE_REQUEST}/send`)}
-            className="bg-accent hover:bg-accent"
-          >
-            <CirclePlus className="mr-2" />
-            <span>Send quote request</span>
-          </Button>
         </div>
       </div>
       <div className="rounded-md">
