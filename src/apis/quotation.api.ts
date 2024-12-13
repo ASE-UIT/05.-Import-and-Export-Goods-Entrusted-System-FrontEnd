@@ -50,10 +50,10 @@ const quotationAction = {
       } catch (error) {
         if (axios.isAxiosError(error) && error.response?.data) {
           const getBookedQuoteRequestError = error.response.data as ErrorType;
-          console.error("Error during get quotations:", getBookedQuoteRequestError);
+          console.error("Error during get quote request:", getBookedQuoteRequestError);
           throw getBookedQuoteRequestError;
         } else {
-          console.error("Unexpected error during get quotations:", error);
+          console.error("Unexpected error during get quote request:", error);
           throw error;
         }
       }
@@ -87,10 +87,10 @@ const quotationAction = {
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
         const getFreightError = error.response.data as ErrorType;
-        console.error("Error during get quotations:", getFreightError);
+        console.error("Error during get freights:", getFreightError);
         throw getFreightError;
       } else {
-        console.error("Unexpected error during get quotations:", error);
+        console.error("Unexpected error during get freights:", error);
         throw error;
       }
     }
@@ -105,10 +105,10 @@ async getEmployee() {
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
       const getEmployeeError = error.response.data as ErrorType;
-      console.error("Error during get quotations:", getEmployeeError);
+      console.error("Error during get employees:", getEmployeeError);
       throw getEmployeeError;
     } else {
-      console.error("Unexpected error during get quotations:", error);
+      console.error("Unexpected error during get employees:", error);
       throw error;
     }
   }

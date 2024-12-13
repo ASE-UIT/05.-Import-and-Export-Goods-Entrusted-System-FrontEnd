@@ -52,7 +52,7 @@ const useQuotation = {
               const result = await quotationAction.getBookedQuoteRequest();
               return result;
             } catch (error) {
-              console.error("Error during get quotation:", error);
+              console.error("Error during get quote request:", error);
               throw error;
             }
           },
@@ -67,7 +67,7 @@ const useQuotation = {
             const result = await quotationAction.getFreight();
             return result;
           } catch (error) {
-            console.error("Error during get quotation:", error);
+            console.error("Error during get freight:", error);
             throw error;
           }
         },
@@ -82,7 +82,7 @@ const useQuotation = {
             const result = await quotationAction.getEmployee();
             return result;
           } catch (error) {
-            console.error("Error during get quotation:", error);
+            console.error("Error during get employee:", error);
             throw error;
           }
         },
