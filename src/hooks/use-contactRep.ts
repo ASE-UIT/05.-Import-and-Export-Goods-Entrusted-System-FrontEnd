@@ -1,60 +1,50 @@
 import contactRepAction from "@/apis/contactRep.api";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
-import {
-  createContactRepData,
-  updateContactRepData,
-} from "@/schema/contactRep.schema";
+import { ContactRepBodyType } from "@/schema/contactRep.schema";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useContactRep = () => {
+const useContactRep = () => {
   const queryClient = useQueryClient();
 
-  const useGetAllContactRep = () => {
-    return useQuery({
-      queryKey: ["contactReps"],
-      queryFn: () => {
-        return contactRepAction.getContactRep();
-      },
+  const useListContactRep = (
+    params: ContactRepQueryParams | null | undefined = null
+  ) =>
+    useQuery({
+      queryKey: ["contact-reps", ...Object.values(params ?? {})],
+      queryFn: () => contactRepAction.list(params),
     });
-  };
 
-  const useCreateContactRep = () => {
-    return useMutation({
-      mutationFn: (data: createContactRepData) =>
-        contactRepAction.createContactRep(data),
-      onSettled: () => {
+  const useDetailsContactRep = (id: string) =>
+    useQuery({
+      queryKey: ["contact-rep", id],
+      queryFn: () => contactRepAction.details(id),
+    });
+
+  const useCreateContractRep = () =>
+    useMutation({
+      mutationFn: contactRepAction.create,
+    });
+
+  const useUpdateContactRep = () =>
+    useMutation({
+      mutationFn: ({
+        id,
+        body,
+      }: {
+        id: string;
+        body: ContactRepBodyType;
+      }) => contactRepAction.update(id, body),
+      onSuccess: (_, req) => {
         queryClient.invalidateQueries({
-          queryKey: ["contactReps"],
+          queryKey: ["contact-rep", req.id],
         });
       },
     });
-  };
-
-  const useUpdateContactRep = () => {
-    return useMutation({
-      mutationFn: ({ id, data }: { id: string; data: updateContactRepData }) =>
-        contactRepAction.updateContactRep(id, data),
-      onSettled: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["contactReps"],
-        });
-      },
-    });
-  };
-
-  const useGetContactRepById = (id: string) => {
-    return useQuery({
-      queryKey: ["contactRep", id],
-      queryFn: () => {
-        return contactRepAction.getContactRep(id);
-      },
-    });
-  };
 
   return {
-    queryClient,
-    useGetAllContactRep,
-    useCreateContactRep,
+    useListContactRep,
+    useDetailsContactRep,
+    useCreateContractRep,
     useUpdateContactRep,
-    useGetContactRepById,
   };
 };
+export default useContactRep;

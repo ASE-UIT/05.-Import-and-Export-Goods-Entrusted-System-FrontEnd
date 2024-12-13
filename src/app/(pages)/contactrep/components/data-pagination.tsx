@@ -5,7 +5,7 @@ import {
   DoubleArrowRightIcon,
 } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
-import { useState, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,12 +20,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
-  setQueryParams: React.Dispatch<
-    React.SetStateAction<{
-      limit: number;
-      page: number;
-    }>
-  >;
+  setQueryParams: Dispatch<SetStateAction<ContactRepQueryParams>>
 }
 
 export function DataTablePagination<TData>({
@@ -48,7 +43,7 @@ export function DataTablePagination<TData>({
   }, [currentPage, setQueryParams]);
 
   useEffect(() => {
-    setQueryParams((prev) => ({
+    setQueryParams((prev: ContactRepQueryParams) => ({
       ...prev,
       limit: currentLimit,
     }));
@@ -70,7 +65,10 @@ export function DataTablePagination<TData>({
             </SelectTrigger>
             <SelectContent side="top">
               {[1, 5, 10, 20].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
+                <SelectItem
+                  key={pageSize}
+                  value={`${pageSize}`}
+                >
                   {pageSize}
                 </SelectItem>
               ))}

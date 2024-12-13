@@ -20,39 +20,19 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
-  setQueryParams: React.Dispatch<
-    React.SetStateAction<{
-      limit: number;
-      page: number;
-    }>
-  >;
 }
 
 export function DataTablePagination<TData>({
   table,
-  setQueryParams,
 }: DataTablePaginationProps<TData>) {
   const pageCount = table.getPageCount();
   const [currentPage, setCurrentPage] = useState(
     table.getState().pagination.pageIndex
   );
-  const [currentLimit, setCurrentLimit] = useState(
-    table.getState().pagination.pageSize
-  );
 
   useEffect(() => {
-    setQueryParams((prev) => ({
-      ...prev,
-      page: currentPage + 1,
-    }));
-  }, [currentPage, setQueryParams]);
-
-  useEffect(() => {
-    setQueryParams((prev) => ({
-      ...prev,
-      limit: currentLimit,
-    }));
-  }, [currentLimit, setQueryParams]);
+    setCurrentPage(table.getState().pagination.pageIndex);
+  }, [table.getState().pagination.pageIndex]);
 
   return (
     <div className="flex flex-row-reverse items-end justify-between pt-[10px]">
@@ -60,16 +40,16 @@ export function DataTablePagination<TData>({
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Rows per page</p>
           <Select
-            value={`${currentLimit}`}
+            value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
-              setCurrentLimit(Number(value));
+              table.setPageSize(Number(value));
             }}
           >
             <SelectTrigger className="h-[32px] w-[64px]">
-              <SelectValue placeholder={currentLimit} />
+              <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[1, 5, 10, 20].map((pageSize) => (
+              {[5, 10, 20].map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
                 </SelectItem>
@@ -81,7 +61,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="size-[32px] p-0"
-            onClick={() => setCurrentPage(0)}
+            onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
             <DoubleArrowLeftIcon className="size-[16px]" />
@@ -89,7 +69,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="size-[32px] p-0"
-            onClick={() => setCurrentPage((prev) => prev - 1)}
+            onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
             <ChevronLeftIcon className="size-[16px]" />
@@ -117,7 +97,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="size-[32px] p-0"
-            onClick={() => setCurrentPage((prev) => prev + 1)}
+            onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
             <ChevronRightIcon className="size-[16px]" />
@@ -125,7 +105,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="size-[32px] p-0"
-            onClick={() => setCurrentPage(pageCount - 1)}
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >
             <DoubleArrowRightIcon className="size-[16px]" />

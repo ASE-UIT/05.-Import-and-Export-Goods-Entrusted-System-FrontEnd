@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
-export const columns: ColumnDef<ContractRepType>[] = [
+export const columns: ColumnDef<ContactRep>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {
