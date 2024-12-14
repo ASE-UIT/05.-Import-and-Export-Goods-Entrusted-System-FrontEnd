@@ -30,6 +30,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import useInvoice from "@/hooks/use-invoice";
 import { InvoiceDetailsType, UpdateInvoiceType } from "@/schema/invoice.schema";
+import { Toaster } from "react-hot-toast";
 
 const formSchema = z.object({
   contractId: z.string().optional(),
@@ -99,6 +100,7 @@ export default function UpdateInvoice() {
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
         <span className="text-3xl font-bold">Update Invoice</span>
+        <Toaster position="top-right" reverseOrder={false} />
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} encType="multipart/form-data">
@@ -204,9 +206,10 @@ export default function UpdateInvoice() {
                         <SelectValue placeholder={invoice?.status} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Pending">PENDING</SelectItem>
-                        <SelectItem value="Refunded">REFUNDED</SelectItem>
-                        <SelectItem value="Cancelled">CANCELLED</SelectItem>
+                      <SelectItem value="PENDING">PENDING</SelectItem>
+                      <SelectItem value="REFUNDED">REFUNDED</SelectItem>
+                      <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+
                       </SelectContent>
                     </Select>
                   </FormControl>

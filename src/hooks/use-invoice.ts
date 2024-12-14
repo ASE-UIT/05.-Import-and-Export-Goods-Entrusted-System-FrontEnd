@@ -11,6 +11,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from 'react-hot-toast';
+
 
 const useInvoice = {
   useCreateInvoice(router: ReturnType<typeof useRouter>) {
@@ -22,10 +24,13 @@ const useInvoice = {
         queryClient.invalidateQueries({
           queryKey: ["invoices"],
         });
+        toast.success("Invoice added successfully!");
         router.push("/invoices");
       },
+
       onError: (error: ErrorType) => {
         console.error("Error during create invoice:", error);
+        toast.error("Failed to add invoice. Please try again!");
         throw error;
       },
     });
@@ -74,10 +79,12 @@ const useInvoice = {
         queryClient.invalidateQueries({
           queryKey: ["invoiceDetails", id],
         });
+        toast.success("Invoice updated successfully!");
         router.push("/invoices");
       },
       onError: (error: ErrorType) => {
         console.error("Error during update invoice:", error);
+        toast.error("Failed to update invoice. Please try again!");
         throw error;
       },
     });
