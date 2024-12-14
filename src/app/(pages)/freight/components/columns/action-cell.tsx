@@ -21,17 +21,9 @@ const ActionCell = ({
 
   return (
     <div className="flex justify-center">
-      <Button
-        id="update-freight"
-        onClick={handleUpdateClick}
-        variant="default"
-        className="hidden"
-      ></Button>
       <span
-        className="cursor-pointer text-blue-500 underline"
-        onClick={() => {
-          document.getElementById("update-freight")?.click();
-        }}
+        className="cursor-pointer text-blue-500"
+        onClick={handleUpdateClick}
       >
         Update
       </span>
