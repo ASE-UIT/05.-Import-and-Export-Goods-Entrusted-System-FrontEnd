@@ -1,7 +1,6 @@
 import React from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useFreightStore } from "@/stores/useFreightStore";
-import { Button } from "@/components/ui/button";
 
 const ActionCell = ({
   freightId,
