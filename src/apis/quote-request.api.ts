@@ -1,9 +1,11 @@
 import {
   CreateQuoteRequestType,
   GetCustomerInfo,
+  GetFullQuoteRequestDetails,
   GetPackageDetails,
   GetQuoteRequestDetailsType,
   GetQuoteRequestType,
+  UpdateQuoteRequestType,
 } from "@/schema/quote-request.schema";
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
@@ -28,6 +30,24 @@ const quoteRequestAction = {
       }
     }
   },
+  updateQuoteRequest: async (id: string, quoteRequestUpdate: UpdateQuoteRequestType) => {
+ try {
+      const response = await http.patch(
+        `v1/quotation-requests/with-details/${id}`,
+        quoteRequestUpdate
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const postError = error.response.data as ErrorType;
+        console.error("Error during update quote request:", postError);
+        throw postError;
+      } else {
+        console.error("Unexpected error during post:", error);
+        throw error;
+      }
+    }
+  }, 
   getQuoteRequest: async () => {
     try {
       const response = await http.get<GetQuoteRequestType>(
@@ -87,6 +107,23 @@ const quoteRequestAction = {
       if (axios.isAxiosError(error) && error.response?.data) {
         const getError = error.response.data as ErrorType;
         console.error("Error during get customer details:", getError);
+        throw getError;
+      } else {
+        console.error("Unexpected error during get:", error);
+        throw error;
+      }
+    }
+  },
+  getFullQuoteRequestDetails: async (quoteReqId: string) => {
+    try {
+      const response = await http.get<GetFullQuoteRequestDetails>(
+        "v1/quotation-requests/with-details/" + quoteReqId
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const getError = error.response.data as ErrorType;
+        console.error("Error during get quote requests:", getError);
         throw getError;
       } else {
         console.error("Unexpected error during get:", error);
