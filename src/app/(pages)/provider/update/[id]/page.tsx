@@ -212,7 +212,6 @@
 //   );
 // }
 
-
 "use client";
 
 import { useProvider } from "@/hooks/use-provider";
@@ -262,8 +261,8 @@ export default function UpdateProvider() {
   useEffect(() => {
     if (provider) {
       console.log(provider);
-      if (provider.data) {
-        const providerData = provider.data[0];
+      if (provider.results) {
+        const providerData = provider.results[0];
 
         form.reset({
           name: providerData.name,
@@ -304,9 +303,7 @@ export default function UpdateProvider() {
               name="name"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">
-                    Name
-                  </FormLabel>
+                  <FormLabel className="font-bold">Name</FormLabel>
                   <FormControl>
                     <Input placeholder="Name" {...field} />
                   </FormControl>
@@ -321,36 +318,22 @@ export default function UpdateProvider() {
               name="contactRepId"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">
-                    ContactRep
-                  </FormLabel>
+                  <FormLabel className="font-bold">ContactRep</FormLabel>
                   <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full h-[60px]">
                         <SelectValue placeholder="Select a representative" />
                       </SelectTrigger>
                       <SelectContent>
                         {contactReps ? (
-                          contactReps.data
-                            ?.results?.map(
-                              (contactRep) => (
-                                <SelectItem
-                                  key={
-                                    contactRep.id
-                                  }
-                                  value={
-                                    contactRep.id
-                                  }
-                                >
-                                  {
-                                    contactRep.name
-                                  }
-                                </SelectItem>
-                              )
-                            )
+                          contactReps.data?.results?.map((contactRep) => (
+                            <SelectItem
+                              key={contactRep.id}
+                              value={contactRep.id}
+                            >
+                              {contactRep.name}
+                            </SelectItem>
+                          ))
                         ) : (
                           <>
                             <SelectItem value="01">
@@ -376,15 +359,9 @@ export default function UpdateProvider() {
               name="email"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">
-                    Email
-                  </FormLabel>
+                  <FormLabel className="font-bold">Email</FormLabel>
                   <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Email"
-                      {...field}
-                    />
+                    <Input type="email" placeholder="Email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -395,15 +372,9 @@ export default function UpdateProvider() {
               name="phone"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">
-                    Phone
-                  </FormLabel>
+                  <FormLabel className="font-bold">Phone</FormLabel>
                   <FormControl>
-                    <Input
-                      type="tel"
-                      placeholder="Phone"
-                      {...field}
-                    />
+                    <Input type="tel" placeholder="Phone" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -414,14 +385,9 @@ export default function UpdateProvider() {
               name="address"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">
-                    Address
-                  </FormLabel>
+                  <FormLabel className="font-bold">Address</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Address"
-                      {...field}
-                    />
+                    <Input placeholder="Address" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -432,14 +398,9 @@ export default function UpdateProvider() {
               name="country"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">
-                    Country
-                  </FormLabel>
+                  <FormLabel className="font-bold">Country</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Country"
-                      {...field}
-                    />
+                    <Input placeholder="Country" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -455,10 +416,7 @@ export default function UpdateProvider() {
                   Cancel
                 </Button>
               </Link>
-              <Button
-                className="w-1/2 h-10 text-lg"
-                type="submit"
-              >
+              <Button className="w-1/2 h-10 text-lg" type="submit">
                 Save
               </Button>
             </div>
