@@ -49,6 +49,7 @@ const formSchema = z.object({
   quotationDate: z.date(),
   expiredDate: z.date(),
   status: z.string(),
+  totalPrice: z.number(),
 });
 
 export default function UpdateQuotationtPage() {
@@ -58,7 +59,6 @@ export default function UpdateQuotationtPage() {
   const [expiredDate, setExpiredDate] = useState<Date | undefined>(undefined);
   const [quoteRequest, setQuoteRequest] = useState<string[]>();
   const [freights, setFreight] = useState<string[]>();
-  const [employees, setEmployee] = useState<string[]>();
   
 
   const [isPickupDateOpen, setPickupDateOpen] = useState(false);
@@ -120,17 +120,6 @@ export default function UpdateQuotationtPage() {
     }
 }, [freightData]);
 
-  const { data: employeeData } = useQuotation.useGetEmployee();
-  useEffect(() => {
-    if (employeeData?.data?.results) {
-        const employees = employeeData.data.results.map((it) => it.id);
-        setEmployee(employees);
-    } else {
-        console.error("Employee data is not valid:", employeeData);
-    }
-}, [employeeData]);
-
-
   useEffect(() => {
     if (data && data.length > 0) {
       // Lọc phần tử theo `id`
@@ -145,6 +134,7 @@ export default function UpdateQuotationtPage() {
   
         // Đặt giá trị cho form
         form.setValue("status", quotationData.status);
+        form.setValue("totalPrice", quotationData.totalPrice);
         form.setValue("quoteReqId", quotationData.quoteReqId);
         form.setValue("employeeId", quotationData.employeeId);
         form.setValue("freightId", quotationData.freightId);
@@ -203,7 +193,10 @@ export default function UpdateQuotationtPage() {
       }),
       ...(values.status.toUpperCase() !== quotation?.status.toUpperCase() && {
         status: values.status.toUpperCase(),
-      }),     
+      }),  
+      ...(values.totalPrice !== quotation?.totalPrice && {
+        totalPrice: values.totalPrice,
+      }),   
     };
     if (Object.keys(updateQuotationBody).length > 0) {
       updateQuotation(updateQuotationBody);
@@ -281,38 +274,17 @@ export default function UpdateQuotationtPage() {
                   <FormLabel className="text-[16px] font-bold">
                     Employee ID
                   </FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value); 
-                      }}
-                    defaultValue={quotation?.employeeId || field.value || ""}
-                  >
-                    <SelectTrigger className="w-[500px] h-[60px]">
-                      <SelectValue
-                        placeholder={
-                          quotation?.employeeId || field.value || ""
-                        }
+                    <FormControl>
+                      <Input
+                        value={quotation?.employeeId || field.value || ""}
+                        readOnly
+                        className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
                       />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {employees && employees.length > 0 ? (
-                        employees.map((it) => (
-                          <SelectItem key={it} value={it}>
-                            {it}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <div className="flex items-center justify-center">  
-                        </div>
-                      )}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/* Freight ID */}
             <FormField
@@ -563,6 +535,24 @@ export default function UpdateQuotationtPage() {
                 </FormItem>
               )}
             />
+            {/* Price */}
+            <FormField
+              control={form.control}
+              name="totalPrice"
+              render={({ field }) => (
+                <FormItem className="w-[500px]">
+                  <FormLabel className="font-bold">Total Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field} 
+                      value={quotation?.totalPrice !== undefined ? String(quotation?.totalPrice) : "Total Price"} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormMessage className="text-[14px]">
               {form.formState.errors.root?.message}
             </FormMessage>
