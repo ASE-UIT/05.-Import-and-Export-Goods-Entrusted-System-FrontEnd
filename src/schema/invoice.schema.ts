@@ -39,10 +39,24 @@ export const ContractDetailsRes = z.object({
     updatedAt: z.string(),
   });
 
-export const InvoiceRes = z.object({
-  message: z.string(),
-  data: z.array(InvoiceDetailsRes),
-});
+  export const Pagination = z.object({
+    currentPage: z.number().nullable(),
+    records: z.number(),
+    totalPages: z.number().nullable(),
+    nextPage: z.number().nullable(),
+    prevPage: z.number().nullable(),
+  });
+  
+  export const InvoiceData = z.object({
+    pagination: Pagination,
+    results: z.array(InvoiceDetailsRes),
+    totalRevenue: z.number(),
+  });
+  
+  export const InvoiceRes = z.object({
+    message: z.string(),
+    data: InvoiceData,
+  });
 
 export const ContractDetailRes = z.array(ContractDetailsRes); // Array
 

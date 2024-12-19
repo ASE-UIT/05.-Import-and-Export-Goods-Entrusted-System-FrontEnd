@@ -26,11 +26,13 @@ const formSchema = z.object({
 export default function InvoiceManagement() {
   const [invoiceData, setInvoiceData] = useState<IInvoice[]>([]);
   const { data, isLoading, error } = useGetInvoice.useGetInvoiceDetail();
+  const totalRevenue = data?.data?.totalRevenue || 0;
+
 
   useEffect(() => {
     if (data) {
       setInvoiceData(
-        data.data.map((invoice: InvoiceDetailsType) => ({
+        data.data.results.map((invoice: InvoiceDetailsType) => ({
           id: invoice.id,
           contract_id: invoice.contractId,
           employee_id: invoice.employeeId,
@@ -56,7 +58,7 @@ export default function InvoiceManagement() {
           <Toaster position="top-right" reverseOrder={false} />
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-2xl">Total revenue: 1000</span>
+          <span className="text-2xl">Total Revenue: {totalRevenue}</span>
         </div>
         <DataTable
           columns={columns}
