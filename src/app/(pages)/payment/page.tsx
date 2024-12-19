@@ -24,7 +24,7 @@ export default function PaymentManagement() {
     if (data) {
       console.log(data);
       setPaymentData(
-        data.data.map((payment: PaymentDetailsType) => ({
+        data.data.results.map((payment: PaymentDetailsType) => ({
           id: payment.id,
           invoice_id: payment.invoiceId,
           amount: payment.amountPaid,
@@ -41,9 +41,6 @@ export default function PaymentManagement() {
       <div className="flex flex-col w-full gap-[20px]">
         <div className="flex justify-between items-center">
           <span className="text-3xl font-bold">Payment</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-2xl">Total revenue: 1000</span>
         </div>
         <DataTable
           columns={columns}

@@ -15,9 +15,23 @@ export const PaymentDetailsRes = z.object({
     updatedAt: z.date(),
 });
 
+  export const Pagination = z.object({
+    currentPage: z.number().nullable(),
+    records: z.number(),
+    totalPages: z.number().nullable(),
+    nextPage: z.number().nullable(),
+    prevPage: z.number().nullable(),
+  });
+  
+  export const PaymentData = z.object({
+    pagination: Pagination,
+    results: z.array(PaymentDetailsRes),
+    totalRevenue: z.number(),
+  });
+
 export const PaymentRes = z.object({
   message: z.string(),
-  data: z.array(PaymentDetailsRes),
+  data: PaymentData,
 });
 
 export type CreatePaymentType = z.TypeOf<typeof CreatePaymentBody>;

@@ -34,6 +34,9 @@ export function DataTablePagination<TData>({
     setCurrentPage(table.getState().pagination.pageIndex);
   }, [table.getState().pagination.pageIndex]);
 
+  const totalRecords = table.getPrePaginationRowModel().rows.length;
+  const currentRecords = table.getState().pagination.pageSize;
+
   return (
     <div className="flex flex-row-reverse items-end justify-between pt-[10px]">
       <div className="flex items-center gap-[50px]">
@@ -112,8 +115,12 @@ export function DataTablePagination<TData>({
           </Button>
         </div>
       </div>
-      <div>
-        Total: 1000
+
+      {/* Thêm thông tin phân trang và số bản ghi */}
+      <div className="flex items-center space-x-2">
+        <p className="text-xl">
+          Total: {totalRecords} payment
+        </p>
       </div>
     </div>
   );
