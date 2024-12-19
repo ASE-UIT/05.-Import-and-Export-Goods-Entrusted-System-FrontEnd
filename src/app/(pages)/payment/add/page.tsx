@@ -51,7 +51,7 @@ export default function AddInvoice() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-  const invoiceIds = invoices?.data.map((invoice) => invoice.id) || [];
+  const invoiceIds = invoices?.data.results.map((invoice) => invoice.id) || [];
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
