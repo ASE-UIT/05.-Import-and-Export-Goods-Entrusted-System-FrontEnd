@@ -1,6 +1,6 @@
-// components/TransportContractModal.tsx
 import { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export default function SaleContractModal() {
     const [formData, setFormData] = useState({
@@ -34,7 +34,49 @@ export default function SaleContractModal() {
     };
 
     const handleSubmit = () => {
-        console.log("Form Data:", formData);
+        // console.log("Form Data:", formData);
+        const formattedData = {
+            id: "",
+            type: "SALE_CONTRACT",
+            fields: {
+                buyer: {
+                    name: formData.buyer_name,
+                    address: formData.buyer_add,
+                    signature: {
+                        signed: formData.buyer_signed,
+                        date: formData.buyer_date,
+                        by: formData.buyer_by
+                    }
+                },
+                seller: {
+                    name: formData.seller_name,
+                    address: formData.seller_add,
+                    signature: {
+                        signed: formData.seller_signed,
+                        date: formData.seller_date,
+                        by: formData.seller_by
+                    }
+                },
+                contract: {
+                    effectiveDate: formData.date,
+                    product: formData.product,
+                    payment: {
+                        amount: formData.amount,
+                        method: formData.means_of_payment,
+                        shippingCost: formData.cost,
+                        invoicePaymentDays: formData.invoice_amount_days,
+                        balanceDays: formData.balance_days,
+                        penaltyPercent: formData.amount_percent
+                    },
+                    delivery: {
+                        date: formData.delivery_date
+                    },
+                    governingLaw: formData.state_name
+                }
+            }
+        };
+
+        console.log("Formatted Data:", formattedData);
     };
 
     return (
@@ -58,7 +100,6 @@ export default function SaleContractModal() {
                                     className="border-dotted border-b-2 py-1 outline-none text-center"
                                     value={formData.buyer_name}
                                     onChange={handleInputChange}
-                                    readOnly
                                 />
                                 <span>with registered address at </span>
                                 <input
@@ -67,7 +108,6 @@ export default function SaleContractModal() {
                                     className="border-dotted border-b-2 py-1 outline-none text-center"
                                     value={formData.buyer_add}
                                     onChange={handleInputChange}
-                                    readOnly
                                 />
                                 <span> (hereinafter the &quot;Buyer&quot;), and </span>
                                 <input
@@ -76,7 +116,6 @@ export default function SaleContractModal() {
                                     className="border-dotted border-b-2 py-1 outline-none text-center"
                                     value={formData.seller_name}
                                     onChange={handleInputChange}
-                                    readOnly
                                 />
                                 <span> with a registered address located at </span>
                                 <input
@@ -85,7 +124,6 @@ export default function SaleContractModal() {
                                     className="border-dotted border-b-2 py-1 outline-none text-center"
                                     value={formData.seller_add}
                                     onChange={handleInputChange}
-                                    readOnly
                                 />
                                 <span> (hereinafter the &quot;Seller&quot;). (collectively the &quot;Parties&quot; or &quot;Party&quot;)</span>
                             </div>
@@ -98,7 +136,6 @@ export default function SaleContractModal() {
                                     className="border-dotted border-b-2 py-1 outline-none text-center"
                                     value={formData.date}
                                     onChange={handleInputChange}
-                                    readOnly
                                 />
                             </div>
 
@@ -114,7 +151,6 @@ export default function SaleContractModal() {
                                     className="border-dotted border-b-2 py-1 outline-none text-center"
                                     value={formData.product}
                                     onChange={handleInputChange}
-                                    readOnly
                                 />
                                 <span>(hereinafter &quot;Goods&quot;), and</span>
                             </div>
@@ -136,7 +172,6 @@ export default function SaleContractModal() {
                                         className="border-dotted border-b-2 py-1 outline-none text-center"
                                         value={formData.amount}
                                         onChange={handleInputChange}
-                                        readOnly
                                     />
                                     <span> via </span>
                                     <input
@@ -145,7 +180,6 @@ export default function SaleContractModal() {
                                         className="border-dotted border-b-2 py-1 outline-none text-center"
                                         value={formData.means_of_payment}
                                         onChange={handleInputChange}
-                                        readOnly
                                     />
                                     <span>. It is the responsibility of the Seller to set the shipping method, bear the shipping fees up to </span>
                                     <input
@@ -154,7 +188,6 @@ export default function SaleContractModal() {
                                         className="border-dotted border-b-2 py-1 outline-none text-center"
                                         value={formData.cost}
                                         onChange={handleInputChange}
-                                        readOnly
                                     />
                                     <span>and third Party expenses. Seller shall also provide an invoice to Buyer at the time of delivery. The Buyer is bound to pay the total invoice amount within </span>
                                     <input
@@ -163,7 +196,6 @@ export default function SaleContractModal() {
                                         className="border-dotted border-b-2 py-1 outline-none text-center"
                                         value={formData.invoice_amount_days}
                                         onChange={handleInputChange}
-                                        readOnly
                                     />
                                     <span> days. Any balances not paid within </span>
                                     <input
@@ -172,7 +204,6 @@ export default function SaleContractModal() {
                                         className="border-dotted border-b-2 py-1 outline-none text-center"
                                         value={formData.balance_days}
                                         onChange={handleInputChange}
-                                        readOnly
                                     />
                                     <span>days will be subject to </span>
                                     <input
@@ -181,7 +212,6 @@ export default function SaleContractModal() {
                                         className="border-dotted border-b-2 py-1 outline-none text-center"
                                         value={formData.amount_percent}
                                         onChange={handleInputChange}
-                                        readOnly
                                     />
                                     <span>percent penalty per month of delinquency in payment, along with storage or inventory carrying charges if any.</span>
                                 </div>
@@ -196,7 +226,6 @@ export default function SaleContractModal() {
                                         className="border-dotted border-b-2 py-1 outline-none text-center"
                                         value={formData.delivery_date}
                                         onChange={handleInputChange}
-                                        readOnly
                                     />
                                     <span>. The Goods will be considered delivered once the Buyer accepts delivery at the above mentioned Buyer location.</span>
                                 </div>
@@ -253,7 +282,6 @@ export default function SaleContractModal() {
                                         className="border-dotted border-b-2 py-1 outline-none text-center"
                                         value={formData.state_name}
                                         onChange={handleInputChange}
-                                        readOnly
                                     />
                                     <span>law.</span>
                                 </div>
@@ -276,7 +304,6 @@ export default function SaleContractModal() {
                                                 className="border-dotted border-b-2 py-1 outline-none text-center"
                                                 value={formData.seller_signed}
                                                 onChange={handleInputChange}
-                                                readOnly
                                             />
                                         </div>
                                         <div>
@@ -286,7 +313,6 @@ export default function SaleContractModal() {
                                                 className="border-dotted border-b-2 py-1 outline-none text-center"
                                                 value={formData.seller_by}
                                                 onChange={handleInputChange}
-                                                readOnly
                                             />
                                         </div>
                                     </div>
@@ -297,7 +323,6 @@ export default function SaleContractModal() {
                                             className="border-dotted border-b-2 py-1 outline-none text-center"
                                             value={formData.seller_date}
                                             onChange={handleInputChange}
-                                            readOnly
                                         />
                                     </div>
                                 </div>
@@ -312,7 +337,6 @@ export default function SaleContractModal() {
                                                 className="border-dotted border-b-2 py-1 outline-none text-center"
                                                 value={formData.buyer_signed}
                                                 onChange={handleInputChange}
-                                                readOnly
                                             />
                                         </div>
                                         <div>
@@ -322,7 +346,6 @@ export default function SaleContractModal() {
                                                 className="border-dotted border-b-2 py-1 outline-none text-center"
                                                 value={formData.buyer_by}
                                                 onChange={handleInputChange}
-                                                readOnly
                                             />
                                         </div>
                                     </div>
@@ -333,14 +356,17 @@ export default function SaleContractModal() {
                                             className="border-dotted border-b-2 py-1 outline-none text-center"
                                             value={formData.buyer_date}
                                             onChange={handleInputChange}
-                                            readOnly
                                         />
                                     </div>
                                 </div>
                             </div>
+
                         </form>
                     </div>
                 </DialogHeader>
+                <DialogFooter>
+                    <Button type="submit" onClick={handleSubmit}>Save</Button>
+                </DialogFooter>
             </DialogContent >
         </Dialog >
     );
