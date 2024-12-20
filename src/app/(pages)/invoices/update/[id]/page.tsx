@@ -30,7 +30,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import useInvoice from "@/hooks/use-invoice";
 import { InvoiceDetailsType, UpdateInvoiceType } from "@/schema/invoice.schema";
-import { Toaster } from "react-hot-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   contractId: z.string().optional(),
@@ -48,6 +48,7 @@ export default function UpdateInvoice() {
   const path = usePathname();
   const id = path.split("/").pop();
   const { data, error } = useInvoice.useGetInvoice(id);
+  const { toast } = useToast();
 
   const router = useRouter();
   const { mutate: updateInvoice, status } = useInvoice.useUpdateInvoice(
@@ -63,8 +64,8 @@ export default function UpdateInvoice() {
   });
 
   useEffect(() => {
-    if (data && data.data.length > 0) {
-      const invoiceData = data.data.find(invoice => invoice.id === id); // Lọc theo id
+    if (data && data.data.results.length > 0) {
+      const invoiceData = data.data.results.find(invoice => invoice.id === id); // Lọc theo id
     if (invoiceData) {
       setInvoice(invoiceData);
       setExpiredDate(new Date(invoiceData.expiredDate));
@@ -85,7 +86,23 @@ export default function UpdateInvoice() {
     };
   
     if (Object.keys(updateInvoiceBody).length > 0) {
-      updateInvoice(updateInvoiceBody);
+      updateInvoice(updateInvoiceBody, {
+        onSuccess: () => {
+          toast({
+            title: "Success",
+            description: "Invoice updated successfully!",
+            variant: "default",
+          });
+          router.push("/invoices");
+        },
+        onError: (err) => {
+          toast({
+            title: "Error",
+            description: err.message || "Failed to update invoice.",
+            variant: "destructive",
+          });
+        },
+      });
     } else {
       form.setError("root", {
         type: "validate",
@@ -100,7 +117,6 @@ export default function UpdateInvoice() {
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
         <span className="text-3xl font-bold">Update Invoice</span>
-        <Toaster position="top-right" reverseOrder={false} />
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} encType="multipart/form-data">

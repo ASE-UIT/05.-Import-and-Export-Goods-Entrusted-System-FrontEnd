@@ -33,7 +33,7 @@ import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/use-auth";
 import { CreateInvoiceBody, CreateInvoiceType } from "@/schema/invoice.schema";
 import useContract from "@/hooks/use-contract";
-import { Toaster } from "react-hot-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   contractId: z.string(),
@@ -46,6 +46,7 @@ const formSchema = z.object({
 export default function AddInvoice() {
   const [expiredDate, setExpiredDate] = useState<Date | undefined>(undefined);
   const router = useRouter();
+  const { toast } = useToast();
 
   const { mutate: createInvoice, status } =
     useInvoice.useCreateInvoice(router);
@@ -73,14 +74,29 @@ export default function AddInvoice() {
       taxAmount: values.taxAmount,
       totalAmount: values.totalAmount,
     };
-      createInvoice(createInvoiceBody);
+    createInvoice(createInvoiceBody, {
+      onSuccess: () => {
+        toast({
+          title: "Success",
+          description: "Invoice created successfully!",
+          variant: "default",
+        });
+        router.push("/invoices");
+      },
+      onError: (err) => {
+        toast({
+          title: "Error",
+          description: err.message || "Failed to create invoice.",
+          variant: "destructive",
+        });
+      },
+    });
   }
 
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
         <span className="text-3xl font-bold">Add Invoice</span>
-        <Toaster position="top-right" reverseOrder={false} />
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} encType="multipart/form-data">

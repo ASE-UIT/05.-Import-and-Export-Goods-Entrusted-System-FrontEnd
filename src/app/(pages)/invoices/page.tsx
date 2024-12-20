@@ -7,7 +7,6 @@ import { useState, useEffect } from "react";
 import { InvoiceDetailsType } from "@/schema/invoice.schema";
 import { format } from "date-fns";
 import { z } from "zod";
-import { Toaster } from "react-hot-toast";
 
 const formSchema = z.object({
   contractId: z.string(),
@@ -27,7 +26,6 @@ export default function InvoiceManagement() {
   const [invoiceData, setInvoiceData] = useState<IInvoice[]>([]);
   const { data, isLoading, error } = useGetInvoice.useGetInvoiceDetail();
   const totalRevenue = data?.data?.totalRevenue || 0;
-
 
   useEffect(() => {
     if (data) {
@@ -55,7 +53,6 @@ export default function InvoiceManagement() {
       <div className="flex flex-col w-full gap-[20px]">
         <div className="flex justify-between items-center">
           <span className="text-3xl font-bold">Invoice</span>
-          <Toaster position="top-right" reverseOrder={false} />
         </div>
         <div className="flex justify-between items-center">
           <span className="text-2xl">Total Revenue: {totalRevenue}</span>
