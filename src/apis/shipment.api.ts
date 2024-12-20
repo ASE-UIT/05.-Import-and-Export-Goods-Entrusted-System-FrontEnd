@@ -5,7 +5,7 @@ import {
     updateShipmentData,
     
 } from "@/schema/shipment.schema"
-import { log } from 'console';
+
 
 const shipmentAction={
     async getShipment(id?: string) {
@@ -19,15 +19,7 @@ const shipmentAction={
         );
         return res.data;
       },
-
-      
-    
-
-    // async createShipment(data: createShipmentData){
-    //     const res =await http.post<EximResponseWrapper>(`/v1/shipment`,data);
-    //     return res.data;
-    // },
-    
+  
     async createShipment(data: createShipmentData) {
       try {
         const res = await http.post<EximResponseWrapper>(`/v1/shipment`, data);
@@ -45,6 +37,18 @@ const shipmentAction={
           data
         );
         return res.data;
+      },
+
+      async getContracts(params = {}) {
+        try {
+          const res = await http.get<EximResponseWrapper>(`/v1/contracts`, {
+            params, // Các tham số lọc như quotationId, status, startDate...
+          });
+          return res.data;
+        } catch (error) {
+          console.error("Error fetching contracts:", error);
+          throw error;
+        }
       },
 }
 

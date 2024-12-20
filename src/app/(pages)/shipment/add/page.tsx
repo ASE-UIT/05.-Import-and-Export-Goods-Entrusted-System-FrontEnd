@@ -24,19 +24,20 @@ import {
 import { shipmentSchema } from "@/schema/shipment.schema";
 import { useShipment } from "@/hooks/use-shipment";
 import { useRouter } from "next/navigation";
+import useContract from "@/hooks/use-contract";
 
 export default function AddShipment() {
   const router = useRouter();
   const { useCreateShipment } = useShipment();
   const createShipment = useCreateShipment();
+  const { data: contracts, isLoading } = useContract.useGetContracts();
+  const contractIds = contracts?.data.map((contract) => contract.id) || [];
 
   const form = useForm<z.infer<typeof shipmentSchema>>({
     resolver: zodResolver(shipmentSchema),
     defaultValues: {
-      // shipmentType: "",
       contractId: "",
       location: "",
-      // status: "",
     },
   });
 
@@ -99,12 +100,31 @@ export default function AddShipment() {
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Contract ID</FormLabel>
                   <FormControl>
-                    <input
-                      {...field}
-                      type="text"
-                      className="w-full h-[60px] px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter Contract ID"
-                    />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-full h-[60px]">
+                        <SelectValue placeholder="Select contract ID" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {isLoading ? (
+                          <div className="flex items-center justify-center">
+                            Loading Contracts...
+                          </div>
+                        ) : contractIds.length > 0 ? (
+                          contractIds.map((id) => (
+                            <SelectItem key={id} value={id}>
+                              {id}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            No Contract Available
+                          </div>
+                        )}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
