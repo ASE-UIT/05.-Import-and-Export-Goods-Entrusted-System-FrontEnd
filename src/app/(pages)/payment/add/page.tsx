@@ -33,15 +33,17 @@ import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/use-auth";
 import { CreatePaymentBody, CreatePaymentType } from "@/schema/payment.schema";
 import useInvoice from "@/hooks/use-invoice";
+import { useToast } from "@/hooks/use-toast";
+
 
 const formSchema = z.object({
   invoiceId: z.string(),
-  status: z.string(),
   amountPaid: z.string(),
 });
 
 export default function AddInvoice() {
   const router = useRouter();
+  const { toast } = useToast();
 
   const { mutate: createPayment, status } =
     usePayment.useCreatePayment(router);
@@ -57,11 +59,28 @@ export default function AddInvoice() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     const createPaymentBody: CreatePaymentType = {
       invoiceId: values.invoiceId,
-      status: values.status.toUpperCase(),
       amountPaid: values.amountPaid,
     };
-      createPayment(createPaymentBody);
+  
+    createPayment(createPaymentBody, {
+      onSuccess: () => {
+        toast({
+          title: "Success",
+          description: "Payment added successfully!",
+          variant: "default",
+        });
+        router.push("/payment"); // Điều hướng sau khi thành công
+      },
+      onError: (error) => {
+        toast({
+          title: "Error",
+          description: `Failed to add payment: ${error?.message || "Unknown error"}`,
+          variant: "destructive",
+        });
+      },
+    });
   }
+  
 
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
@@ -122,35 +141,6 @@ export default function AddInvoice() {
                 </FormItem>
               )}
             />
-
-            {/* Status */}
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel className="font-bold">Status</FormLabel>
-                  <FormControl>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="w-full h-[60px]">
-                        <SelectValue placeholder="Status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Completed">COMPLETED</SelectItem>
-                        <SelectItem value="Pending">PENDING</SelectItem>
-                        <SelectItem value="Paid">PAID</SelectItem>
-                        <SelectItem value="Cancelled">CANCELLED</SelectItem>
-                        <SelectItem value="Failed">FAILED</SelectItem>
-                        <SelectItem value="Refunded">REFUNDED</SelectItem>
-                        <SelectItem value="Onhold">ONHOLD</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <div className="w-1/2 flex gap-2.5">
               <Link href="/payment" className="w-1/2 h-14">
                 <Button className="w-full h-10 text-lg" variant={"outline"} type="button">

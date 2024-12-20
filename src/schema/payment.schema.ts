@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const CreatePaymentBody = z.object({
     invoiceId: z.string().uuid(),
-    status: z.string(),
     amountPaid: z.string(),
 });
 
