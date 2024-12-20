@@ -12,19 +12,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
-
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { z } from "zod";
 import { Label } from "@/components/ui/label";
 
@@ -37,12 +27,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import ChangePasswordForm from "@/app/(pages)/settings/_components/change-password-form";
+import useAuth from "@/hooks/use-auth";
+import Loader from "@/components/loader";
 
 const UserSettingBody = z.object({
-  name: z.string().min(3),
+  name: z.string(),
   email: z.string().email(),
-  address: z.string().min(10),
-  phone: z.string().min(10),
+  address: z.string(),
+  phone: z.string(),
   dateOfBirth: z.string(),
   avatar: z.string(),
 });
@@ -50,99 +42,59 @@ const UserSettingBody = z.object({
 type UserSettingBodyType = z.infer<typeof UserSettingBody>;
 
 export default function SettingForm() {
+  const { data: user, isLoading } = useAuth.useGetSession();
   const [date, setDate] = useState<Date>();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const form = useForm<UserSettingBodyType>({
     resolver: zodResolver(UserSettingBody),
     defaultValues: {
-      name: "Khang Buoi",
-      email: "buoiduykhang@gmail.com",
-      address: "123 Tran Duy Hung - Cau Giay - Ha Noi",
-      phone: "0123456789",
-      dateOfBirth: "1-1-2000",
-      avatar: "https://placehold.co/400",
+      name: user?.employee?.name,
+      email: user?.employee?.email,
+      address: user?.employee?.address,
+      phone: user?.employee?.phone,
+      dateOfBirth: user?.employee.dob,
+      avatar: `https://api.dicebear.com/9.x/initials/svg?seed=${user?.employee?.name}`,
     },
   });
 
-  const inputFile = useRef<HTMLInputElement>(null);
-  const [image, setImage] = useState(null);
-  const [displayImage, setDisplayImage] = useState("https://placehold.co/400");
-  const [_loading] = useState(false);
-  const pressOnce = useRef(false);
-
-  // const handleImageChange = (event: any) => {
-  //   pressOnce.current = true;
-  //   setImage(event.target.files[0]);
-  //   setDisplayImage(
-  //     event.target.files[0] ? URL.createObjectURL(event.target.files[0]) : ""
-  //   );
-  //   event.target.value = null;
-  // };
-
-  // const handleSetImage = async () => {
-  //   console.log("submitted");
-  //   const formdata = new FormData();
-  //   if (image != null) {
-  //     console.log(image);
-  //     formdata.append("avatar", image);
-  //   }
-  //   setLoading(true);
-  //   try {
-  //     console.log("submitting");
-  //   } catch (err: any) {
-  //     console.log(err);
-  //   }
-  //   setLoading(false);
-  // };
+  useEffect(() => {
+    form.reset({
+      name: user?.employee?.name,
+      email: user?.employee?.email,
+      address: user?.employee?.address,
+      phone: user?.employee?.phone,
+      dateOfBirth: user?.employee.dob,
+      avatar: `https://api.dicebear.com/9.x/initials/svg?seed=${user?.employee?.name}`,
+    });
+    setDate(user?.employee.dob ? new Date(user.employee.dob) : new Date());
+  }, [form, user]);
 
   const onSubmit = form.handleSubmit((values) => {
     console.log(values);
   });
 
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-full w-full">
+        <Loader />
+      </div>
+    );
+
   return (
     <>
       <div className="w-full flex flex-col justify-center items-center gap-3">
-        <input
-          type="file"
-          id="file"
-          ref={inputFile}
-          style={{ display: "none" }}
-          // onChange={handleImageChange}
-          multiple
-        />
         <div className="relative">
           <Avatar className="size-[150px]">
-            <AvatarImage src={displayImage} alt="KhangBuoi" />
-            <AvatarFallback>KB</AvatarFallback>
+            <AvatarImage
+              src={`https://api.dicebear.com/9.x/initials/svg?seed=${user?.employee?.name}`}
+              alt="avatar"
+            />
+            <AvatarFallback>{user?.employee?.name}</AvatarFallback>
           </Avatar>
-          {image && (
-            <Button
-              variant={"outline"}
-              size={"icon"}
-              className="absolute top-0 right-0 z-10 rounded-full"
-              onClick={() => {
-                setDisplayImage("https://placehold.co/400");
-                setImage(null);
-                pressOnce.current = false;
-              }}
-            >
-              <X />
-            </Button>
-          )}
-        </div>
-        <div>
-          <Button
-            variant={"outline"}
-            className=""
-            onClick={() => {
-              inputFile.current?.click();
-            }}
-          >
-            Change Avatar
-          </Button>
         </div>
       </div>
-      <div className="mt-8 pl-80 pr-80">
+      <div className="mt-4 pl-80 pr-80">
         <Form {...form}>
           <form
             onSubmit={onSubmit}
@@ -160,6 +112,7 @@ export default function SettingForm() {
                       className="h-[60px]"
                       placeholder="Enter your name"
                       {...field}
+                      readOnly
                     />
                   </FormControl>
                   <FormMessage />
@@ -179,6 +132,7 @@ export default function SettingForm() {
                       placeholder="Enter your email"
                       type="email"
                       {...field}
+                      readOnly
                     />
                   </FormControl>
                   <FormMessage />
@@ -199,6 +153,7 @@ export default function SettingForm() {
                       className="h-[60px]"
                       placeholder="Enter your address"
                       {...field}
+                      readOnly
                     />
                   </FormControl>
                   <FormMessage />
@@ -221,6 +176,7 @@ export default function SettingForm() {
                           className="h-[60px]"
                           placeholder="Enter your phone"
                           {...field}
+                          readOnly
                         />
                       </FormControl>
                       <FormMessage />
@@ -238,39 +194,12 @@ export default function SettingForm() {
                       Date Of Birth
                     </FormLabel>
                     <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-[240px] h-[60px] justify-start text-left font-normal",
-                              !date && "text-muted-foreground"
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {date ? (
-                              format(date, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={(date) => {
-                              setDate(date);
-                              if (date) {
-                                form.setValue(
-                                  "dateOfBirth",
-                                  format(date, "d-M-yyyy")
-                                );
-                              }
-                            }}
-                          />
-                        </PopoverContent>
-                      </Popover>
+                      <Input
+                        className="h-[60px]"
+                        placeholder="Enter your date of birth"
+                        value={date ? format(date, "MM/dd/yyyy") : ""}
+                        readOnly
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -284,7 +213,7 @@ export default function SettingForm() {
                 <p>Password must be at least 8 characters long</p>
               </div>
 
-              <Dialog>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button className="mt-4" variant={"outline"} size={"lg"}>
                     Change
@@ -299,12 +228,17 @@ export default function SettingForm() {
                       Password must be at least 8 characters long
                     </DialogDescription>
                   </DialogHeader>
-                  <ChangePasswordForm />
+                  <ChangePasswordForm
+                    userId={user?.id ?? ""}
+                    onSuccess={() => {
+                      setIsDialogOpen(false);
+                    }}
+                  />
                 </DialogContent>
               </Dialog>
             </div>
 
-            <div className="flex justify-end gap-3 !mt-8">
+            <div className=" justify-end gap-3 !mt-8 hidden">
               <Button className="" variant={"outline"} size={"lg"}>
                 Cancel
               </Button>

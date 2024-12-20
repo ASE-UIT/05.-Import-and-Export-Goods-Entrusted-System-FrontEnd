@@ -86,10 +86,6 @@ const UserDropDown = () => {
           {user?.employee.name}
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="my-1 bg-foreground/20" />
-        <DropdownMenuItem className="cursor-pointer gap-2">
-          <User></User>
-          <span>Profile</span>
-        </DropdownMenuItem>
         <Link href="/settings">
           <DropdownMenuItem className="cursor-pointer gap-2">
             <Settings></Settings>
