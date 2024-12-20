@@ -1,10 +1,13 @@
 'use client';
+'use client';
 
+import { DataTable } from '@/app/(pages)/customers/components/data-table';
+import { columns } from './components/columns';
 import { DataTable } from '@/app/(pages)/customers/components/data-table';
 import { columns } from './components/columns';
 
 import useCustomer from '@/hooks/use-customer';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function CustomerManagementPage() {
   const { useListCustomer } = useCustomer();
@@ -12,14 +15,10 @@ export default function CustomerManagementPage() {
     email: null,
     name: null,
     phone: null,
-    page: 1,
-    limit: 10,
-    sortBy: 'name',
-    sortOrder: 'ASC',
   });
   const { data, isPending, error } = useListCustomer(searchParams);
   const customerList =
-    data?.results?.map((value) => ({
+    data?.map((value) => ({
       id: value.id,
       name: value.name,
       short_name: value.shortName,
@@ -29,12 +28,6 @@ export default function CustomerManagementPage() {
       address: value.address,
       legal_rep_name: value.legalRep.name,
     })) ?? [];
-  const [totalPages, setTotalPages] = useState(0);
-  useEffect(() => {
-    if (data?.pagination.totalPages) {
-      setTotalPages(data?.pagination.totalPages);
-    }
-  }, [data?.pagination.totalPages]);
 
   return (
     <div className="flex flex-col p-[24px] w-[calc(100vw-var(--sidebar-width))]">
@@ -44,7 +37,6 @@ export default function CustomerManagementPage() {
         </div>
         <DataTable
           columns={columns}
-          totalPages={totalPages}
           data={customerList}
           isPending={isPending}
           error={error}

@@ -1,10 +1,16 @@
 'use client';
+'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useCallback, useState } from 'react';
 import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { useCallback, useState } from 'react';
+import { z } from 'zod';
 
+import { Button } from '@/components/ui/button';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -13,6 +19,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Camera } from 'lucide-react';
+import useCustomer from '@/hooks/use-customer';
+import useLegalRep from '@/hooks/use-legalRep';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -35,9 +54,11 @@ const formSchema = z.object({
   tax_id: z.string(),
   address: z.string(),
   legal_rep_id: z.string(),
+  legal_rep_id: z.string(),
   file: z
     .instanceof(File)
     .refine((file) => file.size < 10000000, {
+      message: 'Your file must be less than 10MB.',
       message: 'Your file must be less than 10MB.',
     })
     .optional(),
@@ -57,6 +78,15 @@ export default function AddCustomerPage() {
       address: '',
       legal_rep_id: undefined,
     },
+    defaultValues: {
+      name: '',
+      short_name: '',
+      email: '',
+      phone: '',
+      tax_id: undefined,
+      address: '',
+      legal_rep_id: undefined,
+    },
   });
 
   const onPickFile = useCallback(
@@ -67,11 +97,13 @@ export default function AddCustomerPage() {
         reader.readAsDataURL(acceptedFile);
         form.setValue('file', acceptedFile);
         form.clearErrors('file');
+        form.setValue('file', acceptedFile);
+        form.clearErrors('file');
       } catch (error) {
         console.log(error);
+        console.log(error);
         setPreview(null);
-        form.resetField("file");
-        console.error(error);
+        form.resetField('file');
       }
     },
     [form]
@@ -83,7 +115,22 @@ export default function AddCustomerPage() {
   const { useCreateCustomer } = useCustomer();
   const { mutate: createCustomer } = useCreateCustomer();
 
+  const { useListLegalRep } = useLegalRep();
+  const { data: availableLegalReps } = useListLegalRep();
+
+  const { useCreateCustomer } = useCustomer();
+  const { mutate: createCustomer } = useCreateCustomer();
+
   function onSubmit(values: z.infer<typeof formSchema>) {
+    createCustomer({
+      name: values.name,
+      shortName: values.short_name,
+      email: values.email,
+      phone: values.phone,
+      taxId: values.tax_id,
+      address: values.address,
+      legalRepId: values.legal_rep_id, // Change to id
+    });
     createCustomer({
       name: values.name,
       shortName: values.short_name,
@@ -141,6 +188,7 @@ export default function AddCustomerPage() {
                       />
                       <Button
                         type="button"
+                        onClick={() => document.getElementById('file')?.click()}
                         onClick={() => document.getElementById('file')?.click()}
                       >
                         Upload Image
@@ -225,6 +273,7 @@ export default function AddCustomerPage() {
               <FormField
                 control={form.control}
                 name="legal_rep_id"
+                name="legal_rep_id"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel className="font-bold">Legal Rep Name</FormLabel>
@@ -235,7 +284,7 @@ export default function AddCustomerPage() {
                         </FormControl>
                       </SelectTrigger>
                       <SelectContent>
-                        {availableLegalReps?.results?.map((rep) => (
+                        {availableLegalReps?.map((rep) => (
                           <SelectItem key={rep.id} value={rep.id}>
                             {rep.name}
                           </SelectItem>

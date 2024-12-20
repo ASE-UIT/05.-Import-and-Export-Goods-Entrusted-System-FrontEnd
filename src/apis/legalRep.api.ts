@@ -5,9 +5,10 @@ import axios from 'axios';
 const legalRepAction = {
   list: async (params: LegalRepQueryParams | null | undefined = null) => {
     try {
-      const response = await http.get<
-        EximResponseWrapper<PaginationWrapper<LegalRepResponse[]>>
-      >('/v1/legal-reps', { params });
+      const response = await http.get<EximResponseWrapper<LegalRepResponse[]>>(
+        '/v1/legal-reps',
+        { params }
+      );
       return response.data.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {

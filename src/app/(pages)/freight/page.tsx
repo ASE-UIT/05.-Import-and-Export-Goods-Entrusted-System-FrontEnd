@@ -1,19 +1,16 @@
-"use client";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+'use client';
 
-import { DataTable } from "@/components/table/data-table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { landColumns } from "./components/columns/land-columns";
-import { airColumns } from "./components/columns/air-columns";
-import { FREIGHT_TYPE } from "@/configs/enum";
-import { fclColumns } from "./components/columns/fcl-columns";
-import { lclColumns } from "./components/columns/lcl-columns";
-import { getAirData } from "@/helpers/getAirData";
-import { getLandData } from "@/helpers/getLandData";
-import { getFclData } from "@/helpers/getFclData";
-import { getLclData } from "@/helpers/getLclData";
-
+import { DataTable } from '../customers/components/data-table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { landColumns } from './components/columns/land-columns';
+import { landData } from './data/land-data';
+import { seaColumns } from './components/columns/sea-columns';
+import { seaData } from './data/sea-data';
+import { airColumns } from './components/columns/air-columns';
+import { airData } from './data/air-data';
 export default function FreightManagementPage() {
-  const freightTypes = Object.values(FREIGHT_TYPE);
+  const freightTypes = ['land', 'sea', 'air'];
 
   const airfreightdata = getAirData();
   const landfreightdata = getLandData();
@@ -37,17 +34,23 @@ export default function FreightManagementPage() {
             </TabsList>
           </div>
         </div>
-        <TabsContent value={FREIGHT_TYPE.LAND}>
-          <DataTable columns={landColumns} data={landfreightdata} />
+        <TabsContent value="land">
+          {/* <DataTable
+            columns={freightTable.land.columns}
+            data={freightTable.land.data}
+          /> */}
         </TabsContent>
-        <TabsContent value={FREIGHT_TYPE.AIR}>
-          <DataTable columns={airColumns} data={airfreightdata} />
+        <TabsContent value="sea">
+          {/* <DataTable
+            columns={freightTable.sea.columns}
+            data={freightTable.sea.data}
+          /> */}
         </TabsContent>
-        <TabsContent value={FREIGHT_TYPE.FCL}>
-          <DataTable columns={fclColumns} data={fclData} />
-        </TabsContent>
-        <TabsContent value={FREIGHT_TYPE.LCL}>
-          <DataTable columns={lclColumns} data={lclData} />
+        <TabsContent value="air">
+          {/* <DataTable
+            columns={freightTable.air.columns}
+            data={freightTable.air.data}
+          /> */}
         </TabsContent>
       </Tabs>
     </div>

@@ -22,11 +22,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import { Button } from "../../../../components/ui/button";
-import { DataTableFilter } from "./data-table-filter";
-import { CirclePlus } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
-import { DataTablePagination } from "./data-table-pagination";
+import { Button } from '../../../../components/ui/button';
+import { CirclePlus } from 'lucide-react';
+import { useRouter, usePathname } from 'next/navigation';
+import { DataTablePagination } from '@/components/table/data-pagination';
+import { Skeleton } from '@/components/ui/skeleton';
+import { DataTableFilter } from './data-table-filter';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
