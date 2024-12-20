@@ -228,9 +228,7 @@ export default function QuoteRequestAddForm() {
                   <FormControl>
                     <Input placeholder="Origin" {...field} className="w-full" />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
+
                   <FormMessage />
                 </FormItem>
               )}
@@ -250,9 +248,7 @@ export default function QuoteRequestAddForm() {
                       className="w-full"
                     />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
+
                   <FormMessage />
                 </FormItem>
               )}
