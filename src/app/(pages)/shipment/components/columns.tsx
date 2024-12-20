@@ -97,8 +97,17 @@ export const columns: ColumnDef<IShipmentFormat>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("endDate"),
+    cell: ({ row }) => {
+      const rawDate = row.getValue("endDate") as string; // Ép kiểu dữ liệu
+      const formattedDate = new Intl.DateTimeFormat("vi-VN", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(new Date(rawDate));
+      return formattedDate;
+    },
   },
+
   {
     accessorKey: "location",
     header: ({ column }) => {
