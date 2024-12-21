@@ -38,9 +38,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useAuth from "@/hooks/use-auth";
 const formSchema = z.object({
   requestDate: z.string(),
-  customerId: z.string(),
+  userId: z.string(),
   cargoInsurance: z.boolean(),
   origin: z.string(),
   destination: z.string(),
@@ -73,12 +74,13 @@ export default function QuoteRequestAddForm() {
 
   const { mutate: CreateQuoteRequest } =
     useQuoteRequest.useCreateQuoteRequest(router);
-  const { data: customerData } = useQuoteRequest.useGetCustomerInfo();
+  // const { data: customerData } = useQuoteRequest.useGetCustomerInfo();
+  const { data: session } = useAuth.useGetSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      customerId: "",
+      userId: "",
       requestDate: "",
       origin: "",
       destination: "",
@@ -110,12 +112,15 @@ export default function QuoteRequestAddForm() {
     if (requestDate)
       form.setValue("requestDate", format(requestDate, "yyyy-MM-dd"));
   }, [requestDate]);
+  useEffect(() => {
+    if (session) form.setValue("userId", session.id);
+  }, [session]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     const createQuoteRequest: CreateQuoteRequestType = {
       requestDate: values.requestDate,
-      customerId: values.customerId,
+      userId: values.userId,
       cargoInsurance: values.cargoInsurance,
       origin: values.origin,
       destination: values.destination,
@@ -141,41 +146,6 @@ export default function QuoteRequestAddForm() {
           <div className="flex-1">
             <FormField
               control={form.control}
-              name="customerId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-lg">Customer Name</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className="w-full h-[60px] text-lg ">
-                        <SelectValue placeholder="Select customer" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {customerData?.data.results ? (
-                          customerData.data.results.map((it) => (
-                            <SelectItem key={it.id} value={it.id}>
-                              {it.name}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <div className="flex items-center justify-center">
-                            No Customer Available
-                          </div>
-                        )}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="flex-1">
-            <FormField
-              control={form.control}
               name="requestDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
@@ -186,7 +156,7 @@ export default function QuoteRequestAddForm() {
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "w-full h-[60px] pl-3 text-lg font-normal flex items-center justify-start hover:bg-primary",
+                            "w-1/2 h-[60px] pl-3 text-lg font-normal flex items-center justify-start hover:bg-primary",
                             !field.value && "text-black"
                           )}
                         >
@@ -378,7 +348,7 @@ export default function QuoteRequestAddForm() {
               <FormItem>
                 <div className="flex items-center space-x-2">
                   <DropdownMenuCustom<z.infer<typeof formSchema>>
-                    options={["DRY", "SEA", "FREEZE"]}
+                    options={["DRY", "FREEZE"]}
                     label="Package Type"
                     selectedOption={selectedPackageType}
                     setSelectedOption={setSelectedPackageType}
