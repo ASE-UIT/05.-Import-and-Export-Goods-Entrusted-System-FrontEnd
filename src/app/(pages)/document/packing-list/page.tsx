@@ -19,9 +19,20 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
-import { z } from "zod";
+import { object, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useRouter } from "next/navigation";
+import useDocument from "@/hooks/use-document";
+import { CreateDocumentType } from "@/schema/document.schema";
+import useShipmentTracking from "@/hooks/use-shipment-tracking";
 
 const formSchema = z.object({
   departmentName: z.string(),
@@ -41,13 +52,30 @@ const formSchema = z.object({
   ),
   signature: z.string(),
   instructions: z.string(),
+  shipmentId: z.string(),
+  docNumber: z.string(),
 });
 export default function PackingList() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [shippingDate, setShippingDate] = useState<Date | undefined>(undefined);
   const [rows, setRows] = useState(
-    Array(5).fill({ qty: "", description: "", weight: "", productNumber: "" })
+    Array(1).fill({ qty: "", description: "", weight: "", productNumber: "" })
   );
+
+  const router = useRouter();
+  const { mutate: CreateDocument } = useDocument.useCreateDocument(router);
+
+  const {
+    data: shipments,
+    isLoading: isLoadingShipments,
+    error: shipmentError,
+  } = useShipmentTracking.useGetShipment(
+    undefined,
+    undefined,
+    undefined,
+    undefined
+  );
+
   const addRow = () => {
     setRows((prev) => [
       ...prev,
@@ -64,7 +92,7 @@ export default function PackingList() {
       sentTo: "",
       fromTo: "",
       shippingCo: "",
-      rows: Array(5).fill({
+      rows: Array(1).fill({
         qty: "",
         description: "",
         weight: "",
@@ -72,6 +100,8 @@ export default function PackingList() {
       }),
       signature: "",
       instructions: "",
+      shipmentId: "",
+      docNumber: "",
     },
   });
 
@@ -86,6 +116,26 @@ export default function PackingList() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Packing List Data:", values);
+    const fields = {
+      departmentName: values.departmentName,
+      accountNo: values.accountNo,
+      date: values.date,
+      shippingDate: values.shippingDate,
+      sentTo: values.sentTo,
+      fromTo: values.fromTo,
+      shippingCo: values.shippingCo,
+      rows: values.rows,
+      signature: values.signature,
+      instructions: values.instructions,
+    };
+    const createQuoteRequest: CreateDocumentType = {
+      shipmentId: values.shipmentId,
+      type: "PACKING_LIST",
+      docNumber: values.docNumber ? parseInt(values.docNumber, 10) : 0,
+      fields,
+    };
+    console.log(createQuoteRequest);
+    CreateDocument(createQuoteRequest);
   }
   return (
     <div className="w-full max-w-5xl mx-auto p-8 border border-gray-300 shadow-md bg-white">
@@ -110,7 +160,7 @@ export default function PackingList() {
                 name="departmentName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Department Name:</FormLabel>
+                    <FormLabel className="text-lg">Department Name:</FormLabel>
                     <FormControl>
                       <Input placeholder="Enter department name" {...field} />
                     </FormControl>
@@ -122,7 +172,7 @@ export default function PackingList() {
                 name="accountNo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Account No:</FormLabel>
+                    <FormLabel className="text-lg">Account No:</FormLabel>
                     <FormControl>
                       <Input placeholder="Enter account number" {...field} />
                     </FormControl>
@@ -212,7 +262,7 @@ export default function PackingList() {
                 name="sentTo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Sent To:</FormLabel>
+                    <FormLabel className="text-lg">Sent To:</FormLabel>
                     <FormControl>
                       <Input placeholder="Enter recipient" {...field} />
                     </FormControl>
@@ -224,7 +274,7 @@ export default function PackingList() {
                 name="fromTo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>From To:</FormLabel>
+                    <FormLabel className="text-lg">From To:</FormLabel>
                     <FormControl>
                       <Input placeholder="Enter sender" {...field} />
                     </FormControl>
@@ -236,9 +286,57 @@ export default function PackingList() {
                 name="shippingCo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Shipping Co:</FormLabel>
+                    <FormLabel className="text-lg">Shipping Co:</FormLabel>
                     <FormControl>
                       <Input placeholder="Enter shipping company" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="shipmentId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-lg">Shipment</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="w-full h-[60px] text-lg ">
+                          <SelectValue placeholder="Shipment" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {shipments ? (
+                            shipments.results.map((it) => (
+                              <SelectItem key={it.id} value={it.id}>
+                                {it.id}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <div className="flex items-center justify-center">
+                              No Customer Available
+                            </div>
+                          )}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="docNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-lg">Document Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter doc number"
+                        {...field}
+                        type="number"
+                      />
                     </FormControl>
                   </FormItem>
                 )}
