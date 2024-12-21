@@ -15,19 +15,45 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-const formSchema = z.object({
-  name: z.string(),
-  shortname: z.string(),
-  fee: z.string(),
-});
+import {
+  CreateServiceBody,
+  CreateServiceBodyType,
+} from "@/schema/service.schema";
+import useService from "@/hooks/use-service";
+import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
+import { ErrorType } from "@/types/error.type";
+import { useRouter } from "next/navigation";
 
 export default function AddService() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const addService = useService.useCreateService();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const form = useForm<CreateServiceBodyType>({
+    resolver: zodResolver(CreateServiceBody),
+    defaultValues: {
+      name: "",
+      shortName: "",
+      fee: 0,
+    },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: CreateServiceBodyType) {
+    if (loading) return;
+    setLoading(true);
+    try {
+      await addService.mutateAsync({ service: values });
+      router.push("/service");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as ErrorType).message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -57,7 +83,7 @@ export default function AddService() {
 
             <FormField
               control={form.control}
-              name="shortname"
+              name="shortName"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Short name</FormLabel>
@@ -75,7 +101,7 @@ export default function AddService() {
                 <FormItem className="w-full">
                   <FormLabel className="font-bold">Fee</FormLabel>
                   <FormControl>
-                    <Input placeholder="Fee" {...field} />
+                    <Input placeholder="Fee" {...field} type="number" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -92,8 +118,12 @@ export default function AddService() {
                   Cancel
                 </Button>
               </Link>
-              <Button className="w-1/2 h-10 text-lg" type="submit">
-                Save
+              <Button
+                className="w-1/2 h-10 text-lg"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "Add Service"}
               </Button>
             </div>
           </div>
