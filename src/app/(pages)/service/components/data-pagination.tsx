@@ -112,7 +112,6 @@ export function DataTablePagination<TData>({
           </Button>
         </div>
       </div>
-      <div>Total: 1000</div>
     </div>
   );
 }
