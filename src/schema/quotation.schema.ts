@@ -8,7 +8,7 @@ export const CreateQuotationBody = z.object({
     deliveryDate: z.string(),
     quotationDate: z.string(),
     expiredDate: z.string(),
-    totalPrice: z.number(),
+    totalPrice: z.string(),
 });
 
 export const UpdateQuotationBody = z.object({
@@ -17,15 +17,12 @@ export const UpdateQuotationBody = z.object({
     quotationDate: z.string().optional(),
     expiredDate: z.string().optional(),
     status: z.string().optional(),
-    quoteReqId: z.string().optional(),
-    employeeId: z.string().optional(),
-    freightId: z.string().optional(),
-    totalPrice: z.number().optional(),
+    totalPrice: z.string().optional(),
 });
 
 export const QuotationDetailsRes = z.object({
     id: z.string(),
-    totalPrice: z.number(),
+    totalPrice: z.string(),
     pickupDate: z.date(),
     deliveryDate: z.date(),
     quotationDate: z.date(),
@@ -34,6 +31,7 @@ export const QuotationDetailsRes = z.object({
     quoteReqId: z.string(),
     freightId: z.string(),
     employeeId: z.string(),
+    userId: z.string(),
     createdAt: z.string(),
     updatedAt: z.string(),
 });
