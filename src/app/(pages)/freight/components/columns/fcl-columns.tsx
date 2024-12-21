@@ -3,11 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import { ISeaFreight } from "..";
+import ProviderCell from "./provider-cell";
+import ActionCell from "./action-cell";
 
-export const seaColumns: ColumnDef<ISeaFreight>[] = [
+export const fclColumns: ColumnDef<Freight & FCL>[] = [
   {
-    accessorKey: "provider_name",
+    accessorKey: "providerId",
     header: ({ column }) => {
       return (
         <Button
@@ -16,27 +17,12 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Provider Name
+          Provider
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("provider_name")}</div>,
-  },
-  {
-    accessorKey: "freight_type",
-    header: () => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-        >
-          Freight Type
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue("freight_type")}</div>,
+    cell: ({ row }) => <ProviderCell providerId={row.getValue("providerId")} />,
   },
   {
     accessorKey: "origin",
@@ -73,7 +59,7 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
     cell: ({ row }) => row.getValue("destination"),
   },
   {
-    accessorKey: "transit_time",
+    accessorKey: "transitTime",
     header: ({ column }) => {
       return (
         <Button
@@ -87,27 +73,10 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("transit_time"),
+    cell: ({ row }) => row.getValue("transitTime"),
   },
   {
-    accessorKey: "transit",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Transit
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("transit"),
-  },
-  {
-    accessorKey: "valid_from",
+    accessorKey: "validFrom",
     header: ({ column }) => {
       return (
         <Button
@@ -121,10 +90,11 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("valid_from"),
+    cell: ({ row }) =>
+      new Date(row.getValue("validFrom")).toLocaleDateString("en-GB"),
   },
   {
-    accessorKey: "valid_until",
+    accessorKey: "validUntil",
     header: ({ column }) => {
       return (
         <Button
@@ -138,10 +108,11 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("valid_until"),
+    cell: ({ row }) =>
+      new Date(row.getValue("validUntil")).toLocaleDateString("en-GB"),
   },
   {
-    accessorKey: "note",
+    accessorKey: "additionFee",
     header: () => {
       return (
         <Button
@@ -149,31 +120,51 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
           variant="ghost"
           style={{ backgroundColor: "transparent" }}
         >
-          Note
+          <p className="text-ellipsis overflow-hidden w-[100px]">
+            Addition Fee
+          </p>
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("note"),
+    cell: ({ row }) => row.getValue("additionFee"),
   },
   {
-    accessorKey: "free_time",
-    header: ({ column }) => {
+    accessorKey: "addition_fee_breakdown",
+    header: () => {
       return (
         <Button
           className="pl-0"
           variant="ghost"
           style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Free Time
-          <ArrowUpDown className="ml-2 size-4" />
+          <p className="text-ellipsis overflow-hidden w-[100px]">
+            Addition Fee Breakdown
+          </p>
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("free_time"),
+    cell: ({ row }) =>
+      row.getValue("addition_fee_breakdown")
+        ? row.getValue("addition_fee_breakdown")
+        : "N/A",
   },
   {
-    accessorKey: "twenty_DC",
+    accessorKey: "schedule",
+    header: () => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+        >
+          Schedule
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("schedule"),
+  },
+  {
+    accessorKey: "price_20dc",
     header: ({ column }) => {
       return (
         <Button
@@ -187,10 +178,10 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("twenty_DC"),
+    cell: ({ row }) => row.getValue("price_20dc"),
   },
   {
-    accessorKey: "forty_DC",
+    accessorKey: "price_40dc",
     header: ({ column }) => {
       return (
         <Button
@@ -204,10 +195,10 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("forty_DC"),
+    cell: ({ row }) => row.getValue("price_40dc"),
   },
   {
-    accessorKey: "forty_HC",
+    accessorKey: "price_40hc",
     header: ({ column }) => {
       return (
         <Button
@@ -221,10 +212,10 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("forty_HC"),
+    cell: ({ row }) => row.getValue("price_40hc"),
   },
   {
-    accessorKey: "twenty_RF",
+    accessorKey: "price_20rf",
     header: ({ column }) => {
       return (
         <Button
@@ -238,10 +229,10 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("twenty_RF"),
+    cell: ({ row }) => row.getValue("price_20rf"),
   },
   {
-    accessorKey: "forty_RF",
+    accessorKey: "price_40rf",
     header: ({ column }) => {
       return (
         <Button
@@ -255,6 +246,12 @@ export const seaColumns: ColumnDef<ISeaFreight>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("forty_RF"),
+    cell: ({ row }) => row.getValue("price_40rf"),
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => (
+      <ActionCell freightId={row.original.id} extraId={row.original.fcl_id} />
+    ),
   },
 ];
