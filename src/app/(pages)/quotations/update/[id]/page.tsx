@@ -49,7 +49,7 @@ const formSchema = z.object({
   quotationDate: z.date(),
   expiredDate: z.date(),
   status: z.string(),
-  totalPrice: z.number(),
+  totalPrice: z.string(),
 });
 
 export default function UpdateQuotationtPage() {
@@ -232,33 +232,11 @@ export default function UpdateQuotationtPage() {
                     Quotation Request ID
                   </FormLabel>
                   <FormControl>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value); 
-                      }}
-                    defaultValue={quotation?.quoteReqId || field.value || ""}
-                  >
-                    <SelectTrigger className="w-[500px] h-[60px]">
-                      <SelectValue
-                        placeholder={
-                          quotation?.quoteReqId || field.value || ""
-                        }
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {quoteRequest && quoteRequest.length > 0 ? (
-                        quoteRequest.map((it) => (
-                          <SelectItem key={it} value={it}>
-                            {it}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <div className="flex items-center justify-center">
-                          No Quote Request Available
-                        </div>
-                      )}
-                    </SelectContent>
-                  </Select>
+                    <Input
+                      value={quotation?.quoteReqId || field.value || ""}
+                      readOnly
+                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
+                    />
                 </FormControl>
               <FormMessage />
             </FormItem>
@@ -296,32 +274,11 @@ export default function UpdateQuotationtPage() {
                     Freight ID
                   </FormLabel>
                   <FormControl>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value); 
-                      }}
-                    defaultValue={quotation?.freightId || field.value || ""}
-                  >
-                    <SelectTrigger className="w-[500px] h-[60px]">
-                      <SelectValue
-                        placeholder={
-                          quotation?.freightId || field.value || ""
-                        }
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {freights && freights.length > 0 ? (
-                        freights.map((it) => (
-                          <SelectItem key={it} value={it}>
-                            {it}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <div className="flex items-center justify-center">  
-                        </div>
-                      )}
-                    </SelectContent>
-                  </Select>
+                    <Input
+                      value={quotation?.freightId || field.value || ""}
+                      readOnly
+                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
+                    />
                 </FormControl>
               <FormMessage />
             </FormItem>
@@ -527,7 +484,9 @@ export default function UpdateQuotationtPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Draft">DRAFT</SelectItem>
-                        <SelectItem value="Booked">BOOKED</SelectItem>
+                        <SelectItem value="Accepted">ACCEPTED</SelectItem>
+                        <SelectItem value="Rejected">REJECTED</SelectItem>
+                        <SelectItem value="Expired">EXPIRED</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -545,7 +504,9 @@ export default function UpdateQuotationtPage() {
                   <FormControl>
                     <Input
                       {...field} 
-                      value={quotation?.totalPrice !== undefined ? String(quotation?.totalPrice) : "Total Price"} 
+                      defaultValue={quotation?.totalPrice || ""} 
+                      onChange={(e) => field.onChange(e.target.value)} 
+                      placeholder="Total Price" 
                     />
                   </FormControl>
                   <FormMessage />

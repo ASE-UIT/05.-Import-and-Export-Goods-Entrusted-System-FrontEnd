@@ -46,7 +46,7 @@ const formSchema = z.object({
   deliveryDate: z.string(),
   quotationDate: z.string(),
   expiredDate: z.string(),
-  totalPrice: z.number(),
+  totalPrice: z.string(),
 });
 
 export default function AddQuotationtPage() {
