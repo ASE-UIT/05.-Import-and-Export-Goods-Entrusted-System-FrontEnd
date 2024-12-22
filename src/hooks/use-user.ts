@@ -4,7 +4,7 @@ import {
   UpdatePasswordBodyType,
 } from "@/schema/user.schema";
 import { ErrorType } from "@/types/error.type";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useUser = {
   useCreateUser() {

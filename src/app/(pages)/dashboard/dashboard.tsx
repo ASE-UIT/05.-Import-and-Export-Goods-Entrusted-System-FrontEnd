@@ -15,6 +15,7 @@ import useShipmentTracking from "@/hooks/use-shipment-tracking";
 import { Shipment } from "@/types/shipment.type";
 import useCustomer from "@/hooks/use-customer";
 import useFreight from "@/hooks/use-freight";
+import useQuoteRequest from "@/hooks/use-quote-request";
 
 export default function Dashboard() {
   const {
@@ -30,6 +31,26 @@ export default function Dashboard() {
 
   const { data: freight } = getAllFreight;
 
+  const { data: quoteRequest } = useQuoteRequest.useGetQuoteRequest();
+
+  const activeStatuses = [
+    "DOCUMENT_VERIFICATION",
+    "CUSTOMS_CLEARANCE_PENDING",
+    "PROCESSING_AT_ORIGIN_PORT",
+    "LOADED_ON_VESSEL",
+    "IN_TRANSIT",
+    "ARRIVE_AT_DESTINATION_PORT",
+    "CUSTOMS_CLEARANCE_AT_DESTINATION",
+    "PROCESSING_AT_DESTINATION_WAREHOUSE",
+    "OUT_FOR_DELIVERY",
+    "ON_HOLD",
+  ];
+
+  const activeShipments = shipments?.results?.filter((shipment) =>
+    activeStatuses.includes(shipment.tracking?.status || "")
+  );
+
+  console.log("quoteRequest", quoteRequest?.length);
   console.log("freight", freight?.pagination.records);
   console.log("shipment", shipments?.pagination.records);
   console.log("customer", customers?.pagination.records);
@@ -51,10 +72,19 @@ export default function Dashboard() {
 
   return (
     <div className="p-6 space-y-4 w-full">
-      <GroupCard />
+      <GroupCard
+        customer={customers?.pagination.records}
+        shipment={activeShipments?.length}
+        freight={freight?.pagination.records}
+        quote={quoteRequest?.length}
+      />
       <div className="flex w-full space-x-7">
         <GroupButton />
-        <ReportChart />
+        <ReportChart
+          customer={customers?.results}
+          shipment={shipments?.results}
+          quote={quoteRequest}
+        />
       </div>
       <div className="space-y-2 w-full">
         <div className="flex justify-between items-center">
