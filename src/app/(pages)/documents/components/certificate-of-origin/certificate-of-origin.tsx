@@ -144,10 +144,11 @@ const CertificateOfOrigin = ({data} : {data: CertificateOfOriginData}) => {
         <p>Sworn to before me this ______ day of ___________________, 20 ________.</p>
         <p>Signature of Notary: ____________________________________________</p>
         <p>
+          {`
           The ___________________________, a recognized Chamber of Commerce under the laws of the State of
           ___________________, has examined the manufacturer's invoice or shipper's affidavit concerning the origin of
           the merchandise and, according to the best of its knowledge and belief, finds that the products named
-          originated in the ___________________________.
+          originated in the ___________________________.`}
         </p>
         <p>Secretary: ____________________________________________</p>
       </div>
