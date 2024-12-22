@@ -49,7 +49,6 @@ const formSchema = z.object({
   quotationDate: z.date(),
   expiredDate: z.date(),
   status: z.string(),
-  totalPrice: z.string(),
 });
 
 export default function UpdateQuotationtPage() {
@@ -134,7 +133,6 @@ export default function UpdateQuotationtPage() {
   
         // Đặt giá trị cho form
         form.setValue("status", quotationData.status);
-        form.setValue("totalPrice", quotationData.totalPrice);
         form.setValue("quoteReqId", quotationData.quoteReqId);
         form.setValue("employeeId", quotationData.employeeId);
         form.setValue("freightId", quotationData.freightId);
@@ -194,9 +192,6 @@ export default function UpdateQuotationtPage() {
       ...(values.status.toUpperCase() !== quotation?.status.toUpperCase() && {
         status: values.status.toUpperCase(),
       }),  
-      ...(values.totalPrice !== quotation?.totalPrice && {
-        totalPrice: values.totalPrice,
-      }),   
     };
     if (Object.keys(updateQuotationBody).length > 0) {
       updateQuotation(updateQuotationBody);
@@ -489,25 +484,6 @@ export default function UpdateQuotationtPage() {
                         <SelectItem value="Expired">EXPIRED</SelectItem>
                       </SelectContent>
                     </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* Price */}
-            <FormField
-              control={form.control}
-              name="totalPrice"
-              render={({ field }) => (
-                <FormItem className="w-[500px]">
-                  <FormLabel className="font-bold">Total Price</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field} 
-                      defaultValue={quotation?.totalPrice || ""} 
-                      onChange={(e) => field.onChange(e.target.value)} 
-                      placeholder="Total Price" 
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

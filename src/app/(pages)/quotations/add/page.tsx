@@ -46,7 +46,6 @@ const formSchema = z.object({
   deliveryDate: z.string(),
   quotationDate: z.string(),
   expiredDate: z.string(),
-  totalPrice: z.string(),
 });
 
 export default function AddQuotationtPage() {
@@ -118,7 +117,6 @@ export default function AddQuotationtPage() {
       deliveryDate: values.deliveryDate,
       quotationDate: values.quotationDate,
       expiredDate: values.expiredDate,
-      totalPrice: values.totalPrice,
     };
     createQuotation(createQuotationBody);
   }
@@ -390,20 +388,6 @@ export default function AddQuotationtPage() {
               />
             </div>
 
-            {/* Price */}
-            <FormField
-              control={form.control}
-              name="totalPrice"
-              render={({ field }) => (
-                <FormItem className="w-[500px]">
-                  <FormLabel className="font-bold">Total Price</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Total Price" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </div>
           {/* Button */}
           <div className="flex justify-center mt-6">
