@@ -139,7 +139,6 @@ export default function PackingList() {
   }
   return (
     <div className="w-full max-w-5xl mx-auto p-8 border border-gray-300 shadow-md bg-white">
-      {/* Header */}
       <div className="flex flex-col items-center mb-4">
         <h1 className="text-3xl font-bold">Company Name</h1>
         <div className="text-sm mt-2 text-center">
