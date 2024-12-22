@@ -1,25 +1,26 @@
 "use client";
-
 import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
+import { IShipmentFormat } from "@/types/shipment.d";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-export interface IShipment {
-  id: string;
-  type: string;
-  client: string;
-  price: string;
-  enddate: string;
-  location: string;
-  status: string;
-  origin: string;
-  destination: string;
-}
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import ImportExportForm from "./im_export.form";
 
-export const columns: ColumnDef<IShipment>[] = [
+export const columns: ColumnDef<IShipmentFormat>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "shipmentId",
     header: ({ column }) => {
       return (
         <Button
@@ -32,10 +33,10 @@ export const columns: ColumnDef<IShipment>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("id")}</div>,
+    cell: ({ row }) => row.getValue("shipmentId"),
   },
   {
-    accessorKey: "type",
+    accessorKey: "shipmentType",
     header: ({ column }) => {
       return (
         <Button
@@ -48,7 +49,7 @@ export const columns: ColumnDef<IShipment>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("type")}</div>,
+    cell: ({ row }) => <div>{row.getValue("shipmentType")}</div>,
   },
   {
     accessorKey: "client",
@@ -83,7 +84,7 @@ export const columns: ColumnDef<IShipment>[] = [
     cell: ({ row }) => row.getValue("price"),
   },
   {
-    accessorKey: "enddate",
+    accessorKey: "endDate",
     header: ({ column }) => {
       return (
         <Button
@@ -96,8 +97,17 @@ export const columns: ColumnDef<IShipment>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("enddate"),
+    cell: ({ row }) => {
+      const rawDate = row.getValue("endDate") as string; // Ép kiểu dữ liệu
+      const formattedDate = new Intl.DateTimeFormat("vi-VN", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(new Date(rawDate));
+      return formattedDate;
+    },
   },
+
   {
     accessorKey: "location",
     header: ({ column }) => {
@@ -155,39 +165,53 @@ export const columns: ColumnDef<IShipment>[] = [
     id: "action",
     header: "Action",
     cell: ({ row }) => {
-      const shipment = row.original as IShipment; // Ép kiểu cho row.original
+      const shipment = row.original as IShipmentFormat; // Ép kiểu cho row.original
 
-      let linkTo: string;
+      // let linkTo: string;
 
-      if (shipment.type === "Sea Freight") {
-        linkTo =
-          shipment.origin === shipment.destination
-            ? `/shipment/details/seaimport/` // Đường dẫn cho sea import
-            : `/shipment/details/seaexport/`; // Đường dẫn cho sea export
-      } else if (shipment.type === "Air Freight") {
-        linkTo =
-          shipment.origin === shipment.destination
-            ? `/shipment/details/airimport/` // Đường dẫn cho air import
-            : `/shipment/details/airexport/`; // Đường dẫn cho air export
-      } else if (shipment.type === "Land Freight") {
-        linkTo =
-          shipment.origin === shipment.destination
-            ? `/shipment/details/landimport/` // Đường dẫn cho land import
-            : `/shipment/details/landexport/`; // Đường dẫn cho land export
-      } else {
-        linkTo = `/shipment/details/other/${shipment.id}`; // Đường dẫn mặc định nếu không thuộc các loại trên
-      }
+      // if (shipment.shipmentType === "LCL" || shipment.shipmentType === "FCL") {
+      //   linkTo =
+      //     shipment.origin === shipment.destination
+      //       ? `/shipment/details/seaimport/` // Đường dẫn cho sea import
+      //       : `/shipment/details/seaexport/`; // Đường dẫn cho sea export
+      // } else if (shipment.shipmentType === "AIR") {
+      //   linkTo =
+      //     shipment.origin === shipment.destination
+      //       ? `/shipment/details/airimport/` // Đường dẫn cho air import
+      //       : `/shipment/details/airexport/`; // Đường dẫn cho air export
+      // } else if (shipment.shipmentType === "LAND") {
+      //   linkTo =
+      //     shipment.origin === shipment.destination
+      //       ? `/shipment/details/landimport/` // Đường dẫn cho land import
+      //       : `/shipment/details/landexport/`; // Đường dẫn cho land export
+      // } else {
+      //   linkTo = `/shipment/details/other/${shipment.shipmentId}`; // Đường dẫn mặc định nếu không thuộc các loại trên
+      // }
 
       return (
         <div>
-          <Link href={linkTo}>
+          {/* <Link href={linkTo}>
             <button
               className="text-blue-500"
-              aria-label={`Edit ${shipment.id}`}
+              aria-label={`Edit ${shipment.shipmentId}`}
             >
               View details
             </button>
-          </Link>
+          </Link> */}
+          <Dialog>
+            <DialogTrigger>
+              <button>View</button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[1025px]">
+              <DialogHeader>
+                <DialogTitle>Inport/Export form</DialogTitle>
+                <ImportExportForm />
+              </DialogHeader>
+              <DialogFooter>
+                <Button type="submit">Request</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       );
     },
