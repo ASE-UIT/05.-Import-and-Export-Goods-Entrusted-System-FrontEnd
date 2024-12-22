@@ -59,7 +59,6 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
   });
-
   return (
     <div className="w-full">
       <div className="flex w-full justify-between pb-[10px] mb-[20px]">
