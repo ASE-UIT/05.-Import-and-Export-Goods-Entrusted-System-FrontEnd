@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/select";
 const formSchema = z.object({
   requestDate: z.string(),
-  customerId: z.string(),
+  userId: z.string(),
   cargoInsurance: z.boolean(),
   origin: z.string(),
   destination: z.string(),
@@ -83,7 +83,7 @@ export default function QuoteRequestUpdateForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      customerId: "",
+      userId: "",
       requestDate: "",
       origin: "",
       destination: "",
@@ -102,7 +102,7 @@ export default function QuoteRequestUpdateForm() {
   useEffect(() => {
     if (getFullDetails) {
       form.reset({
-        customerId: getFullDetails.customerId || "",
+        userId: getFullDetails.customerId || "",
         requestDate: getFullDetails.requestDate
           ? format(new Date(getFullDetails.requestDate), "yyyy-MM-dd")
           : "",
@@ -176,7 +176,7 @@ export default function QuoteRequestUpdateForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     const updateQuoteRequest: UpdateQuoteRequestType = {
       requestDate: values.requestDate,
-      customerId: values.customerId,
+      userId: values.userId,
       cargoInsurance: values.cargoInsurance,
       origin: values.origin,
       destination: values.destination,
@@ -208,7 +208,7 @@ export default function QuoteRequestUpdateForm() {
               <div className="flex-1">
                 <FormField
                   control={form.control}
-                  name="customerId"
+                  name="userId"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-lg">Customer Name</FormLabel>
