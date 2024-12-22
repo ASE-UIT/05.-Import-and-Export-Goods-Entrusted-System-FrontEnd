@@ -29,7 +29,10 @@ export default function Page() {
             <div className="flex w-full flex-col border-[1px]">
               <div className="flex w-full font-bold">
                 <div className={"flex-1" + border}>
-                  <div>Chi cục Hải quan đăng ký tờ khai:</div>
+                  <div>
+                    Chi cục Hải quan đăng ký tờ khai:
+                    <input></input>
+                  </div>
                   <div>Chi cục Hải quan cửa khẩu xuất:</div>
                 </div>
                 <div className={"flex-[0.75]" + border}>
