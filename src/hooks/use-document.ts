@@ -1,53 +1,34 @@
-import { ErrorType } from "@/types/error.type";
-import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { toast } from "./use-toast";
-import { CreateDocumentType } from "@/schema/document.schema";
-import documentAction from "@/apis/document.api";
+import importDocumentAction from "@/apis/document/import.api";
+import { importDocumentData } from "@/schema/document/importDocument.schema";
+import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 
-const useDocument ={
-    useCreateDocument(router: ReturnType<typeof useRouter>) {
-        const queryClient = useQueryClient();
-        return useMutation({
-        mutationFn: (createDocumentBody: CreateDocumentType) =>
-            documentAction.createDocument(createDocumentBody),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-            queryKey: ["document"],
-            });
-            toast({
-                title: "Create success",
-                description: "Document created successfully",
-                duration: 10000
-            });
-            router.push("/quote-request");
-        },
-        onError: (error: ErrorType) => {
-            console.error("Error during create:", error);
-            toast({
-            title: "Create failed",
-            description: "An error occurred while creating document",
-            variant: "destructive",
-            duration: 5000,
-          });
-            throw error;
-        },
+export const useDocument = () => {
+  const queryClient = useQueryClient();
+
+  const useGetImportDocumentById = (id: number) => {
+    return useQuery({
+      queryKey: ["importDocument", id],
+      queryFn: () => {
+        return importDocumentAction.getImportDocument(id);
+      },
+    });
+  };
+
+  const useCreateImportDocument = () => {
+    return useMutation({
+      mutationFn: (data: importDocumentData) =>
+        importDocumentAction.createImportDocument(data),
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["importDocument"],
         });
-    },
-    useGetDOcumentById(id: string) {
-        return useQuery({
-        queryKey: ["document", id],
-        queryFn: async () => {
-            try {
-            const result = await documentAction.getDocumentById(id);
-            return result;
-            } catch (error) {
-            console.error("Error during get document:", error);
-            throw error;
-            }
-        },
-        retry: 0,
-        });
-    },
-}
-export default useDocument;
+      },
+    });
+  };
+
+  return {
+    queryClient,
+    useGetImportDocumentById,
+    useCreateImportDocument,
+  };
+};
