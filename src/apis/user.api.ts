@@ -1,4 +1,6 @@
 import {
+  CreateClientAccountBodyType,
+  CreateEmployeeAccountBodyType,
   CreateUsersBodyType,
   UpdatePasswordBodyType,
   UserResponseType,
@@ -6,6 +8,7 @@ import {
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
 import axios from "axios";
+import { create } from "domain";
 
 const userAction = {
   list: async () => {
@@ -26,7 +29,7 @@ const userAction = {
     }
   },
 
-  create: async (userDetails: CreateUsersBodyType) => {
+  createEmployee: async (userDetails: CreateEmployeeAccountBodyType) => {
     try {
       const response = await http.post("v1/users", userDetails);
       return response.data;
@@ -42,6 +45,21 @@ const userAction = {
     }
   },
 
+  createClient: async (userDetails: CreateClientAccountBodyType) => {
+    try {
+      const response = await http.post("v1/users", userDetails);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const userError = error.response.data as ErrorType;
+        console.error("Error during create user:", userError);
+        throw userError;
+      } else {
+        console.error("Unexpected error during create user:", error);
+        throw error;
+      }
+    }
+  },
   updatePassword: async (
     userId: string,
     updatePasswordDetails: UpdatePasswordBodyType

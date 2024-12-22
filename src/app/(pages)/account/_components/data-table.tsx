@@ -30,11 +30,13 @@ import { useRouter, usePathname } from "next/navigation";
 import { DataTablePagination } from "./data-pagination";
 
 interface DataTableProps<TData, TValue> {
+  type?: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
 export function DataTable<TData, TValue>({
+  type,
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -65,7 +67,10 @@ export function DataTable<TData, TValue>({
       <div className="flex w-full justify-between pb-[10px] mb-[20px]">
         <dataTableFilter.DataTableFilter table={table} />
         <div className="flex gap-3">
-          <Button variant="default" onClick={() => router.push(`${path}/add`)}>
+          <Button
+            variant="default"
+            onClick={() => router.push(`${path}/add-${type}`)}
+          >
             <CirclePlus className="mr-2" />
             <span>Add {path.slice(1, path.length)}</span>
           </Button>

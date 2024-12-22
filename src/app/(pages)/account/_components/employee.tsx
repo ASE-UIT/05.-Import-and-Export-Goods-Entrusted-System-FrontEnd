@@ -16,7 +16,7 @@ export default function Employee({ data }: EmployeeProps) {
         <div className="flex justify-between items-center">
           <span className="text-2xl font-bold">Employee Account</span>
         </div>
-        {data && <DataTable columns={columns} data={data} />}
+        {data && <DataTable columns={columns} data={data} type="employee" />}
       </div>
     </div>
   );

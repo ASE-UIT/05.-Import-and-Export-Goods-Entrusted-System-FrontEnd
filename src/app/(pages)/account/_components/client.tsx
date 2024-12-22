@@ -16,7 +16,7 @@ export default function Client({ data }: ClientProps) {
         <div className="flex justify-between items-center">
           <span className="text-2xl font-bold">Client Account</span>
         </div>
-        {data && <DataTable columns={columns} data={data} />}
+        {data && <DataTable columns={columns} data={data} type="client" />}
       </div>
     </div>
   );
