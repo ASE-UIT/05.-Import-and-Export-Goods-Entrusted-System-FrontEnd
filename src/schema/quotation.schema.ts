@@ -8,7 +8,6 @@ export const CreateQuotationBody = z.object({
     deliveryDate: z.string(),
     quotationDate: z.string(),
     expiredDate: z.string(),
-    totalPrice: z.string(),
 });
 
 export const UpdateQuotationBody = z.object({
@@ -17,7 +16,6 @@ export const UpdateQuotationBody = z.object({
     quotationDate: z.string().optional(),
     expiredDate: z.string().optional(),
     status: z.string().optional(),
-    totalPrice: z.string().optional(),
 });
 
 export const QuotationDetailsRes = z.object({
