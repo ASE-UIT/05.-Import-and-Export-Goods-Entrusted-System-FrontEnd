@@ -1,5 +1,6 @@
 "use client";
 
+import useAuth from "@/hooks/use-auth";
 import {
   ClipboardCheck,
   ClipboardMinus,
@@ -47,6 +48,7 @@ function MenuItem({ icon, title, path }: MenuItemProps) {
 }
 
 export default function Sidebar() {
+  const { data: user } = useAuth.useGetSession();
   return (
     <div className="w-60 h-[900px] bg-secondary fixed">
       <div className="p-5 gap-y-3 border-b border-[#FCFCFC]/[40]">

@@ -1,8 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -15,36 +12,58 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { useParams, useRouter } from "next/navigation";
 import {
-  CreateServiceBody,
-  CreateServiceBodyType,
-} from "@/schema/service.schema";
-import useService from "@/hooks/use-service";
-import { useState } from "react";
+  UpdateLegalRepBody,
+  UpdateLegalRepBodyType,
+} from "@/schema/regalRep.schema";
+import useLegalRep from "@/hooks/use-legalRep";
+import { useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { ErrorType } from "@/types/error.type";
-import { useRouter } from "next/navigation";
 
-export default function AddService() {
-  const addService = useService.useCreateService();
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-  const form = useForm<CreateServiceBodyType>({
-    resolver: zodResolver(CreateServiceBody),
+export default function AddContactRep() {
+  const { legalId } = useParams<{ legalId: string }>();
+  const { useDetailLegalRep } = useLegalRep();
+  const { data: legalRep } = useDetailLegalRep(legalId);
+  console.log(legalRep);
+  const form = useForm<UpdateLegalRepBodyType>({
+    resolver: zodResolver(UpdateLegalRepBody),
     defaultValues: {
-      name: "",
-      shortName: "",
-      fee: 0,
+      name: legalRep?.name ?? "",
+      email: legalRep?.email ?? "",
+      phone: legalRep?.phone ?? "",
     },
   });
 
-  async function onSubmit(values: CreateServiceBodyType) {
+  useEffect(() => {
+    form.reset({
+      name: legalRep?.name ?? "",
+      email: legalRep?.email ?? "",
+      phone: legalRep?.phone ?? "",
+    });
+  }, [legalRep, form]);
+
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+  const { useUpdateLegalRep } = useLegalRep();
+  const { mutateAsync: updateRegalRep } = useUpdateLegalRep();
+
+  async function onSubmit(values: UpdateLegalRepBodyType) {
     if (loading) return;
     setLoading(true);
     try {
-      await addService.mutateAsync({ service: values });
-      router.push("/service");
+      await updateRegalRep({ id: legalId, body: values });
+      toast({
+        title: "Success",
+        description: "Legal representative updated successfully",
+      });
+      router.push("/regal-representative");
     } catch (error) {
       toast({
         title: "Error",
@@ -55,16 +74,16 @@ export default function AddService() {
       setLoading(false);
     }
   }
-
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
-        <span className="text-3xl font-bold">Add Service</span>
+        <span className="text-3xl font-bold">Update Legal Representative</span>
       </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           encType="multipart/form-data"
+          noValidate
         >
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
             <FormField
@@ -80,15 +99,14 @@ export default function AddService() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
-              name="shortName"
+              name="email"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Short name</FormLabel>
+                  <FormLabel className="font-bold">Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Short name" {...field} />
+                    <Input type="email" placeholder="Email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -96,12 +114,12 @@ export default function AddService() {
             />
             <FormField
               control={form.control}
-              name="fee"
+              name="phone"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Fee</FormLabel>
+                  <FormLabel className="font-bold">Phone</FormLabel>
                   <FormControl>
-                    <Input placeholder="Fee" {...field} type="number" />
+                    <Input type="tel" placeholder="Phone" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -109,10 +127,13 @@ export default function AddService() {
             />
 
             <div className="w-1/2 flex gap-2.5">
-              <Link href="/service" className="w-1/2 h-14 text-lg">
+              <Link
+                href="/legal-representative"
+                className="w-1/2 h-14 text-lg bg-white text-black"
+              >
                 <Button
+                  className="w-full h-10  text-lg"
                   variant={"outline"}
-                  className="w-full h-10 text-lg"
                   type="button"
                 >
                   Cancel
@@ -120,10 +141,11 @@ export default function AddService() {
               </Link>
               <Button
                 className="w-1/2 h-10 text-lg"
+                variant={"default"}
                 type="submit"
                 disabled={loading}
               >
-                {loading ? "Loading..." : "Add Service"}
+                {loading ? "Loading..." : "Add"}
               </Button>
             </div>
           </div>

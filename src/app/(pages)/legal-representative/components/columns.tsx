@@ -1,11 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Service } from "@/types/service.type";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
-export const columns: ColumnDef<Service>[] = [
+export const columns: ColumnDef<LegalRepResponse>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -39,7 +38,7 @@ export const columns: ColumnDef<Service>[] = [
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "shortName",
+    accessorKey: "email",
     header: ({ column }) => {
       return (
         <Button
@@ -48,14 +47,14 @@ export const columns: ColumnDef<Service>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Short Name
+          Email
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("shortName")}</div>,
+    cell: ({ row }) => row.getValue("email"),
   },
   {
-    accessorKey: "fee",
+    accessorKey: "phone",
     header: ({ column }) => {
       return (
         <Button
@@ -64,18 +63,18 @@ export const columns: ColumnDef<Service>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Fee
+          Phone
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("fee"),
+    cell: ({ row }) => row.getValue("phone"),
   },
   {
     id: "action",
     header: "Action",
     cell: ({ row }) => (
       <div>
-        <Link href={`/service/update/${row.getValue("name")}`}>
+        <Link href={`/regal-representative/update/${row.getValue("id")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
       </div>
