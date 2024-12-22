@@ -51,7 +51,7 @@ export default function AddContactRep() {
         title: "Success",
         description: "Legal representative created successfully",
       });
-      router.push("/regal-representative");
+      router.push("/legal-representative");
     } catch (error) {
       toast({
         title: "Error",
