@@ -1,5 +1,5 @@
 import {
-  BookedQuotationsType,
+  AcceptedQuotationsType,
   ContractsResType,
   CreateContractType,
   UpdateContractType,
@@ -39,17 +39,20 @@ const contractAction = {
       }
     }
   },
-  async getBookedQuotations() {
+  async getAcceptedQuotations() {
     try {
-      const response = await http.get<BookedQuotationsType>(
-        "v1/quotations?status=BOOKED"
+      const response = await http.get<AcceptedQuotationsType>(
+        "v1/quotations?status=ACCEPTED"
       );
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
-        const getBookedQuotationsError = error.response.data as ErrorType;
-        console.error("Error during get contracts:", getBookedQuotationsError);
-        throw getBookedQuotationsError;
+        const getAcceptedQuotationsError = error.response.data as ErrorType;
+        console.error(
+          "Error during get contracts:",
+          getAcceptedQuotationsError
+        );
+        throw getAcceptedQuotationsError;
       } else {
         console.error("Unexpected error during get contracts:", error);
         throw error;
