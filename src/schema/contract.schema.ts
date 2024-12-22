@@ -48,10 +48,10 @@ export const QuotationDetailsRes = z.object({
   updatedAt: z.string(),
 });
 
-export const BookedQuotationsRes = z.array(QuotationDetailsRes);
+export const AcceptedQuotationsRes = z.array(QuotationDetailsRes);
 
 export type UpdateContractType = z.TypeOf<typeof UpdateContractBody>;
 export type CreateContractType = z.TypeOf<typeof CreateContractBody>;
 export type ContractsResType = z.TypeOf<typeof ContractsRes>;
 export type ContractDetailsType = z.TypeOf<typeof ContractDetailsRes>;
-export type BookedQuotationsType = z.TypeOf<typeof BookedQuotationsRes>;
+export type AcceptedQuotationsType = z.TypeOf<typeof AcceptedQuotationsRes>;

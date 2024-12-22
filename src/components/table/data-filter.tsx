@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Table } from '@tanstack/react-table';
-import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { Table } from "@tanstack/react-table";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import {
   Select,
   SelectTrigger,
@@ -10,8 +10,8 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-} from '@/components/ui/select';
-import { Search } from 'lucide-react';
+} from "@/components/ui/select";
+import { Search } from "lucide-react";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -22,13 +22,12 @@ export function DataTableFilter<TData>({
 }: DataTableToolbarProps<TData>) {
   const filterableColumns = table
     .getAllColumns()
-    .filter((column) => column.id !== 'action')
+    .filter((column) => column.id !== "action")
     .map((column) => column.id);
 
   const [currentFilter, setCurrentFilter] = useState<string>(
     filterableColumns[0]
   );
-  console.log(filterableColumns);
   return (
     <div className="flex gap-[5px] items-center">
       <div className="w-[300px] ">
@@ -53,7 +52,8 @@ export function DataTableFilter<TData>({
             {filterableColumns.map((title) => (
               <SelectItem value={title} key={title}>
                 {title
-                  .replace(/([A-Z])/g, ' $1')
+                  .replace(/_/g, " ")
+                  .replace(/([a-z])([A-Z])/g, "$1 $2")
                   .toLowerCase()
                   .replace(/\b\w/g, (char) => char.toUpperCase())}
               </SelectItem>
