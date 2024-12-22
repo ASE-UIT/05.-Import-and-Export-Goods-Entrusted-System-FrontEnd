@@ -2,7 +2,7 @@ import { z } from "zod";
 export const createQuoteRequestBody = z
   .object({
     requestDate: z.string(),
-    customerId: z.string(),
+    userId: z.string(),
     origin: z.string(),
     destination: z.string(),
     shipmentReadyDate: z.string(),
@@ -22,7 +22,7 @@ export const getQuoteRequest = z.array(
         id: z.string().uuid(),
         requestDate: z.date(),
         status: z.string(),
-        customerId: z.string().uuid(),
+        userId: z.string().uuid(),
         createdAt: z.date(),
         updatedAt: z.date()
     })
@@ -103,7 +103,7 @@ export const getCustomerInfo =  z.object({
 function mapToQuoteRequest(data: z.infer<typeof getQuoteRequest>): QuoteRequest[] {
   return data.map((data) => ({
     quote_request_id: data.id,                
-    customer_id: data.customerId,             
+    user_id: data.userId,             
     request_date: new Date(data.requestDate).toLocaleDateString("en-GB"),     
     status: data.status,
     create_at: new Date(data.createdAt).toLocaleDateString("en-GB"),          
