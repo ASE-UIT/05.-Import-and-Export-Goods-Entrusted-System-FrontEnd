@@ -40,15 +40,15 @@ const useContract = {
       retry: 0,
     });
   },
-  useGetBookedQuotations() {
+  useAcceptedBookedQuotations() {
     return useQuery({
-      queryKey: ["bookedQuotations"],
+      queryKey: ["acceptedQuotations"],
       queryFn: async () => {
         try {
-          const result = await contractAction.getBookedQuotations();
+          const result = await contractAction.getAcceptedQuotations();
           return result;
         } catch (error) {
-          console.error("Error during get contracts:", error);
+          console.error("Error during get quotation:", error);
           throw error;
         }
       },
