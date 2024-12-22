@@ -19,13 +19,13 @@ export interface  IShipment {
     shipmentId: string;
     shipmentType: string;
     client: string;
-    price: string;
+    price: number;
     endDate: string;
     location: string;
     status: string;
     origin: string;
     destination: string;
-    contractId: string
+    contractId: string | number | (() => ZodNumber); // Chấp nhận nhiều kiểu
   }
   
   // interface  invoiceElement {

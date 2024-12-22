@@ -6,6 +6,7 @@ import {
 } from "@/schema/shipment.schema";
 import contractAction from "@/apis/contract.api";
 import { IShipment } from "@/types/shipment.d";
+import { number } from "zod";
 export const useShipment = () => {
   const queryClient = useQueryClient();
 
@@ -22,6 +23,7 @@ export const useShipment = () => {
       select: (data) => {
         // Lọc thông tin theo yêu cầu từ dữ liệu API
         return data.map((shipment) => ({
+          contractId:number,
           shipmentId: shipment.id,
           shipmentType: shipment.shipmentType,
           price: shipment.contract?.quotation?.totalPrice,
