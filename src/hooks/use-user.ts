@@ -4,9 +4,16 @@ import {
   UpdatePasswordBodyType,
 } from "@/schema/user.schema";
 import { ErrorType } from "@/types/error.type";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const useUser = {
+  useGetListUser() {
+    return useQuery({
+      queryKey: ["users"],
+      queryFn: userAction.list,
+    });
+  },
+
   useCreateUser() {
     return useMutation({
       mutationFn: (createUserDetails: CreateUsersBodyType) =>
