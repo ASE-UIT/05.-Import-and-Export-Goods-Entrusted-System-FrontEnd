@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -15,20 +14,64 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-const formSchema = z.object({
-  name: z.string(),
-  shortname: z.string(),
-  fee: z.string(),
-});
+import {
+  UpdateServiceBody,
+  UpdateServiceBodyType,
+} from "@/schema/service.schema";
+import useService from "@/hooks/use-service";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ErrorType } from "@/types/error.type";
+import { toast } from "@/hooks/use-toast";
 
 export default function UpdateService() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { serviceName } = useParams<{ serviceName: string }>();
+  const { data } = useService.useGetService(
+    "",
+    decodeURIComponent(serviceName)
+  );
+  const updateService = useService.useUpdateService();
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm<UpdateServiceBodyType>({
+    resolver: zodResolver(UpdateServiceBody),
+    defaultValues: {
+      name: data?.[0].name,
+      shortName: data?.[0].shortName,
+      fee: data?.[0].fee,
+    },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  const router = useRouter();
+
+  useEffect(() => {
+    form.reset({
+      name: data?.[0].name,
+      shortName: data?.[0].shortName,
+      fee: data?.[0].fee,
+    });
+  }, [data, form]);
+
+  async function onSubmit(values: UpdateServiceBodyType) {
+    if (loading) return;
+    setLoading(true);
+    try {
+      if (data?.[0].id) {
+        await updateService.mutateAsync({
+          serviceId: data[0].id,
+          service: values,
+        });
+        router.push("/service");
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as ErrorType).message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -58,10 +101,10 @@ export default function UpdateService() {
 
             <FormField
               control={form.control}
-              name="shortname"
+              name="shortName"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Short name</FormLabel>
+                  <FormLabel className="font-bold">Short Name</FormLabel>
                   <FormControl>
                     <Input placeholder="Short name" {...field} />
                   </FormControl>
@@ -93,8 +136,12 @@ export default function UpdateService() {
                   Cancel
                 </Button>
               </Link>
-              <Button className="w-1/2 h-10 text-lg" type="submit">
-                Save
+              <Button
+                className="w-1/2 h-10 text-lg"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "Update"}
               </Button>
             </div>
           </div>

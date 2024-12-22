@@ -1,11 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Service } from "@/types/service.type";
+import { UserResponseType } from "@/schema/user.schema";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 
-export const columns: ColumnDef<Service>[] = [
+export const columns: ColumnDef<UserResponseType>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -23,7 +22,7 @@ export const columns: ColumnDef<Service>[] = [
     cell: ({ row }) => <div>{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "name",
+    accessorKey: "username",
     header: ({ column }) => {
       return (
         <Button
@@ -32,14 +31,14 @@ export const columns: ColumnDef<Service>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          User Name
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    cell: ({ row }) => <div>{row.getValue("username")}</div>,
   },
   {
-    accessorKey: "shortName",
+    accessorKey: "customerId",
     header: ({ column }) => {
       return (
         <Button
@@ -48,14 +47,14 @@ export const columns: ColumnDef<Service>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Short Name
+          Customer ID
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("shortName")}</div>,
+    cell: ({ row }) => <div>{row.getValue("customerId")}</div>,
   },
   {
-    accessorKey: "fee",
+    accessorKey: "customer",
     header: ({ column }) => {
       return (
         <Button
@@ -64,21 +63,27 @@ export const columns: ColumnDef<Service>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Fee
+          Customer Name
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("fee"),
+    cell: ({ row }) => row.original.customer?.name,
   },
+
   {
-    id: "action",
-    header: "Action",
-    cell: ({ row }) => (
-      <div>
-        <Link href={`/service/update/${row.getValue("name")}`}>
-          <button className="text-blue-500">Edit</button>
-        </Link>
-      </div>
-    ),
+    accessorKey: "role",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Role
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.original.role.name,
   },
 ];

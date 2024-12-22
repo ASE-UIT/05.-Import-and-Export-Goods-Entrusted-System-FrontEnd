@@ -82,7 +82,7 @@ export default function AddContractPage() {
   });
 
   useEffect(() => {
-    if (sessionData) {
+    if (sessionData && sessionData.employee.id) {
       form.setValue("employeeId", sessionData.employee.id);
     }
   }, [sessionData]);
