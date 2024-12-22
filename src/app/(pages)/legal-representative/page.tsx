@@ -1,9 +1,8 @@
 "use client";
-import { columns } from "@/app/(pages)/regal-representative/components/columns";
-import { DataTable } from "@/app/(pages)/regal-representative/components/data-table";
+import { columns } from "@/app/(pages)/legal-representative/components/columns";
+import { DataTable } from "@/app/(pages)/legal-representative/components/data-table";
 import Loader from "@/components/loader";
 import useLegalRep from "@/hooks/use-legalRep";
-import React, { useState } from "react";
 
 export default function RegalRep() {
   const { useListLegalRep } = useLegalRep();

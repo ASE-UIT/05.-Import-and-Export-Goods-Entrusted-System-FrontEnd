@@ -116,7 +116,7 @@ export default function AddContactRep() {
 
             <div className="w-1/2 flex gap-2.5">
               <Link
-                href="/regal-representative"
+                href="/legal-representative"
                 className="w-1/2 h-14 text-lg bg-white text-black"
               >
                 <Button
