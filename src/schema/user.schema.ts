@@ -18,13 +18,19 @@ export const CreateUsersBody = z
         "SALES",
         "CUSTOMER_SERVICE",
         "HUMAN_RESOURCES",
+        "HUMAN_RESOURCE",
         "DOCUMENTATION",
+        "CLIENT",
       ])
       .describe("The user role. Cannot be ADMIN"),
     employeeId: z
       .string()
-      .uuid()
-      .describe("The employee ID associated with the user"),
+      .describe("The employee ID associated with the user")
+      .nullable(),
+    customerId: z
+      .string()
+      .describe("The customer ID associated with the user")
+      .nullable(),
   })
   .strict();
 
@@ -98,6 +104,21 @@ export const UserResponse = z.object({
     })
     .nullable(),
 });
+
+export const CreateEmployeeAccountBody = CreateUsersBody.omit({
+  customerId: true,
+});
+
+export const CreateClientAccountBody = CreateUsersBody.omit({
+  employeeId: true,
+});
+
 export type UserResponseType = z.infer<typeof UserResponse>;
+export type CreateEmployeeAccountBodyType = z.infer<
+  typeof CreateEmployeeAccountBody
+>;
+export type CreateClientAccountBodyType = z.infer<
+  typeof CreateClientAccountBody
+>;
 export type CreateUsersBodyType = z.infer<typeof CreateUsersBody>;
 export type UpdatePasswordBodyType = z.infer<typeof UpdatePasswordBody>;

@@ -1,6 +1,7 @@
 import userAction from "@/apis/user.api";
 import {
-  CreateUsersBodyType,
+  CreateClientAccountBodyType,
+  CreateEmployeeAccountBodyType,
   UpdatePasswordBodyType,
 } from "@/schema/user.schema";
 import { ErrorType } from "@/types/error.type";
@@ -14,16 +15,28 @@ const useUser = {
     });
   },
 
-  useCreateUser() {
+  useCreateEmployeeAccount() {
     return useMutation({
-      mutationFn: (createUserDetails: CreateUsersBodyType) =>
-        userAction.create(createUserDetails),
+      mutationFn: (createUserDetails: CreateEmployeeAccountBodyType) =>
+        userAction.createEmployee(createUserDetails),
       onError: (error: ErrorType) => {
         console.error("Error during user creation:", error);
         throw error;
       },
     });
   },
+
+  useCreateClientAccount() {
+    return useMutation({
+      mutationFn: (createUserDetails: CreateClientAccountBodyType) =>
+        userAction.createClient(createUserDetails),
+      onError: (error: ErrorType) => {
+        console.error("Error during user creation:", error);
+        throw error;
+      },
+    });
+  },
+
   useUpdatePassword() {
     const queryClient = useQueryClient();
     return useMutation({

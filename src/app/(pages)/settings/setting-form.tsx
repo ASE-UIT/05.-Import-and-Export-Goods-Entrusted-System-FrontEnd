@@ -29,13 +29,16 @@ import {
 import ChangePasswordForm from "@/app/(pages)/settings/_components/change-password-form";
 import useAuth from "@/hooks/use-auth";
 import Loader from "@/components/loader";
+import useCustomer from "@/hooks/use-customer";
+import { Customer, Employee } from "@/types/user.type";
 
 const UserSettingBody = z.object({
   name: z.string(),
   email: z.string().email(),
   address: z.string(),
   phone: z.string(),
-  dateOfBirth: z.string(),
+  dateOfBirth: z.string().nullable(),
+  taxId: z.string().nullable(),
   avatar: z.string(),
 });
 
@@ -43,32 +46,44 @@ type UserSettingBodyType = z.infer<typeof UserSettingBody>;
 
 export default function SettingForm() {
   const { data: user, isLoading } = useAuth.useGetSession();
+  const { useDetailsCustomer } = useCustomer();
+  const { data: customer } = useDetailsCustomer(user?.customerId ?? "");
+  const [currentUser, setCurrentUser] = useState<Employee | Customer>();
+  useEffect(() => {
+    if (user && user.customerId) {
+      setCurrentUser(customer);
+    } else {
+      setCurrentUser(user?.employee);
+    }
+  }, [user, customer]);
   const [date, setDate] = useState<Date>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const form = useForm<UserSettingBodyType>({
     resolver: zodResolver(UserSettingBody),
     defaultValues: {
-      name: user?.employee?.name,
-      email: user?.employee?.email,
-      address: user?.employee?.address,
-      phone: user?.employee?.phone,
-      dateOfBirth: user?.employee.dob,
-      avatar: `https://api.dicebear.com/9.x/initials/svg?seed=${user?.employee?.name}`,
+      name: currentUser?.name ?? "",
+      email: currentUser?.email ?? "",
+      address: currentUser?.address ?? "",
+      phone: currentUser?.phone ?? "",
+      dateOfBirth: currentUser && "dob" in currentUser ? currentUser.dob : "",
+      taxId: currentUser && "taxId" in currentUser ? currentUser.taxId : "",
+      avatar: `https://api.dicebear.com/9.x/initials/svg?seed=${currentUser?.name}`,
     },
   });
 
   useEffect(() => {
     form.reset({
-      name: user?.employee?.name,
-      email: user?.employee?.email,
-      address: user?.employee?.address,
-      phone: user?.employee?.phone,
-      dateOfBirth: user?.employee.dob,
-      avatar: `https://api.dicebear.com/9.x/initials/svg?seed=${user?.employee?.name}`,
+      name: currentUser?.name ?? "",
+      email: currentUser?.email ?? "",
+      address: currentUser?.address ?? "",
+      phone: currentUser?.phone ?? "",
+      dateOfBirth: currentUser && "dob" in currentUser ? currentUser.dob : "",
+      taxId: currentUser && "taxId" in currentUser ? currentUser.taxId : "",
+      avatar: `https://api.dicebear.com/9.x/initials/svg?seed=${currentUser?.name}`,
     });
     setDate(user?.employee.dob ? new Date(user.employee.dob) : new Date());
-  }, [form, user]);
+  }, [form, user, currentUser]);
 
   const onSubmit = form.handleSubmit((values) => {
     console.log(values);
@@ -87,10 +102,10 @@ export default function SettingForm() {
         <div className="relative">
           <Avatar className="size-[150px]">
             <AvatarImage
-              src={`https://api.dicebear.com/9.x/initials/svg?seed=${user?.employee?.name}`}
+              src={`https://api.dicebear.com/9.x/initials/svg?seed=${currentUser?.name}`}
               alt="avatar"
             />
-            <AvatarFallback>{user?.employee?.name}</AvatarFallback>
+            <AvatarFallback>{currentUser?.name}</AvatarFallback>
           </Avatar>
         </div>
       </div>
@@ -185,26 +200,56 @@ export default function SettingForm() {
                 />
               </div>
 
-              <FormField
-                control={form.control}
-                name="dateOfBirth"
-                render={() => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className="text-[16px] font-bold">
-                      Date Of Birth
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        className="h-[60px]"
-                        placeholder="Enter your date of birth"
-                        value={date ? format(date, "MM/dd/yyyy") : ""}
-                        readOnly
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {currentUser && "dob" in currentUser && (
+                <div className="w-full">
+                  <FormField
+                    control={form.control}
+                    name="dateOfBirth"
+                    render={() => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel className="text-[16px] font-bold">
+                          Date Of Birth
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            className="h-[60px]"
+                            placeholder="Enter your date of birth"
+                            value={date ? format(date, "MM/dd/yyyy") : ""}
+                            readOnly
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
+
+              {currentUser && "taxId" in currentUser && (
+                <div className="w-full">
+                  <FormField
+                    control={form.control}
+                    name="taxId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-[16px] font-bold">
+                          Tax ID
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            className="h-[60px]"
+                            placeholder="Enter your tax id"
+                            {...field}
+                            value={field.value ?? ""}
+                            readOnly
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
             </div>
 
             <div className="flex justify-between">
