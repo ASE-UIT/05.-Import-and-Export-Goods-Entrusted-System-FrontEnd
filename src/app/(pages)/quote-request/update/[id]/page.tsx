@@ -229,6 +229,7 @@ export default function QuoteRequestUpdateForm() {
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
+                          disabled={true}
                         >
                           <SelectTrigger className="w-full h-[60px] text-lg ">
                             <SelectValue placeholder={defaultUserName} />
