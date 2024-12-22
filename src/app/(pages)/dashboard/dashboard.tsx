@@ -13,6 +13,8 @@ import { DataTable } from "@/app/(pages)/dashboard/_components/data-table";
 import Link from "next/link";
 import useShipmentTracking from "@/hooks/use-shipment-tracking";
 import { Shipment } from "@/types/shipment.type";
+import useCustomer from "@/hooks/use-customer";
+import useFreight from "@/hooks/use-freight";
 
 export default function Dashboard() {
   const {
@@ -20,6 +22,17 @@ export default function Dashboard() {
     isLoading: isLoadingShipments,
     error: shipmentError,
   } = useShipmentTracking.useGetShipment();
+
+  const { useListCustomer } = useCustomer();
+  const { data: customers } = useListCustomer();
+
+  const { getAllFreight } = useFreight();
+
+  const { data: freight } = getAllFreight;
+
+  console.log("freight", freight?.pagination.records);
+  console.log("shipment", shipments?.pagination.records);
+  console.log("customer", customers?.pagination.records);
 
   const [data, setData] = useState<TableShipmentTracking[]>([]);
   useEffect(() => {
