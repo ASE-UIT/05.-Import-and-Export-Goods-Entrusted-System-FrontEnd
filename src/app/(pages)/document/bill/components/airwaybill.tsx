@@ -16,16 +16,15 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import useDocument from "@/hooks/use-document";
 import useShipmentTracking from "@/hooks/use-shipment-tracking";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectValue } from "@radix-ui/react-select";
 import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
 import useDocumentAirWayBill from "@/hooks/use-air-waybill";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   shipmentId: z.string(),
@@ -45,8 +44,9 @@ const formSchema = z.object({
 });
 
 export default function AirWayBill(data: any) {
+  const router = useRouter()
   const { data: shipmentList } = useShipmentTracking.useGetShipment();
-  const { mutate: createDocument } = useDocumentAirWayBill.useCreateAirWaybill();
+  const { mutate: createDocument } = useDocumentAirWayBill.useCreateAirWaybill(router);
   const shipmentIds =
     shipmentList?.results.map((shipment) => shipment.id) ?? [];
   const form = useForm<z.infer<typeof formSchema>>({
