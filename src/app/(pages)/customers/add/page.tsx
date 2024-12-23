@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { useCallback, useState } from 'react';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useCallback, useState } from "react";
+import { z } from "zod";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,19 +13,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera } from 'lucide-react';
-import useCustomer from '@/hooks/use-customer';
-import useLegalRep from '@/hooks/use-legalRep';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Camera } from "lucide-react";
+import useCustomer from "@/hooks/use-customer";
+import useLegalRep from "@/hooks/use-legalRep";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string(),
@@ -38,7 +40,7 @@ const formSchema = z.object({
   file: z
     .instanceof(File)
     .refine((file) => file.size < 10000000, {
-      message: 'Your file must be less than 10MB.',
+      message: "Your file must be less than 10MB.",
     })
     .optional(),
 });
@@ -49,12 +51,12 @@ export default function AddCustomerPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      short_name: '',
-      email: '',
-      phone: '',
+      name: "",
+      short_name: "",
+      email: "",
+      phone: "",
       tax_id: undefined,
-      address: '',
+      address: "",
       legal_rep_id: undefined,
     },
   });
@@ -65,17 +67,17 @@ export default function AddCustomerPage() {
       try {
         reader.onload = () => setPreview(reader.result as string);
         reader.readAsDataURL(acceptedFile);
-        form.setValue('file', acceptedFile);
-        form.clearErrors('file');
+        form.setValue("file", acceptedFile);
+        form.clearErrors("file");
       } catch (error) {
         console.log(error);
         setPreview(null);
-        form.resetField('file');
+        form.resetField("file");
       }
     },
     [form]
   );
-
+  const router = useRouter();
   const { useListLegalRep } = useLegalRep();
   const { data: availableLegalReps } = useListLegalRep();
 
@@ -83,15 +85,33 @@ export default function AddCustomerPage() {
   const { mutate: createCustomer } = useCreateCustomer();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    createCustomer({
-      name: values.name,
-      shortName: values.short_name,
-      email: values.email,
-      phone: values.phone,
-      taxId: values.tax_id,
-      address: values.address,
-      legalRepId: values.legal_rep_id, // Change to id
-    });
+    createCustomer(
+      {
+        name: values.name,
+        shortName: values.short_name,
+        email: values.email,
+        phone: values.phone,
+        taxId: values.tax_id,
+        address: values.address,
+        legalRepId: values.legal_rep_id, // Change to id
+      },
+      {
+        onSuccess: () => {
+          toast({
+            title: "Success",
+            description: "Customer created successfully",
+          });
+          router.push("/customers");
+        },
+        onError: (error) => {
+          toast({
+            title: "Error",
+            description: error.message,
+            variant: "destructive",
+          });
+        },
+      }
+    );
   }
 
   return (
@@ -137,7 +157,7 @@ export default function AddCustomerPage() {
                       />
                       <Button
                         type="button"
-                        onClick={() => document.getElementById('file')?.click()}
+                        onClick={() => document.getElementById("file")?.click()}
                       >
                         Upload Image
                       </Button>
