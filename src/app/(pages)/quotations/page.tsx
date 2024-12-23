@@ -26,7 +26,6 @@ export default function QuotationManagementPage() {
   const [quotationData, setQuotationData] = useState<IQuotation[]>([]);
   const { data, isLoading, error } = useQuotation.useGetQuotations();
 
-
   useEffect(() => {
     if (data) {
       setQuotationData(
@@ -48,15 +47,14 @@ export default function QuotationManagementPage() {
       );
     }
   }, [data]);
-  
 
   return (
-    <div className="flex flex-col p-[24px] w-[calc(100vw-var(--sidebar-width))]">
+    <div className="flex flex-col p-[24px] w-[calc(100vw-var(--sidebar-width))] ml-4">
       <div className="flex flex-col w-full gap-[20px]">
         <div className="flex justify-between items-center">
           <span className="text-3xl font-bold">Quotation</span>
         </div>
-        <DataTable 
+        <DataTable
           columns={columns}
           data={quotationData}
           isLoading={isLoading}
