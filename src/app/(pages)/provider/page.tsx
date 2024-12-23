@@ -3,7 +3,6 @@
 import { DataTable } from "@/app/(pages)/provider/components/data-table";
 import { columns } from "./components/columns";
 import { useProvider } from "@/hooks/use-provider";
-import { providerData as sampleData } from "./data/sample-data";
 
 export default function ProviderManagement() {
   const { useGetAllProvider } = useProvider();
@@ -18,7 +17,7 @@ export default function ProviderManagement() {
         </div>
         <DataTable
           columns={columns}
-          data={providerData?.results ?? sampleData}
+          data={providerData?.results || []}
           error={error}
           isPending={isPending}
         />

@@ -1,49 +1,29 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
-import StatusBadge from "@/components/status-badge";
 import Link from "next/link";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown} from "lucide-react";
+import StatusBadge from '@/components/status-badge';
+import { format } from "date-fns";
 
 export interface IQuotation {
-  quotation_id: string;
-  quote_request_id: string;
-  employee_id: string;
-  freight_id: string;
-  total_price: string;
-  pickup_date: string;
-  delivery_date: string;
-  quotation_date: string;
-  expired_date: string;
+  id: string;
+  quoteReqId:string
+  employeeId: string;
+  freightId: string;
+  userId: string;
+  totalPrice: string;
+  pickupDate: string;
+  deliveryDate: string;
+  quotationDate: string;
+  expiredDate: string;
   status: string;
 }
 
 export const columns: ColumnDef<IQuotation>[] = [
   {
-    id: "checkbox",
-    cell: ({ row }) => (
-      <div className="flex justify-center">
-        <Checkbox
-          className="h-4 w-4"
-          onCheckedChange={(checked) => {
-            if (checked) {
-              console.log(
-                `Selected row with ID: ${row.getValue("quotation_id")}`
-              );
-            } else {
-              console.log(
-                `Deselected row with ID: ${row.getValue("quotation_id")}`
-              );
-            }
-          }}
-        />
-      </div>
-    ),
-  },
-  {
-    accessorKey: "quotation_id",
+    accessorKey: "id",
     header: ({ column }) => {
       return (
         <Button
@@ -57,10 +37,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("quotation_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "quote_request_id",
+    accessorKey: "quoteReqId",
     header: ({ column }) => {
       return (
         <Button
@@ -74,10 +54,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("quote_request_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("quoteReqId")}</div>,
   },
   {
-    accessorKey: "employee_id",
+    accessorKey: "employeeId",
     header: ({ column }) => {
       return (
         <Button
@@ -91,10 +71,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("employee_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("employeeId")}</div>,
   },
   {
-    accessorKey: "freight_id",
+    accessorKey: "freightId",
     header: ({ column }) => {
       return (
         <Button
@@ -108,10 +88,27 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("freight_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("freightId")}</div>,
   },
   {
-    accessorKey: "total_price",
+    accessorKey: "userId",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          User ID
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{row.getValue("userId")}</div>,
+  },
+  {
+    accessorKey: "totalPrice",
     header: ({ column }) => {
       return (
         <Button
@@ -125,10 +122,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("total_price"),
+    cell: ({ row }) => row.getValue("totalPrice"),
   },
   {
-    accessorKey: "pickup_date",
+    accessorKey: "pickupDate",
     header: ({ column }) => {
       return (
         <Button
@@ -142,10 +139,13 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("pickup_date"),
+    cell: ({ row }) => format(row.getValue("pickupDate"), "yyyy-MM-dd"),
+    sortingFn: (a, b) =>
+      new Date(a.original.pickupDate).getTime() -
+      new Date(b.original.pickupDate).getTime(),
   },
   {
-    accessorKey: "delivery_date",
+    accessorKey: "deliveryDate",
     header: ({ column }) => {
       return (
         <Button
@@ -159,10 +159,13 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("delivery_date"),
+    cell: ({ row }) => format(row.getValue("deliveryDate"), "yyyy-MM-dd"),
+    sortingFn: (a, b) =>
+      new Date(a.original.deliveryDate).getTime() -
+      new Date(b.original.deliveryDate).getTime(),
   },
   {
-    accessorKey: "quotation_date",
+    accessorKey: "quotationDate",
     header: ({ column }) => {
       return (
         <Button
@@ -176,10 +179,13 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("quotation_date"),
+    cell: ({ row }) => format(row.getValue("quotationDate"), "yyyy-MM-dd"),
+    sortingFn: (a, b) =>
+      new Date(a.original.quotationDate).getTime() -
+      new Date(b.original.quotationDate).getTime(),
   },
   {
-    accessorKey: "expired_date",
+    accessorKey: "expiredDate",
     header: ({ column }) => {
       return (
         <Button
@@ -193,7 +199,10 @@ export const columns: ColumnDef<IQuotation>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("expired_date"),
+    cell: ({ row }) => format(row.getValue("expiredDate"), "yyyy-MM-dd"),
+    sortingFn: (a, b) =>
+      new Date(a.original.expiredDate).getTime() -
+      new Date(b.original.expiredDate).getTime(),
   },
   {
     accessorKey: "status",
@@ -205,22 +214,9 @@ export const columns: ColumnDef<IQuotation>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div>
-        <Link href={`/quotation/update/${row.getValue("quotation_id")}`}>
+        <Link href={`/quotations/update/${row.getValue("id")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
-      </div>
-    ),
-  },
-  {
-    id: "delete",
-    cell: () => (
-      <div>
-        <Button
-          variant="default"
-          className="flex items-center gap-2 text-sm px-2 py-1"
-        >
-          <span>Delete</span>
-        </Button>
       </div>
     ),
   },

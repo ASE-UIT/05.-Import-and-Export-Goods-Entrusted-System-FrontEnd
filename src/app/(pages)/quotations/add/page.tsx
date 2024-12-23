@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 import {
   Form,
@@ -33,63 +35,125 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import useQuotation from "@/hooks/use-quotation";
+import { useRouter } from "next/navigation";
+import { CreateQuotationType } from "@/schema/quotation.schema";
+import useAuth from "@/hooks/use-auth";
+import useService from "@/hooks/use-service";
+import { toast } from "@/hooks/use-toast";
+import { ErrorType } from "@/types/error.type";
 
 const formSchema = z.object({
-  quote_request_id: z.string(),
-  employee_id: z.string(),
-  freight_id: z.string(),
-  pickup_date: z.date(),
-  delivery_date: z.date(),
-  quotation_date: z.date(),
-  expired_date: z.date(),
-  total_price: z.string(),
+  quoteReqId: z.string(),
+  employeeId: z.string(),
+  freightId: z.string(),
+  pickupDate: z.string(),
+  deliveryDate: z.string(),
+  quotationDate: z.string(),
+  expiredDate: z.string(),
+  serviceId: z.array(z.string()),
 });
 
 export default function AddQuotationtPage() {
-  // const { id: quotation_id } = useParams<{ id: string }>();
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-  });
-
   const [pickupDate, setPickupDate] = useState<Date | undefined>(undefined);
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>(undefined);
   const [quotationDate, setQuotationDate] = useState<Date | undefined>(
     undefined
   );
   const [expiredDate, setExpiredDate] = useState<Date | undefined>(undefined);
+  const [quoteRequest, setQuoteRequest] = useState<string[]>();
+  const [freights, setFreight] = useState<string[]>();
+
+  const { data: listService } = useService.useGetService();
+
+  const router = useRouter();
+  const { data: quoteRequestData } = useQuotation.useGetBookedQuoteRequest();
+  const { data: freightData } = useQuotation.useGetFreight();
+  const { mutateAsync: createQuotation, status } =
+    useQuotation.useCreateQuotation(router);
+  const { data: sessionData } = useAuth.useGetSession();
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      quoteReqId: "",
+      employeeId: "",
+      freightId: "",
+      pickupDate: "",
+      deliveryDate: "",
+      quotationDate: "",
+      expiredDate: "",
+      serviceId: [],
+    },
+  });
 
   useEffect(() => {
-    if (pickupDate) form.setValue("pickup_date", pickupDate);
-  }, [pickupDate]);
+    if (sessionData && sessionData.employee.id) {
+      form.setValue("employeeId", sessionData.employee.id);
+    }
+  }, [sessionData, form]);
 
   useEffect(() => {
-    if (deliveryDate) form.setValue("delivery_date", deliveryDate);
-  }, [deliveryDate]);
+    if (quoteRequestData) {
+      const quoteRequest = quoteRequestData.map((it) => it.id);
+      setQuoteRequest(quoteRequest);
+    }
+  }, [quoteRequestData]);
 
   useEffect(() => {
-    if (quotationDate) form.setValue("quotation_date", quotationDate);
-  }, [quotationDate]);
+    if (freightData?.data?.results) {
+      const freights = freightData.data.results.map((it) => it.id);
+      setFreight(freights);
+    } else {
+      console.error("Freight data is not valid:", freightData);
+    }
+  }, [freightData]);
 
   useEffect(() => {
-    if (expiredDate) form.setValue("expired_date", expiredDate);
-  }, [expiredDate]);
+    if (pickupDate)
+      form.setValue("pickupDate", format(pickupDate, "yyyy-MM-dd"));
+  }, [pickupDate, form]);
+
+  useEffect(() => {
+    if (quotationDate)
+      form.setValue("quotationDate", format(quotationDate, "yyyy-MM-dd"));
+  }, [quotationDate, form]);
+
+  useEffect(() => {
+    if (expiredDate)
+      form.setValue("expiredDate", format(expiredDate, "yyyy-MM-dd"));
+  }, [expiredDate, form]);
+
+  useEffect(() => {
+    if (deliveryDate)
+      form.setValue("deliveryDate", format(deliveryDate, "yyyy-MM-dd"));
+  }, [deliveryDate, form]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log({
-      ...values,
-      pickup_date: values.pickup_date
-        ? format(values.pickup_date, "d-M-yyyy")
-        : undefined,
-      delivery_date: values.delivery_date
-        ? format(values.delivery_date, "d-M-yyyy")
-        : undefined,
-      quotation_date: values.quotation_date
-        ? format(values.quotation_date, "d-M-yyyy")
-        : undefined,
-      expired_date: values.expired_date
-        ? format(values.expired_date, "d-M-yyyy")
-        : undefined,
+    const createQuotationBody: CreateQuotationType = {
+      quoteReqId: values.quoteReqId,
+      employeeId: values.employeeId,
+      freightId: values.freightId,
+      pickupDate: values.pickupDate,
+      deliveryDate: values.deliveryDate,
+      quotationDate: values.quotationDate,
+      expiredDate: values.expiredDate,
+      serviceId: values.serviceId,
+    };
+    createQuotation(createQuotationBody, {
+      onSuccess: () => {
+        toast({
+          title: "Success",
+          description: "Quotation has been added successfully",
+        });
+      },
+      onError: (error: ErrorType) => {
+        toast({
+          title: "Error",
+          description: error?.errors?.[0]?.message || error.message,
+          variant: "destructive",
+        });
+      },
     });
   }
 
@@ -104,13 +168,13 @@ export default function AddQuotationtPage() {
           encType="multipart/form-data"
         >
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
-            {/* Quotation ID */}
+            {/* Quote Request ID */}
             <FormField
               control={form.control}
-              name="quote_request_id"
+              name="quoteReqId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-bold">
+                  <FormLabel className="text-[16px] font-bold">
                     Quotation Request ID
                   </FormLabel>
                   <FormControl>
@@ -122,9 +186,17 @@ export default function AddQuotationtPage() {
                         <SelectValue placeholder="Select an ID" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="01">01</SelectItem>
-                        <SelectItem value="02">02</SelectItem>
-                        <SelectItem value="03">03</SelectItem>
+                        {quoteRequest ? (
+                          quoteRequest.map((it) => (
+                            <SelectItem key={it} value={it}>
+                              {it}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            No Quote Request Available
+                          </div>
+                        )}
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -136,24 +208,18 @@ export default function AddQuotationtPage() {
             {/* Employee ID */}
             <FormField
               control={form.control}
-              name="employee_id"
+              name="employeeId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-bold">Employee ID</FormLabel>
+                  <FormLabel className="text-[16px] font-bold">
+                    Employee ID
+                  </FormLabel>
                   <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className="w-[500px] h-[60px]">
-                        <SelectValue placeholder="Select an ID" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="01">01</SelectItem>
-                        <SelectItem value="02">02</SelectItem>
-                        <SelectItem value="03">03</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      value={field.value || ""}
+                      readOnly
+                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -163,7 +229,7 @@ export default function AddQuotationtPage() {
             {/* Freight ID */}
             <FormField
               control={form.control}
-              name="freight_id"
+              name="freightId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-bold">Freight ID</FormLabel>
@@ -176,9 +242,17 @@ export default function AddQuotationtPage() {
                         <SelectValue placeholder="Select an ID" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="01">01</SelectItem>
-                        <SelectItem value="02">02</SelectItem>
-                        <SelectItem value="03">03</SelectItem>
+                        {freights ? (
+                          freights.map((it) => (
+                            <SelectItem key={it} value={it}>
+                              {it}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            No Freight Available
+                          </div>
+                        )}
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -191,7 +265,7 @@ export default function AddQuotationtPage() {
               {/* Pickup Date */}
               <FormField
                 control={form.control}
-                name="pickup_date"
+                name="pickupDate"
                 render={() => (
                   <FormItem className="w-1/2">
                     <FormLabel className="text-[16px] font-bold">
@@ -230,7 +304,7 @@ export default function AddQuotationtPage() {
               {/* Delivery Date */}
               <FormField
                 control={form.control}
-                name="delivery_date"
+                name="deliveryDate"
                 render={() => (
                   <FormItem className="w-1/2">
                     <FormLabel className="text-[16px] font-bold">
@@ -272,7 +346,7 @@ export default function AddQuotationtPage() {
               {/* Quotation Date */}
               <FormField
                 control={form.control}
-                name="quotation_date"
+                name="quotationDate"
                 render={() => (
                   <FormItem className="w-1/2">
                     <FormLabel className="text-[16px] font-bold">
@@ -312,7 +386,7 @@ export default function AddQuotationtPage() {
               {/* Expired Date */}
               <FormField
                 control={form.control}
-                name="expired_date"
+                name="expiredDate"
                 render={() => (
                   <FormItem className="w-1/2">
                     <FormLabel className="text-[16px] font-bold">
@@ -350,15 +424,38 @@ export default function AddQuotationtPage() {
               />
             </div>
 
-            {/* Price */}
+            {/* Services */}
+
             <FormField
               control={form.control}
-              name="total_price"
+              name="serviceId" // Changed from serviceIds to serviceId to match schema
               render={({ field }) => (
-                <FormItem className="w-[500px]">
-                  <FormLabel className="font-bold">Total Price</FormLabel>
+                <FormItem className="space-y-4">
+                  <FormLabel className="text-base font-bold">
+                    Services
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder="Total Price" {...field} />
+                    <div className="grid gap-4">
+                      {listService?.map((service) => (
+                        <div
+                          key={service.id}
+                          className="flex items-center space-x-2"
+                        >
+                          <Checkbox
+                            checked={field.value?.includes(service.id)}
+                            onCheckedChange={(checked) => {
+                              const updatedValue = checked
+                                ? [...field.value, service.id]
+                                : field.value.filter((id) => id !== service.id);
+                              field.onChange(updatedValue);
+                            }}
+                          />
+                          <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                            {service.name}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -368,7 +465,7 @@ export default function AddQuotationtPage() {
           {/* Button */}
           <div className="flex justify-center mt-6">
             <div className="w-1/2 flex gap-2.5">
-              <Link href="/quotation" className="w-1/2 h-14">
+              <Link href="/quotations" className="w-1/2 h-14">
                 <Button
                   className="w-full h-10 text-lg"
                   variant={"outline"}
@@ -378,7 +475,7 @@ export default function AddQuotationtPage() {
                 </Button>
               </Link>
               <Button className="w-1/2 h-10 text-lg" type="submit">
-                Save
+                {status === "pending" ? "Adding..." : "Save"}
               </Button>
             </div>
           </div>
