@@ -256,7 +256,7 @@ export default function Page() {
                         <input readOnly 
                           value={importDocument?.fields?.hopDong}
                           placeholder="   -"
-                          className="w-full font-normal"
+                          className="w-full font-normal text-[13px]"
                         ></input>
                       </div>
                       <div className="flex flex-col">
