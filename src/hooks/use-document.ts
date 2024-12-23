@@ -34,5 +34,20 @@ const useDocument ={
         },
         });
     },
+    useGetDOcumentById(id: string) {
+        return useQuery({
+        queryKey: ["document", id],
+        queryFn: async () => {
+            try {
+            const result = await documentAction.getDocumentById(id);
+            return result;
+            } catch (error) {
+            console.error("Error during get document:", error);
+            throw error;
+            }
+        },
+        retry: 0,
+        });
+    },
 }
 export default useDocument;
