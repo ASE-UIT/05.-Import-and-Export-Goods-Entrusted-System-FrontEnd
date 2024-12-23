@@ -73,7 +73,7 @@ export const getCustomerInfo =  z.object({
   id: z.string().uuid(),
   requestDate: z.string().datetime(),
   status: z.string(),
-  customerId: z.string().uuid(),
+  userId: z.string().uuid(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   quoteReqDetails: z.object({

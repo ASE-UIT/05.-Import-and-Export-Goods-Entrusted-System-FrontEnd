@@ -37,6 +37,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useUser from "@/hooks/use-user";
+import useAuth from "@/hooks/use-auth";
 const formSchema = z.object({
   requestDate: z.string(),
   userId: z.string(),
@@ -71,14 +73,25 @@ export default function QuoteRequestUpdateForm() {
     quoteRequestId,
     router
   );
-  const { data: customerData } = useQuoteRequest.useGetCustomerInfo();
+  const { data: userData } = useUser.useGetListUser();
   const { data: getFullDetails } =
     useQuoteRequest.useGetFullQuoteRequestDetail(quoteRequestId);
+  const { data: session } = useAuth.useGetSession();
 
-  const defaultCustomer = customerData?.data.results?.find(
-    (customer) => customer.id === getFullDetails?.customerId
+  const defaultUser = userData?.data?.find(
+    (user) => user.id === getFullDetails?.userId
   );
-  const customerName = defaultCustomer ? defaultCustomer.name : "";
+  const defaultUserName = defaultUser ? defaultUser.username : "";
+
+  const filteredData = userData
+    ? userData.data?.filter((user) => {
+        if (session?.role.name === "CLIENT") {
+          return user.id === session?.id;
+        } else {
+          return user.role.name === "CLIENT";
+        }
+      })
+    : [];
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -102,7 +115,7 @@ export default function QuoteRequestUpdateForm() {
   useEffect(() => {
     if (getFullDetails) {
       form.reset({
-        userId: getFullDetails.customerId || "",
+        userId: getFullDetails.userId || "",
         requestDate: getFullDetails.requestDate
           ? format(new Date(getFullDetails.requestDate), "yyyy-MM-dd")
           : "",
@@ -216,15 +229,16 @@ export default function QuoteRequestUpdateForm() {
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
+                          disabled={true}
                         >
                           <SelectTrigger className="w-full h-[60px] text-lg ">
-                            <SelectValue placeholder={customerName} />
+                            <SelectValue placeholder={defaultUserName} />
                           </SelectTrigger>
                           <SelectContent>
-                            {customerData?.data.results ? (
-                              customerData.data.results.map((it) => (
+                            {filteredData ? (
+                              filteredData.map((it) => (
                                 <SelectItem key={it.id} value={it.id}>
-                                  {it.name}
+                                  {it.username}
                                 </SelectItem>
                               ))
                             ) : (
