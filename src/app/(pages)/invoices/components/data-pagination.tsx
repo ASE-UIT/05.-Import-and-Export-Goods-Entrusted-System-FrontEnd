@@ -119,7 +119,7 @@ export function DataTablePagination<TData>({
       {/* Thêm thông tin phân trang và số bản ghi */}
       <div className="flex items-center space-x-2">
         <p className="text-xl">
-          Total: {totalRecords} payment
+          Total: {totalRecords} invoices
         </p>
       </div>
     </div>
