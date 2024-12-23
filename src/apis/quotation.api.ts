@@ -4,7 +4,6 @@ import {
   CreateQuotationType,
   UpdateQuotationType,
   FreightDetailResType,
-  EmployeeDetailResType,
 } from "@/schema/quotation.schema";
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
@@ -94,24 +93,6 @@ const quotationAction = {
         throw error;
       }
     }
-},
-
-async getEmployee() {
-  try {
-    const response = await http.get<EmployeeDetailResType>(
-      "v1/employees"
-    );
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.data) {
-      const getEmployeeError = error.response.data as ErrorType;
-      console.error("Error during get employees:", getEmployeeError);
-      throw getEmployeeError;
-    } else {
-      console.error("Unexpected error during get employees:", error);
-      throw error;
-    }
-  }
 },
 
   async updateQuotation(

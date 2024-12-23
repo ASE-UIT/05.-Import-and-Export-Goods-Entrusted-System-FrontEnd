@@ -22,33 +22,50 @@ function InfoCard({ value, title, icon, color }: InfoCardProps) {
   );
 }
 
-export default function GroupCard() {
+type GroupCardProps = {
+  customer: number | undefined;
+
+  shipment: number | undefined;
+
+  freight: number | undefined;
+
+  quote: number | undefined;
+};
+
+const GroupCard: React.FC<GroupCardProps> = ({
+  customer,
+  shipment,
+  freight,
+  quote,
+}) => {
   return (
     <div className="flex justify-between w-full">
       <InfoCard
-        value="200"
+        value={customer?.toString() || "0"}
         title="Customers"
         icon={<Users className="w-16 h-16 shrink-0" />}
         color="#E85C5C"
       />
       <InfoCard
-        value="112"
+        value={shipment?.toString() || "0"}
         title="Active shipments"
         icon={<ClipboardCheck className="w-16 h-16 shrink-0 " />}
         color="#108080"
       />
       <InfoCard
-        value="113"
+        value={quote?.toString() || "0"}
         title="Quote"
         icon={<ClipboardPenLine className="w-16 h-16 shrink-0 " />}
         color="#F70"
       />
       <InfoCard
-        value="114"
+        value={freight?.toString() || "0"}
         title="Freight"
         icon={<Search className="w-16 h-16 shrink-0 " />}
         color="#4F93EB"
       />
     </div>
   );
-}
+};
+
+export default GroupCard;

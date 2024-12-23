@@ -68,10 +68,11 @@ export default function AddContractPage() {
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [contractDate, setContractDate] = useState<Date | undefined>(undefined);
-  const [bookedQuotations, setBookedQuotations] = useState<string[]>();
+  const [acceptedQuotations, setAcceptedQuotations] = useState<string[]>();
 
   const router = useRouter();
-  const { data: bookedQuotationData } = useContract.useGetBookedQuotations();
+  const { data: acceptedQuotationData } =
+    useContract.useAcceptedBookedQuotations();
   const { mutate: createContract, status } =
     useContract.useCreateContract(router);
   const { data: sessionData } = useAuth.useGetSession();
@@ -81,17 +82,17 @@ export default function AddContractPage() {
   });
 
   useEffect(() => {
-    if (sessionData) {
+    if (sessionData && sessionData.employee.id) {
       form.setValue("employeeId", sessionData.employee.id);
     }
   }, [sessionData]);
 
   useEffect(() => {
-    if (bookedQuotationData) {
-      const quotations = bookedQuotationData.map((it) => it.id);
-      setBookedQuotations(quotations);
+    if (acceptedQuotationData) {
+      const quotations = acceptedQuotationData.map((it) => it.id);
+      setAcceptedQuotations(quotations);
     }
-  }, [bookedQuotationData]);
+  }, [acceptedQuotationData]);
 
   useEffect(() => {
     if (startDate) form.setValue("startDate", format(startDate, "yyyy-MM-dd"));
@@ -147,8 +148,8 @@ export default function AddContractPage() {
                         <SelectValue placeholder="Select an ID" />
                       </SelectTrigger>
                       <SelectContent>
-                        {bookedQuotations ? (
-                          bookedQuotations.map((it) => (
+                        {acceptedQuotations ? (
+                          acceptedQuotations.map((it) => (
                             <SelectItem key={it} value={it}>
                               {it}
                             </SelectItem>

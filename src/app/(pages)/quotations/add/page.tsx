@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 import {
   Form,
@@ -37,6 +39,9 @@ import useQuotation from "@/hooks/use-quotation";
 import { useRouter } from "next/navigation";
 import { CreateQuotationType } from "@/schema/quotation.schema";
 import useAuth from "@/hooks/use-auth";
+import useService from "@/hooks/use-service";
+import { toast } from "@/hooks/use-toast";
+import { ErrorType } from "@/types/error.type";
 
 const formSchema = z.object({
   quoteReqId: z.string(),
@@ -46,37 +51,47 @@ const formSchema = z.object({
   deliveryDate: z.string(),
   quotationDate: z.string(),
   expiredDate: z.string(),
-  totalPrice: z.number(),
+  serviceId: z.array(z.string()),
 });
 
 export default function AddQuotationtPage() {
   const [pickupDate, setPickupDate] = useState<Date | undefined>(undefined);
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>(undefined);
-  const [quotationDate, setQuotationDate] = useState<Date | undefined>(undefined);
+  const [quotationDate, setQuotationDate] = useState<Date | undefined>(
+    undefined
+  );
   const [expiredDate, setExpiredDate] = useState<Date | undefined>(undefined);
   const [quoteRequest, setQuoteRequest] = useState<string[]>();
   const [freights, setFreight] = useState<string[]>();
-  const [employees, setEmployee] = useState<string[]>();
+
+  const { data: listService } = useService.useGetService();
 
   const router = useRouter();
   const { data: quoteRequestData } = useQuotation.useGetBookedQuoteRequest();
   const { data: freightData } = useQuotation.useGetFreight();
-  const { data: employeeData } = useQuotation.useGetEmployee();
-  const { mutate: createQuotation, status } =
+  const { mutateAsync: createQuotation, status } =
     useQuotation.useCreateQuotation(router);
+  const { data: sessionData } = useAuth.useGetSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      quoteReqId: "",
+      employeeId: "",
+      freightId: "",
+      pickupDate: "",
+      deliveryDate: "",
+      quotationDate: "",
+      expiredDate: "",
+      serviceId: [],
+    },
   });
 
   useEffect(() => {
-    if (employeeData?.data?.results) {
-        const employees = employeeData.data.results.map((it) => it.id);
-        setEmployee(employees);
-    } else {
-        console.error("Employee data is not valid:", employeeData);
+    if (sessionData && sessionData.employee.id) {
+      form.setValue("employeeId", sessionData.employee.id);
     }
-}, [employeeData]);
+  }, [sessionData, form]);
 
   useEffect(() => {
     if (quoteRequestData) {
@@ -86,33 +101,33 @@ export default function AddQuotationtPage() {
   }, [quoteRequestData]);
 
   useEffect(() => {
-     if (freightData?.data?.results) {
-         const freights = freightData.data.results.map((it) => it.id);
-         setFreight(freights);
-     } else {
-         console.error("Freight data is not valid:", freightData);
-     }
- }, [freightData]);
+    if (freightData?.data?.results) {
+      const freights = freightData.data.results.map((it) => it.id);
+      setFreight(freights);
+    } else {
+      console.error("Freight data is not valid:", freightData);
+    }
+  }, [freightData]);
 
   useEffect(() => {
     if (pickupDate)
       form.setValue("pickupDate", format(pickupDate, "yyyy-MM-dd"));
-  }, [pickupDate]);
+  }, [pickupDate, form]);
 
   useEffect(() => {
     if (quotationDate)
       form.setValue("quotationDate", format(quotationDate, "yyyy-MM-dd"));
-  }, [quotationDate]);
+  }, [quotationDate, form]);
 
   useEffect(() => {
     if (expiredDate)
       form.setValue("expiredDate", format(expiredDate, "yyyy-MM-dd"));
-  }, [expiredDate]);
+  }, [expiredDate, form]);
 
   useEffect(() => {
     if (deliveryDate)
       form.setValue("deliveryDate", format(deliveryDate, "yyyy-MM-dd"));
-  }, [deliveryDate]);
+  }, [deliveryDate, form]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const createQuotationBody: CreateQuotationType = {
@@ -123,9 +138,23 @@ export default function AddQuotationtPage() {
       deliveryDate: values.deliveryDate,
       quotationDate: values.quotationDate,
       expiredDate: values.expiredDate,
-      totalPrice: values.totalPrice,
+      serviceId: values.serviceId,
     };
-    createQuotation(createQuotationBody);
+    createQuotation(createQuotationBody, {
+      onSuccess: () => {
+        toast({
+          title: "Success",
+          description: "Quotation has been added successfully",
+        });
+      },
+      onError: (error: ErrorType) => {
+        toast({
+          title: "Error",
+          description: error?.errors?.[0]?.message || error.message,
+          variant: "destructive",
+        });
+      },
+    });
   }
 
   return (
@@ -182,29 +211,15 @@ export default function AddQuotationtPage() {
               name="employeeId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-bold">Employee ID</FormLabel>
+                  <FormLabel className="text-[16px] font-bold">
+                    Employee ID
+                  </FormLabel>
                   <FormControl>
-                  <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className="w-[500px] h-[60px]">
-                        <SelectValue placeholder="Select an ID" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {employees ? (
-                          employees.map((it) => (
-                            <SelectItem key={it} value={it}>
-                              {it}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <div className="flex items-center justify-center">
-                            No Employee Available
-                          </div>
-                        )}
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      value={field.value || ""}
+                      readOnly
+                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -409,15 +424,38 @@ export default function AddQuotationtPage() {
               />
             </div>
 
-            {/* Price */}
+            {/* Services */}
+
             <FormField
               control={form.control}
-              name="totalPrice"
+              name="serviceId" // Changed from serviceIds to serviceId to match schema
               render={({ field }) => (
-                <FormItem className="w-[500px]">
-                  <FormLabel className="font-bold">Total Price</FormLabel>
+                <FormItem className="space-y-4">
+                  <FormLabel className="text-base font-bold">
+                    Services
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder="Total Price" {...field} />
+                    <div className="grid gap-4">
+                      {listService?.map((service) => (
+                        <div
+                          key={service.id}
+                          className="flex items-center space-x-2"
+                        >
+                          <Checkbox
+                            checked={field.value?.includes(service.id)}
+                            onCheckedChange={(checked) => {
+                              const updatedValue = checked
+                                ? [...field.value, service.id]
+                                : field.value.filter((id) => id !== service.id);
+                              field.onChange(updatedValue);
+                            }}
+                          />
+                          <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                            {service.name}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

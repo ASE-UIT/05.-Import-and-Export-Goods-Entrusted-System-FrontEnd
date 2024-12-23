@@ -39,22 +39,6 @@ export const columns: ColumnDef<ProviderType>[] = [
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "contactRepId",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          ContactRep
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue("contactRepId")}</div>,
-  },
-  {
     accessorKey: "email",
     header: ({ column }) => {
       return (

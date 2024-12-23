@@ -12,6 +12,7 @@ export interface IQuotation {
   quoteReqId:string
   employeeId: string;
   freightId: string;
+  userId: string;
   totalPrice: string;
   pickupDate: string;
   deliveryDate: string;
@@ -88,6 +89,23 @@ export const columns: ColumnDef<IQuotation>[] = [
       );
     },
     cell: ({ row }) => <div>{row.getValue("freightId")}</div>,
+  },
+  {
+    accessorKey: "userId",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          User ID
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{row.getValue("userId")}</div>,
   },
   {
     accessorKey: "totalPrice",

@@ -5,32 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 
-export interface IInvoice {
+export interface IPayment {
   id: string;
   invoice_id: string;
   amount: string;
   status: string;
   create_date: string;
+  update_date: string;
 }
 
-export const columns: ColumnDef<IInvoice>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-  },
+export const columns: ColumnDef<IPayment>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -95,6 +79,22 @@ export const columns: ColumnDef<IInvoice>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Create At
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("create_date"),
+  },
+  {
+    accessorKey: "update_date",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Update At
         </Button>
       );
     },
