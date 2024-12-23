@@ -1,17 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Service } from "@/types/service.type";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
-export interface IService {
-  id: string;
-  name: string;
-  shortname: string;
-  fee: string;
-}
-
-export const columns: ColumnDef<IService>[] = [
+export const columns: ColumnDef<Service>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -45,7 +39,7 @@ export const columns: ColumnDef<IService>[] = [
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "shortname",
+    accessorKey: "shortName",
     header: ({ column }) => {
       return (
         <Button
@@ -54,11 +48,11 @@ export const columns: ColumnDef<IService>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Short name
+          Short Name
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("shortname")}</div>,
+    cell: ({ row }) => <div>{row.getValue("shortName")}</div>,
   },
   {
     accessorKey: "fee",
@@ -81,7 +75,7 @@ export const columns: ColumnDef<IService>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div>
-        <Link href={`/service/update/${row.getValue("id")}`}>
+        <Link href={`/service/update/${row.getValue("name")}`}>
           <button className="text-blue-500">Edit</button>
         </Link>
       </div>

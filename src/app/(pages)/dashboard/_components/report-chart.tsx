@@ -8,6 +8,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { Shipment } from "@/types/shipment.type";
+import { GetQuoteRequestType } from "@/schema/quote-request.schema";
 
 export const description = "A multiple line chart";
 
@@ -78,7 +80,16 @@ const LegendCard: React.FC = () => {
   );
 };
 
-export function ReportChart() {
+type ReportChartProps = {
+  customer: CustomerResponse[] | undefined;
+  shipment: Shipment[] | undefined;
+  quote: GetQuoteRequestType | undefined;
+};
+
+export function ReportChart({ customer, shipment, quote }: ReportChartProps) {
+  console.log("customer", customer);
+  console.log("shipment", shipment);
+  console.log("quote", quote);
   return (
     <div className="w-full flex space-x-6">
       <div className="flex flex-col space-y-4">

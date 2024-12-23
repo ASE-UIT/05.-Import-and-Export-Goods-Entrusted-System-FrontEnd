@@ -1,6 +1,7 @@
 "use client";
 
 import Barcode from "@/components/ui/barcode";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -9,7 +10,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useContract from "@/hooks/use-contract";
+import useImportCusDec from "@/hooks/use-import-cus-dec";
 import useShipmentTracking from "@/hooks/use-shipment-tracking";
+import { toast } from "@/hooks/use-toast";
+import { ErrorType } from "@/types/error.type";
+import { Shipment } from "@/types/shipment.type";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Page() {
@@ -21,6 +28,23 @@ export default function Page() {
   const { useGetShipment } = useShipmentTracking;
 
   const { data: shipmentData } = useGetShipment();
+  const {data: documents} = useImportCusDec.useGetImportCusDec(undefined, undefined, "CUSTOM_IMPORT");
+  console.log(documents);
+  const create = useImportCusDec.useCreateImportCusDec();
+  const {data: contracts} = useContract.useGetContracts();
+  const [shipmentNotDocument, setShipmentNotDocument] = useState<Shipment[]>();
+
+  useEffect(() => {
+    if (shipmentData && documents) {
+      const shipmentIds = shipmentData.results.map((shipment) => shipment.id);
+      console.log(shipmentIds);
+      const documentShipmentIds = Array.isArray(documents?.data) ? documents.data.map((document) => document.shipmentId) : [];
+      console.log(documentShipmentIds);
+      const shipmentNotDocument = shipmentIds.filter((shipmentId) => !documentShipmentIds.includes(shipmentId));
+      console.log(shipmentNotDocument);
+      setShipmentNotDocument(shipmentData.results.filter((shipment) => shipmentNotDocument.includes(shipment.id)));
+    }
+  }, [shipmentData, documents]);
   
 
   const [shipmentId, setShipmentId] = useState("");
@@ -31,6 +55,7 @@ export default function Page() {
   const [hopDongNgay, setHopDongNgay] = useState(new Date().toISOString().split("T")[0]);
   const [hopDongHetHan, setHopDongHetHan] = useState(new Date().toISOString().split("T")[0]);
   const [ngayDen, setNgayDen] = useState(new Date().toISOString().split("T")[0]);
+  const [loading, setLoading] = useState(false);
 
   const [contractId, setContractId] = useState("");
 
@@ -81,8 +106,8 @@ export default function Page() {
     loaiHinh: "",
     hoaDonThuongMai: "",
     giayPhepSo: "",
-    giayPhepNgay: "",
-    giayPhepHetHan: "",
+    giayPhepNgay: new Date().toISOString().split("T")[0],
+    giayPhepHetHan: new Date().toISOString().split("T")[0],
     hopDong: "",
     hopDongNgay: "",
     hopDongHetHan: "",
@@ -91,7 +116,7 @@ export default function Page() {
     cangDoHang: "",
     phuongTienVanTai: "",
     tenSoHieu: "",
-    ngayDen: "",
+    ngayDen: new Date().toISOString().split("T")[0],
     nuocXuatKhau: "",
     dieuKienGiaoHang: "",
     phuongThucThanhToan: "",
@@ -115,6 +140,8 @@ export default function Page() {
       },
     ]);
   };
+
+  const router = useRouter();
 
   const addContainerRow = () => {
     setContainerRows([
@@ -153,16 +180,33 @@ export default function Page() {
   updateSingleField("hopDong", contractId)
   }, [contractId]);
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    updateSingleField("hopDongNgay", hopDongNgay)
+  }, [hopDongNgay ]);
+
+  useEffect(() => {
+    updateSingleField("hopDongHetHan", hopDongHetHan)
+  }, [hopDongHetHan]);
+
+  const handleSubmit = async () => {
+    if(loading) return;
+    setLoading(true);
     const formSubmit = {
       shipmentId,
-      type: "CUSTOM_IMPORT",
-      docNumber: formState.soToKhai,
+      type: "CUSTOM_IMPORT" as const,
+      docNumber: Number(formState.soToKhai),
       fields: { ...formState, productRows, containerRows },
     }
-
-    console.log(formSubmit);
-
+    await create.mutateAsync(formSubmit, {
+      onSuccess: () => {
+        toast({
+            title: "Success",
+            description: "Create import customs declaration successfully",
+        })
+        router.push("/document/import-customs-declaration")
+    },
+    });
+    setLoading(false);
   };
 
   return (
@@ -296,8 +340,12 @@ export default function Page() {
                   value={shipmentId}
                   onValueChange={(value) => {
                   setShipmentId(value)
-                  setContractId(shipmentData?.results.find((shipment) => shipment.id === value)?.contractId || "")
-                  }
+                  const contractId = shipmentNotDocument?.find((shipment) => shipment.id === value)?.contractId || ""
+                  setContractId(contractId)
+                  const contract = contracts?.data?.find((contract) => contract.id === contractId);
+                  setHopDongNgay(contract?.contractDate ? new Date(contract.contractDate).toISOString().split("T")[0] : "");
+                  setHopDongHetHan(contract?.endDate ? new Date(contract.endDate).toISOString().split("T")[0] : "");
+                }
                   }
                 >
                   <SelectTrigger className="ml-2 w-[300px]">
@@ -305,15 +353,22 @@ export default function Page() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      {shipmentData?.results &&
-                        shipmentData.results.map((shipment) => (
+                      {shipmentNotDocument?.length === 0 ?(
+                        <SelectItem disabled value="no-shipment">
+                          No shipment available
+                        </SelectItem>
+                      ) : (
+                        shipmentNotDocument?.map((shipment) => (
                           <SelectItem
                             value={shipment.id}
                             key={shipment.id}
                           >
                             {shipment.id}
                           </SelectItem>
-                        ))}
+                        
+                        ))
+                      )
+                        }
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -489,6 +544,7 @@ export default function Page() {
                         <input
                           type="date"
                           value={hopDongNgay}
+                          readOnly
                           onChange={(e) =>
                           {
                             setHopDongNgay(e.target.value)
@@ -504,6 +560,7 @@ export default function Page() {
                         <input
                           type="date"
                           value={hopDongHetHan}
+                          readOnly
                           onChange={(e) =>
                           {
                             setHopDongHetHan(e.target.value)
@@ -908,12 +965,10 @@ export default function Page() {
           </div>
         </div>
         <div className="flex justify-center">
-          <button
-            onClick={handleSubmit}
-            className="h-[50px] w-[200px] rounded-lg bg-blue-500 text-white"
-          >
+          <Button 
+          onClick={handleSubmit}>
             Submit Document
-          </button>
+          </Button>
         </div>
       </div>
     </>

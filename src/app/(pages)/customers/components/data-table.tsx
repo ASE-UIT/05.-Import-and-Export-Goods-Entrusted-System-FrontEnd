@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import * as React from 'react';
+import * as React from "react";
 
 import {
   ColumnDef,
@@ -11,7 +11,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -20,14 +20,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 
-import { Button } from '../../../../components/ui/button';
-import { CirclePlus } from 'lucide-react';
-import { useRouter, usePathname } from 'next/navigation';
-import { Skeleton } from '@/components/ui/skeleton';
-import { DataTableFilter } from './data-table-filter';
-import { DataTablePagination } from './data-table-pagination';
+import { Button } from "../../../../components/ui/button";
+import { CirclePlus } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
+import { DataTableFilter } from "./data-table-filter";
+import { DataTablePagination } from "./data-table-pagination";
 // import { customerMappingProp, CustomerMappingProp } from '.';
 
 interface DataTableProps<TData, TValue> {
@@ -96,6 +96,12 @@ export function DataTable<TData, TValue>({
           table={table}
         />
         <div className="flex gap-3">
+          <Button
+            variant="outline"
+            onClick={() => router.push(`/legal-representative`)}
+          >
+            View Legal Representative
+          </Button>
           <Button variant="outline" onClick={() => router.push(`/provider`)}>
             View Provider
           </Button>
@@ -130,7 +136,7 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+                  data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <React.Fragment key={cell.id}>
