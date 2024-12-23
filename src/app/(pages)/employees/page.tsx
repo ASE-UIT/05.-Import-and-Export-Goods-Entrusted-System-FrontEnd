@@ -34,7 +34,7 @@ export default function EmployeeManagementPage() {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div className="flex flex-col p-[24px] w-[calc(100vw-var(--sidebar-width))]">
+    <div className="flex flex-col p-[24px] w-[calc(100vw-var(--sidebar-width))] ">
       <div className="flex flex-col w-full gap-[20px]">
         <div className="flex justify-between items-center">
           <span className="text-3xl font-bold">Employee List</span>
