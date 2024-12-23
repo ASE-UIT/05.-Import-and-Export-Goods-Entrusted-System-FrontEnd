@@ -1,4 +1,4 @@
-import importDocumentAction from "@/apis/document/import.api";
+import importDocumentAction from "@/apis/document/importCusDec.api";
 import { importDocumentData } from "@/schema/document/importDocument.schema";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 

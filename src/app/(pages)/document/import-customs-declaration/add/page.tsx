@@ -1,7 +1,6 @@
 "use client";
 
 import Barcode from "@/components/ui/barcode";
-import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -11,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useShipmentTracking from "@/hooks/use-shipment-tracking";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Page() {
   const border = " border-r-[1px] border-b-[1px]";
@@ -22,8 +21,18 @@ export default function Page() {
   const { useGetShipment } = useShipmentTracking;
 
   const { data: shipmentData } = useGetShipment();
+  
 
   const [shipmentId, setShipmentId] = useState("");
+  const [ngayGioGui, setNgayGioGui] = useState(new Date().toISOString().split("T")[0]);
+  const [ngayGioDangKy, setNgayGioDangKy] = useState(new Date().toISOString().split("T")[0]);
+  const [giayPhepNgay, setGiayPhepNgay] = useState(new Date().toISOString().split("T")[0]);
+  const [giayPhepHetHan, setGiayPhepHetHan] = useState(new Date().toISOString().split("T")[0]);
+  const [hopDongNgay, setHopDongNgay] = useState(new Date().toISOString().split("T")[0]);
+  const [hopDongHetHan, setHopDongHetHan] = useState(new Date().toISOString().split("T")[0]);
+  const [ngayDen, setNgayDen] = useState(new Date().toISOString().split("T")[0]);
+
+  const [contractId, setContractId] = useState("");
 
   const [productRows, setProductRows] = useState([
     {
@@ -53,9 +62,9 @@ export default function Page() {
     chiCucHaiQuanDangKy: "",
     chiCucHaiQuanCuaKhauNhap: "",
     soThamChieu: "",
-    ngayGioGui: "",
+    ngayGioGui: new Date().toISOString().split("T")[0],
     soToKhai: "",
-    ngayGioDangKy: "",
+    ngayGioDangKy: new Date().toISOString().split("T")[0],
     soLuongPhuLuc: "",
     congChucDangKy: "",
 
@@ -140,8 +149,15 @@ export default function Page() {
     }));
   };
 
+  useEffect(() => {
+  updateSingleField("hopDong", contractId)
+  }, [contractId]);
+
   const handleSubmit = () => {
-    console.log({ ...formState, productRows, containerRows, shipmentId });
+    console.log(shipmentId )
+    console.log(formState.soToKhai)
+    console.log("CUSTOM_IMPORT")
+    console.log({ ...formState, productRows, containerRows });
   };
 
   return (
@@ -168,7 +184,7 @@ export default function Page() {
             <div className="flex w-full flex-col border-[1px]">
               <div className="flex w-full font-bold">
                 <div className={"flex-1" + border}>
-                  <div className="flex">
+                  <div className="flex flex-col">
                     Chi cục Hải quan đăng ký tờ khai:
                     <input
                       onChange={(e) =>
@@ -178,7 +194,7 @@ export default function Page() {
                       className="font-normal"
                     />
                   </div>
-                  <div className="flex">
+                  <div className="flex flex-col">
                     Chi cục Hải quan cửa khẩu nhập:
                     <input
                       onChange={(e) =>
@@ -193,7 +209,7 @@ export default function Page() {
                   </div>
                 </div>
                 <div className={"flex-[0.75]" + border}>
-                  <div className="flex">
+                  <div className="flex flex-col">
                     Số tham chiếu:
                     <input
                       onChange={(e) =>
@@ -203,18 +219,24 @@ export default function Page() {
                       className="font-normal"
                     ></input>
                   </div>
-                  <div className="flex">
+                  <div className="flex flex-col">
                     Ngày, giờ gửi:
                     <input
                       type="date"
-                      value={new Date().toISOString().split("T")[0]}
+                      value={ngayGioGui}
+                      onChange={(e) =>
+                      {
+                        setNgayGioGui(e.target.value)
+                        updateSingleField("ngayGioGui", e.target.value)
+                      }
+                      }
                       placeholder="   -"
                       className="font-normal"
                     ></input>
                   </div>
                 </div>
                 <div className={"flex-[0.75]" + border}>
-                  <div className="flex">
+                  <div className="flex flex-col">
                     Số tờ khai:
                     <input
                       onChange={(e) =>
@@ -224,16 +246,22 @@ export default function Page() {
                       className="font-normal"
                     ></input>
                   </div>
-                  <div className="flex">
+                  <div className="flex flex-col">
                     Ngày, giờ đăng ký:
                     <input
                       type="date"
-                      value={new Date().toISOString().split("T")[0]}
+                      value={ ngayGioDangKy}
+                      onChange={(e) =>
+                      {
+                        setNgayGioDangKy(e.target.value)
+                        updateSingleField("ngayGioDangKy", e.target.value)
+                      }
+                      }
                       placeholder="   -"
                       className="font-normal"
                     ></input>
                   </div>
-                  <div className="flex">
+                  <div className="flex flex-col">
                     Số lượng phụ lục tờ khai:
                     <input
                       onChange={(e) =>
@@ -245,7 +273,7 @@ export default function Page() {
                   </div>
                 </div>
                 <div className={"flex-[0.75]" + borderB}>
-                  <div className="flex">
+                  <div className="flex flex-col">
                     Công chức đăng ký tờ khai
                     <input
                       onChange={(e) =>
@@ -261,9 +289,13 @@ export default function Page() {
                 ShipmentID:
                 <Select
                   value={shipmentId}
-                  onValueChange={(value) => setShipmentId(value)}
+                  onValueChange={(value) => {
+                  setShipmentId(value)
+                  setContractId(shipmentData?.results.find((shipment) => shipment.id === value)?.contractId || "")
+                  }
+                  }
                 >
-                  <SelectTrigger className="ml-2 w-[180px]">
+                  <SelectTrigger className="ml-2 w-[300px]">
                     <SelectValue placeholder="Filter" />
                   </SelectTrigger>
                   <SelectContent>
@@ -272,9 +304,9 @@ export default function Page() {
                         shipmentData.results.map((shipment) => (
                           <SelectItem
                             value={shipment.id}
-                            key={shipment.contractId}
+                            key={shipment.id}
                           >
-                            {shipment.contractId}
+                            {shipment.id}
                           </SelectItem>
                         ))}
                     </SelectGroup>
@@ -284,7 +316,7 @@ export default function Page() {
               <div className={"flex w-full"}>
                 <div className={"flex flex-1 flex-col" + borderR}>
                   <div className={"flex-1" + borderB}>
-                    <div className="flex">
+                    <div className="flex flex-col">
                       1. Người xuất khẩu:
                       <input
                         onChange={(e) =>
@@ -296,7 +328,7 @@ export default function Page() {
                     </div>
                   </div>
                   <div className={"flex flex-1 flex-col" + borderB}>
-                    <div className="flex">
+                    <div className="flex flex-col">
                       2. Người nhập khẩu:
                       <input
                         onChange={(e) =>
@@ -308,19 +340,19 @@ export default function Page() {
                     </div>
                     <div className="flex h-full items-end justify-end gap-1">
                       <div>MST</div>
-                      <div className={"flex h-6 w-20" + borderLT}>
+                      <div className={"flex h-6 w-32" + borderLT}>
                         <input
                           onChange={(e) =>
                             updateSingleField("mstNhapKhau", e.target.value)
                           }
                           placeholder="   -"
-                          className="w-16 font-normal"
+                          className="w-full font-normal"
                         ></input>
                       </div>
                     </div>
                   </div>
                   <div className={"flex flex-1 flex-col" + borderB}>
-                    <div className="flex">
+                    <div className="flex flex-col">
                       3. Người uỷ thác/người được ủy quyền:
                       <input
                         onChange={(e) =>
@@ -332,19 +364,19 @@ export default function Page() {
                     </div>
                     <div className="flex h-full items-end justify-end gap-1">
                       <div>MST</div>
-                      <div className={"flex h-6 w-20" + borderLT}>
+                      <div className={"flex h-6 w-32" + borderLT}>
                         <input
                           onChange={(e) =>
                             updateSingleField("mstUyThac", e.target.value)
                           }
                           placeholder="   -"
-                          className="w-16 font-normal"
+                          className="w-full font-normal"
                         ></input>
                       </div>
                     </div>
                   </div>
                   <div className="flex flex-1 flex-col">
-                    <div className="flex">
+                    <div className="flex flex-col">
                       4. Đại lý Hải quan:
                       <input
                         onChange={(e) =>
@@ -356,13 +388,13 @@ export default function Page() {
                     </div>
                     <div className="flex h-full items-end justify-end gap-1">
                       <div>MST</div>
-                      <div className={"flex h-6 w-20" + borderLT}>
+                      <div className={"flex h-6 w-32" + borderLT}>
                         <input
                           onChange={(e) =>
                             updateSingleField("mstDaiLy", e.target.value)
                           }
                           placeholder="   -"
-                          className="w-16 font-normal"
+                          className="w-full font-normal"
                         ></input>
                       </div>
                     </div>
@@ -382,7 +414,7 @@ export default function Page() {
                     </div>
                   </div>
                   <div className={"flex" + borderB}>
-                    <div className={"flex flex-[0.75]" + borderR}>
+                    <div className={"flex flex-col flex-[0.5]" + borderR}>
                       6. Hóa đơn thương mại:
                       <input
                         onChange={(e) =>
@@ -392,8 +424,8 @@ export default function Page() {
                         className="font-normal"
                       ></input>
                     </div>
-                    <div className={"flex-[0.9]" + borderR}>
-                      <div className="flex">
+                    <div className={"flex-[0.5]" + borderR}>
+                      <div className="flex flex-col">
                         7. Giấy phép số:
                         <input
                           onChange={(e) =>
@@ -403,91 +435,117 @@ export default function Page() {
                           className="font-normal"
                         ></input>
                       </div>
-                      <div className="flex">
+                      <div className="flex flex-col">
                         Ngày
                         <input
                           type="date"
-                          value={new Date().toISOString().split("T")[0]}
+                          value={giayPhepNgay}
+                          onChange={(e) =>
+                          {
+                            setGiayPhepNgay(e.target.value)
+                            updateSingleField("giayPhepNgay", e.target.value)
+                          }
+                          }
                           placeholder="   -"
-                          className="font-normal"
+                          className="w-32 font-normal "
                         ></input>
                       </div>
-                      <div className="flex">
+                      <div className="flex flex-col">
                         Ngày hết hạn
                         <input
                           type="date"
-                          value={new Date().toISOString().split("T")[0]}
+                          value={giayPhepHetHan}
+                          onChange={(e) =>
+                          {
+                            setGiayPhepHetHan(e.target.value)
+                            updateSingleField("giayPhepHetHan", e.target.value)
+                          }
+                          }
                           placeholder="   -"
-                          className="font-normal"
+                          className="w-32 font-normal"
                         ></input>
                       </div>
                     </div>
                     <div className="flex-[0.5]">
-                      <div className="flex">
+                      <div className="flex flex-col">
                         8. Hợp đồng:
                         <input
                           onChange={(e) =>
                             updateSingleField("hopDong", e.target.value)
                           }
+                          readOnly
+                          value={contractId}
                           placeholder="   -"
-                          className="w-20 font-normal"
+                          className="w-full font-normal"
                         ></input>
                       </div>
-                      <div className="flex">
+                      <div className="flex flex-col">
                         Ngày
                         <input
                           type="date"
-                          value={new Date().toISOString().split("T")[0]}
+                          value={hopDongNgay}
+                          onChange={(e) =>
+                          {
+                            setHopDongNgay(e.target.value)
+                            updateSingleField("hopDongNgay", e.target.value)
+                          }
+                          }
                           placeholder="   -"
-                          className="w-20 font-normal"
+                          className="w-32 font-normal"
                         ></input>
                       </div>
-                      <div className="flex">
+                      <div className="flex flex-col">
                         Ngày hết hạn
                         <input
                           type="date"
-                          value={new Date().toISOString().split("T")[0]}
+                          value={hopDongHetHan}
+                          onChange={(e) =>
+                          {
+                            setHopDongHetHan(e.target.value)
+                            updateSingleField("hopDongHetHan", e.target.value)
+                          }
+                          }
                           placeholder="  -"
-                          className="w-20 font-normal"
+                          className="w-32 font-normal"
                         ></input>
                       </div>
                     </div>
                   </div>
                   <div className={"flex" + borderB}>
-                    <div className={"flex flex-[0.75]" + borderR}>
+                    <div className={"flex flex-col flex-[0.5]" + borderR}>
                       9. Vận đơn (số/ngày):
                       <input
                         onChange={(e) =>
                           updateSingleField("vanDon", e.target.value)
                         }
                         placeholder="  -"
-                        className="w-20 font-normal"
+                        className="w-full font-normal"
                       ></input>
                     </div>
-                    <div className={"flex flex-[0.9]" + borderR}>
+                    <div className={"flex flex-col flex-[0.5]" + borderR}>
                       10. Cảng xếp hàng:
                       <input
                         onChange={(e) =>
                           updateSingleField("cangXepHang", e.target.value)
                         }
                         placeholder="  -"
-                        className="w-20 font-normal"
+                        className="w-full font-normal"
                       ></input>
                     </div>
-                    <div className="flex flex-[0.5]">
+                    <div className="flex flex-col flex-[0.5]">
                       11. Cảng dỡ hàng:
                       <input
                         onChange={(e) =>
                           updateSingleField("cangDoHang", e.target.value)
                         }
                         placeholder="  -"
-                        className="w-20 font-normal"
+                        className="w-full font-normal"
                       ></input>
                     </div>
                   </div>
                   <div className={"flex" + borderB}>
                     <div className={"flex-[1.65]" + borderR}>
-                      <div className="flex">
+                      <div className="flex gap-2">
                         12. Phương tiện vận tải:
                         <input
                           onChange={(e) =>
@@ -500,7 +558,7 @@ export default function Page() {
                           className="font-normal"
                         ></input>
                       </div>
-                      <div className="flex">
+                      <div className="flex gap-2">
                         Tên, số hiệu:
                         <input
                           onChange={(e) =>
@@ -510,17 +568,23 @@ export default function Page() {
                           className="font-normal"
                         ></input>
                       </div>
-                      <div className="flex">
+                      <div className="flex gap-2">
                         Ngày đến
                         <input
                           type="date"
-                          value={new Date().toISOString().split("T")[0]}
+                          value={ngayDen}
+                          onChange={(e) =>
+                          {
+                            setNgayDen(e.target.value)
+                            updateSingleField("ngayDen", e.target.value)
+                          }
+                          }
                           placeholder="  -"
                           className="font-normal"
                         ></input>
                       </div>
                     </div>
-                    <div className="flex flex-[0.5]">
+                    <div className="flex flex-col flex-[0.5]">
                       13. Nước xuất khẩu:
                       <input
                         onChange={(e) =>
@@ -532,7 +596,7 @@ export default function Page() {
                     </div>
                   </div>
                   <div className={"flex" + borderB}>
-                    <div className={"flex flex-[1]" + borderR}>
+                    <div className={"flex flex-col flex-[1]" + borderR}>
                       14. Điều kiện giao hàng:
                       <input
                         onChange={(e) =>
@@ -542,7 +606,7 @@ export default function Page() {
                         className="font-normal"
                       ></input>
                     </div>
-                    <div className="flex flex-[1]">
+                    <div className="flex flex-col flex-[1]">
                       15. Phương thức thanh toán:
                       <input
                         onChange={(e) =>
@@ -557,7 +621,7 @@ export default function Page() {
                     </div>
                   </div>
                   <div className="flex">
-                    <div className={"flex flex-[1]" + borderR}>
+                    <div className={"flex flex-col flex-[1]" + borderR}>
                       16. Đồng tiền thanh toán:
                       <input
                         onChange={(e) =>
@@ -567,7 +631,7 @@ export default function Page() {
                         className="font-normal"
                       ></input>
                     </div>
-                    <div className="flex flex-[1]">
+                    <div className="flex flex-col flex-[1]">
                       17. Tỷ giá tính thuế:
                       <input
                         onChange={(e) =>
@@ -784,7 +848,7 @@ export default function Page() {
                     <td className="border-[1px] border-b-0 border-t-0"></td>
                     <td className="border-[1px] border-b-0 border-t-0"></td>
                     <td className="flex items-end justify-start font-bold">
-                      Cộng: <span className="ml-1 font-normal"></span>
+                      Cộng: {containerRows.reduce((acc, row) => acc + (Number(row.trongLuong) || 0), 0)} <span className="ml-1 font-normal"></span>
                     </td>
                   </tr>
                 </tbody>

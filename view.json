@@ -1,0 +1,157 @@
+{
+    "chiCucHaiQuanDangKy": "Hải quan Hải Phòng",
+    "chiCucHaiQuanCuaKhauNhap": "Cửa khẩu Lào Cai",
+    "soThamChieu": "REF202312001",
+    "ngayGioGui": "2024-12-23",
+    "soToKhai": "202312001",
+    "ngayGioDangKy": "2024-12-23",
+    "soLuongPhuLuc": "2",
+    "congChucDangKy": "Nguyễn Văn A",
+    "nguoiXuatKhau": "Shanghai Trading Co., Ltd.",
+    "nguoiNhapKhau": "Công ty TNHH Thương mại Việt Nam",
+    "mstNhapKhau": "0123456789",
+    "nguoiUyThac": "Công ty CP Xuất Nhập Khẩu",
+    "mstUyThac": "0987654321",
+    "daiLyHaiQuan": "Công ty TNHH Dịch vụ Hải quan ABC",
+    "mstDaiLy": "0123498765",
+    "loaiHinh": "E11 - Nhập khẩu thương mại",
+    "hoaDonThuongMai": "INV202312001",
+    "giayPhepSo": "GP2023001",
+    "giayPhepNgay": "2024-12-01",
+    "giayPhepHetHan": "2024-12-31",
+    "hopDong": "2a6e7e6f-7ff7-4cc4-9d76-0de61426791e",
+    "hopDongNgay": "2024-12-16",
+    "hopDongHetHan": "2024-12-30",
+    "vanDon": "10",
+    "cangXepHang": "Shanghai Port",
+    "cangDoHang": "Hai Phong Port",
+    "phuongTienVanTai": "Đường biển",
+    "tenSoHieu": "VESSEL123",
+    "ngayDen": "2024-12-26",
+    "nuocXuatKhau": "China",
+    "dieuKienGiaoHang": "CIF Hai Phong",
+    "phuongThucThanhToan": "L/C",
+    "dongTienThanhToan": "USD",
+    "tyGiaTinhThue": "24500",
+    "productRows": [
+        {
+            "id": 1,
+            "moTa": "Điện thoại",
+            "maSo": "8517.12.00",
+            "xuatXu": "CN",
+            "uuDai": "Ak",
+            "luongHang": "1000",
+            "donVi": "Chiếc",
+            "donGia": "500",
+            "triGia": "500000"
+        },
+        {
+            "id": 2,
+            "moTa": "Phụ kiện",
+            "maSo": "8517.70.00",
+            "xuatXu": "CN",
+            "uuDai": "Ak",
+            "luongHang": "2000",
+            "donVi": "Bộ",
+            "donGia": "50",
+            "triGia": "100000"
+        }
+    ],
+    "containerRows": [
+        {
+            "id": 1,
+            "soHieu": "123456",
+            "soLuongKien": "500",
+            "trongLuong": "10000"
+        },
+        {
+            "id": 2,
+            "soHieu": "123457",
+            "soLuongKien": "500",
+            "trongLuong": "10000"
+        }
+    ]
+}
+
+{
+    "shipmentId": "cf738a5e-f61a-4c04-9d42-394739553e45",
+    "type": "CUSTOM_IMPORT",
+    "docNumber": 202312001,
+    "fields": {
+        "chiCucHaiQuanDangKy": "Hải quan Hải Phòng",
+        "chiCucHaiQuanCuaKhauNhap": "Cửa khẩu Lào Cai",
+        "soThamChieu": "REF202312001",
+        "ngayGioGui": "2024-12-23",
+        "soToKhai": "202312001",
+        "ngayGioDangKy": "2024-12-23",
+        "soLuongPhuLuc": "2",
+        "congChucDangKy": "Nguyễn Văn A",
+        "nguoiXuatKhau": "Shanghai Trading Co., Ltd.",
+        "nguoiNhapKhau": "Công ty TNHH Thương mại Việt Nam",
+        "mstNhapKhau": "0123456789",
+        "nguoiUyThac": "Công ty CP Xuất Nhập Khẩu",
+        "mstUyThac": "0987654321",
+        "daiLyHaiQuan": "Công ty TNHH Dịch vụ Hải quan ABC",
+        "mstDaiLy": "0123498765",
+        "loaiHinh": "E11 - Nhập khẩu thương mại",
+        "hoaDonThuongMai": "INV202312001",
+        "giayPhepSo": "GP2023001",
+        "giayPhepNgay": "2024-12-01",
+        "giayPhepHetHan": "2024-12-31",
+        "hopDong": "2a6e7e6f-7ff7-4cc4-9d76-0de61426791e",
+        "hopDongNgay": "2024-12-16",
+        "hopDongHetHan": "2024-12-30",
+        "vanDon": "10",
+        "cangXepHang": "Shanghai Port",
+        "cangDoHang": "Hai Phong Port",
+        "phuongTienVanTai": "Đường biển",
+        "tenSoHieu": "VESSEL123",
+        "ngayDen": "2024-12-26",
+        "nuocXuatKhau": "China",
+        "dieuKienGiaoHang": "CIF Hai Phong",
+        "phuongThucThanhToan": "L/C",
+        "dongTienThanhToan": "USD",
+        "tyGiaTinhThue": "24500",
+        "productRows": [
+            {
+                "id": 1,
+                "moTa": "Điện thoại",
+                "maSo": "8517.12.00",
+                "xuatXu": "CN",
+                "uuDai": "Ak",
+                "luongHang": "1000",
+                "donVi": "Chiếc",
+                "donGia": "500",
+                "triGia": "500000"
+            },
+            {
+                "id": 2,
+                "moTa": "Phụ kiện",
+                "maSo": "8517.70.00",
+                "xuatXu": "CN",
+                "uuDai": "Ak",
+                "luongHang": "2000",
+                "donVi": "Bộ",
+                "donGia": "50",
+                "triGia": "100000"
+            }
+        ],
+        "containerRows": [
+            {
+                "id": 1,
+                "soHieu": "123456",
+                "soLuongKien": "500",
+                "trongLuong": "10000"
+            },
+            {
+                "id": 2,
+                "soHieu": "123457",
+                "soLuongKien": "500",
+                "trongLuong": "10000"
+            }
+        ]
+    },
+    "schema": {
+     
+    }
+  }
