@@ -154,10 +154,15 @@ export default function Page() {
   }, [contractId]);
 
   const handleSubmit = () => {
-    console.log(shipmentId )
-    console.log(formState.soToKhai)
-    console.log("CUSTOM_IMPORT")
-    console.log({ ...formState, productRows, containerRows });
+    const formSubmit = {
+      shipmentId,
+      type: "CUSTOM_IMPORT",
+      docNumber: formState.soToKhai,
+      fields: { ...formState, productRows, containerRows },
+    }
+
+    console.log(formSubmit);
+
   };
 
   return (
@@ -476,7 +481,7 @@ export default function Page() {
                           readOnly
                           value={contractId}
                           placeholder="   -"
-                          className="w-full font-normal"
+                          className="w-full font-normal text-[13px] h-[24px]"
                         ></input>
                       </div>
                       <div className="flex flex-col">
