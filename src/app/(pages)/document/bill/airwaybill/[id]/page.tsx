@@ -9,7 +9,7 @@ export default function AirWayBillPage() {
   const { id } = useParams<{ id: string }>();
   const { data: airWaybillData, isLoading } = useDocument.useGetDocumentById(
     id,
-    "PACKING_LIST"
+    "AIRWAY_BILL"
   );
   if ((airWaybillData && !airWaybillData.data[0]) || isLoading) {
     return (
@@ -23,5 +23,6 @@ export default function AirWayBillPage() {
       </div>
     );
   }
+  console.log(airWaybillData.data[0]);
   return <AirWayBill data={airWaybillData.data[0]} />;
 }

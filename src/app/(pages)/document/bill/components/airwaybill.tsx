@@ -53,28 +53,33 @@ export default function AirWayBill(data: any) {
     shipmentList?.results.map((shipment) => shipment.id) ?? [];
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: data.fields
+    defaultValues: data.data.fields
       ? {
-          shipmentId: data.shipmentId,
-          shipperName: data.fields.shipperName,
-          shipperAddress: data.fields.shipperAddress,
-          consigneeName: data.fields.shipperAddress,
-          consigneeAddress: data.fields.consigneeAddress,
-          flightNumber: data.fields.flightNumber,
-          flightDate: data.fields.flightDate,
-          trackingNumber: data.fields.trackingNumber,
-          numberOfPieces: data.fields.numberOfPieces,
-          grossWeight: data.fields.grossWeight,
-          declaredValue: data.fields.declaredValue,
-          goodsDescription: data.fields.goodsDescription,
-          signedDate: data.fields.signedDate,
-          docNumber: data.docNumber,
+          shipmentId: data.data.shipmentId,
+          shipperName: data.data.fields.shipperName,
+          shipperAddress: data.data.fields.shipperAddress,
+          consigneeName: data.data.fields.shipperAddress,
+          consigneeAddress: data.data.fields.consigneeAddress,
+          flightNumber: data.data.fields.flightNumber,
+          flightDate: data.data.fields.flightDate,
+          trackingNumber: data.data.fields.trackingNumber,
+          numberOfPieces: data.data.fields.numberOfPieces,
+          grossWeight: data.data.fields.grossWeight,
+          declaredValue: data.data.fields.declaredValue,
+          goodsDescription: data.data.fields.goodsDescription,
+          signedDate: data.data.fields.signedDate,
+          docNumber: data.data.docNumber,
         }
       : {},
   });
+  console.log(form.formState.errors);
+  console.log(form.getValues("shipmentId"));
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!data) {
+    console.log("submit");
+    console.log("data: ", data);
+    if (!data || Object.keys(data).length === 0) {
+      console.log("no data");
       createDocument({
         shipmentId: values.shipmentId,
         type: "AIRWAY_BILL",
@@ -108,6 +113,7 @@ export default function AirWayBill(data: any) {
           signedDate: "string",
         },
       });
+      return;
     }
     updateDocument({
       type: "AIRWAY_BILL",
@@ -148,6 +154,9 @@ export default function AirWayBill(data: any) {
         <div className="max-w-3xl mx-auto my-5 p-5 border rounded-lg border-gray-300">
           <h2 className="text-center font-bold text-xl mb-5">AIR WAYBILL</h2>
           <div className="flex flex-row mb-5 items-center">
+            {form.formState.errors.shipmentId && (
+              <span>{form.formState.errors.shipmentId.message}</span>
+            )}
             <h3 className="basis-1/3 font-semibold">Shipment ID: </h3>
             <FormField
               control={form.control}
@@ -187,7 +196,7 @@ export default function AirWayBill(data: any) {
                   type="text"
                   placeholder="Doc Number"
                   value={field.value}
-                  onChange={(e) => field.onChange(e.target.value)}
+                  onChange={(e) => field.onChange(parseInt(e.target.value))}
                   className="basic-2/3 w-[445px] text-sm border border-gray-300 rounded-md"
                 />
               )}
