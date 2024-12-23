@@ -6,7 +6,7 @@ export const providerSchema = z.object({
   phone: z.string().min(1, "Phone Number cannot be empty"),
   address: z.string().min(1, "Address cannot be empty"),
   country: z.string().min(1, "Country cannot be empty"),
-  contactRepId: z.string().min(1, "Contact Rep cannot be empty"),
+  status: z.enum(["active", "inactive"]),
 });
 
 export type createProviderData = z.infer<typeof providerSchema>;
