@@ -25,7 +25,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useParams } from "next/navigation";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import useInvoice from "@/hooks/use-invoice";
@@ -48,8 +52,7 @@ export default function AddInvoice() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const { mutate: createInvoice, status } =
-    useInvoice.useCreateInvoice(router);
+  const { mutate: createInvoice, status } = useInvoice.useCreateInvoice(router);
   const { data: sessionData } = useAuth.useGetSession();
   const { data: contracts, isLoading } = useContract.useGetContracts();
 
@@ -58,13 +61,13 @@ export default function AddInvoice() {
   });
   const contractIds = contracts?.data.map((contract) => contract.id) || [];
 
-
   useEffect(() => {
     if (sessionData) {
-      form.setValue("employeeId", sessionData.employee.id);
+      if (sessionData.employee.id) {
+        form.setValue("employeeId", sessionData.employee.id);
+      }
     }
   }, [sessionData]);
-
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const createInvoiceBody: CreateInvoiceType = {
@@ -99,43 +102,49 @@ export default function AddInvoice() {
         <span className="text-3xl font-bold">Add Invoice</span>
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} encType="multipart/form-data">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          encType="multipart/form-data"
+        >
           <div className="flex flex-col items-center w-[600px] gap-4 py-4">
             {/* Contract ID */}
             <FormField
-          control={form.control}
-          name="contractId"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel className="font-bold">Contract ID</FormLabel>
-              <FormControl>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <SelectTrigger className="w-full h-[60px]">
-                    <SelectValue placeholder="Select contract ID" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {isLoading ? (
-                      <div className="flex items-center justify-center">
-                        Loading Contracts...
-                      </div>
-                    ) : contractIds.length > 0 ? (
-                      contractIds.map((id) => (
-                        <SelectItem key={id} value={id}>
-                          {id}
-                        </SelectItem>
-                      ))
-                    ) : (
-                      <div className="flex items-center justify-center">
-                        No Contract Available
-                      </div>
-                    )}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+              control={form.control}
+              name="contractId"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="font-bold">Contract ID</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-full h-[60px]">
+                        <SelectValue placeholder="Select contract ID" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {isLoading ? (
+                          <div className="flex items-center justify-center">
+                            Loading Contracts...
+                          </div>
+                        ) : contractIds.length > 0 ? (
+                          contractIds.map((id) => (
+                            <SelectItem key={id} value={id}>
+                              {id}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            No Contract Available
+                          </div>
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/* Employee ID */}
             <FormField
@@ -157,12 +166,14 @@ export default function AddInvoice() {
             />
 
             <div className="w-full flex space-x-[12px]">
-            <FormField
+              <FormField
                 control={form.control}
                 name="expiredDate"
                 render={({ field }) => (
                   <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">Expired Date</FormLabel>
+                    <FormLabel className="text-[16px] font-bold">
+                      Expired Date
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -187,7 +198,8 @@ export default function AddInvoice() {
                             onSelect={(date) => {
                               setExpiredDate(date);
                               field.onChange(date);
-                            }}                           />
+                            }}
+                          />
                         </PopoverContent>
                       </Popover>
                     </FormControl>
@@ -229,7 +241,11 @@ export default function AddInvoice() {
 
             <div className="w-1/2 flex gap-2.5">
               <Link href="/invoices" className="w-1/2 h-14">
-                <Button className="w-full h-10 text-lg" variant={"outline"} type="button">
+                <Button
+                  className="w-full h-10 text-lg"
+                  variant={"outline"}
+                  type="button"
+                >
                   Cancel
                 </Button>
               </Link>
