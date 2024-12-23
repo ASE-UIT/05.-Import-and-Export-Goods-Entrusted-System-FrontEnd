@@ -54,11 +54,12 @@ const formSchema = z.object({
 export default function UpdateQuotationtPage() {
   const [pickupDate, setPickupDate] = useState<Date | undefined>(undefined);
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>(undefined);
-  const [quotationDate, setQuotationDate] = useState<Date | undefined>(undefined);
+  const [quotationDate, setQuotationDate] = useState<Date | undefined>(
+    undefined
+  );
   const [expiredDate, setExpiredDate] = useState<Date | undefined>(undefined);
   const [quoteRequest, setQuoteRequest] = useState<string[]>();
   const [freights, setFreight] = useState<string[]>();
-  
 
   const [isPickupDateOpen, setPickupDateOpen] = useState(false);
   const [isDeliveryDateOpen, setDeliveryDateOpen] = useState(false);
@@ -112,25 +113,25 @@ export default function UpdateQuotationtPage() {
   const { data: freightData } = useQuotation.useGetFreight();
   useEffect(() => {
     if (freightData?.data?.results) {
-        const freights = freightData.data.results.map((it) => it.id);
-        setFreight(freights);
+      const freights = freightData.data.results.map((it) => it.id);
+      setFreight(freights);
     } else {
-        console.error("Freight data is not valid:", freightData);
+      console.error("Freight data is not valid:", freightData);
     }
-}, [freightData]);
+  }, [freightData]);
 
   useEffect(() => {
     if (data && data.length > 0) {
       // Lọc phần tử theo `id`
       const quotationData = data.find((quotation) => quotation.id === id);
-  
+
       if (quotationData) {
         setQuotation(quotationData);
         setPickupDate(new Date(quotationData.pickupDate));
         setDeliveryDate(new Date(quotationData.deliveryDate));
         setQuotationDate(new Date(quotationData.quotationDate));
         setExpiredDate(new Date(quotationData.expiredDate));
-  
+
         // Đặt giá trị cho form
         form.setValue("status", quotationData.status);
         form.setValue("quoteReqId", quotationData.quoteReqId);
@@ -141,8 +142,6 @@ export default function UpdateQuotationtPage() {
       }
     }
   }, [data, id]);
-  
-  
 
   useEffect(() => {
     if (pickupDate) form.setValue("pickupDate", pickupDate);
@@ -171,10 +170,16 @@ export default function UpdateQuotationtPage() {
       ...(values.freightId !== quotation?.freightId && {
         freightId: values.freightId,
       }),
-      ...(!isSameDay(values.pickupDate, quotation?.pickupDate || new Date()) && {
+      ...(!isSameDay(
+        values.pickupDate,
+        quotation?.pickupDate || new Date()
+      ) && {
         pickupDate: values.pickupDate.toISOString(),
       }),
-      ...(!isSameDay(values.deliveryDate, quotation?.deliveryDate || new Date()) && {
+      ...(!isSameDay(
+        values.deliveryDate,
+        quotation?.deliveryDate || new Date()
+      ) && {
         deliveryDate: values.deliveryDate.toISOString(),
       }),
       ...(!isSameDay(
@@ -191,7 +196,7 @@ export default function UpdateQuotationtPage() {
       }),
       ...(values.status.toUpperCase() !== quotation?.status.toUpperCase() && {
         status: values.status.toUpperCase(),
-      }),  
+      }),
     };
     if (Object.keys(updateQuotationBody).length > 0) {
       updateQuotation(updateQuotationBody);
@@ -211,42 +216,42 @@ export default function UpdateQuotationtPage() {
       {error ? (
         error.message
       ) : (
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          encType="multipart/form-data"
-        >
-          <div className="flex flex-col items-center w-[600px] gap-4 py-4">
-            {/* Quote Request ID */}
-            <FormField
-              control={form.control}
-              name="quoteReqId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[16px] font-bold">
-                    Quotation Request ID
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      value={quotation?.quoteReqId || field.value || ""}
-                      readOnly
-                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
-                    />
-                </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            encType="multipart/form-data"
+          >
+            <div className="flex flex-col items-center w-[600px] gap-4 py-4">
+              {/* Quote Request ID */}
+              <FormField
+                control={form.control}
+                name="quoteReqId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[16px] font-bold">
+                      Quotation Request ID
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        value={quotation?.quoteReqId || field.value || ""}
+                        readOnly
+                        className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* Employee ID */}
-            <FormField
-              control={form.control}
-              name="employeeId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[16px] font-bold">
-                    Employee ID
-                  </FormLabel>
+              {/* Employee ID */}
+              <FormField
+                control={form.control}
+                name="employeeId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[16px] font-bold">
+                      Employee ID
+                    </FormLabel>
                     <FormControl>
                       <Input
                         value={quotation?.employeeId || field.value || ""}
@@ -255,264 +260,277 @@ export default function UpdateQuotationtPage() {
                       />
                     </FormControl>
                     <FormMessage />
-                </FormItem>
-              )}
-            />
+                  </FormItem>
+                )}
+              />
 
-            {/* Freight ID */}
-            <FormField
-              control={form.control}
-              name="freightId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[16px] font-bold">
-                    Freight ID
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      value={quotation?.freightId || field.value || ""}
-                      readOnly
-                      className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
-                    />
-                </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-            <div className="w-[500px] flex space-x-[12px]">
-              {/* Pickup Date */}
+              {/* Freight ID */}
               <FormField
                 control={form.control}
-                name="pickupDate"
-                render={() => (
-                  <FormItem className="w-1/2">
+                name="freightId"
+                render={({ field }) => (
+                  <FormItem>
                     <FormLabel className="text-[16px] font-bold">
-                      Pickup Date
+                      Freight ID
                     </FormLabel>
                     <FormControl>
-                      <Popover
-                        open={isPickupDateOpen}
-                        onOpenChange={setPickupDateOpen}
-                    >
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={`w-full h-[60px] justify-start text-left font-normal ${
-                            !pickupDate ? "text-muted-foreground" : ""
-                          }`}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {pickupDate ? (
-                            format(pickupDate, "PPP")
-                          ) : (
-                            <span>
-                              {quotation &&
-                                format(quotation.pickupDate, "PPP")}
-                            </span>
-                          )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={pickupDate}
-                            onSelect={(date) => handlePickupSelect(date || new Date())}
-                          />
-                        </PopoverContent>
-                      </Popover>
+                      <Input
+                        value={quotation?.freightId || field.value || ""}
+                        readOnly
+                        className="w-[500px] h-[60px] bg-gray-100 text-gray-500 cursor-not-allowed"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              {/* Delivery Date */}
+
+              <div className="w-[500px] flex space-x-[12px]">
+                {/* Pickup Date */}
+                <FormField
+                  control={form.control}
+                  name="pickupDate"
+                  render={() => (
+                    <FormItem className="w-1/2">
+                      <FormLabel className="text-[16px] font-bold">
+                        Pickup Date
+                      </FormLabel>
+                      <FormControl>
+                        <Popover
+                          open={isPickupDateOpen}
+                          onOpenChange={setPickupDateOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant={"outline"}
+                              className={`w-full h-[60px] justify-start text-left font-normal ${
+                                !pickupDate ? "text-muted-foreground" : ""
+                              }`}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {pickupDate ? (
+                                format(pickupDate, "PPP")
+                              ) : (
+                                <span>
+                                  {quotation &&
+                                    format(quotation.pickupDate, "PPP")}
+                                </span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={pickupDate}
+                              onSelect={(date) =>
+                                handlePickupSelect(date || new Date())
+                              }
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* Delivery Date */}
+                <FormField
+                  control={form.control}
+                  name="deliveryDate"
+                  render={() => (
+                    <FormItem className="w-1/2">
+                      <FormLabel className="text-[16px] font-bold">
+                        Delivery Date
+                      </FormLabel>
+                      <FormControl>
+                        <Popover
+                          open={isDeliveryDateOpen}
+                          onOpenChange={setDeliveryDateOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant={"outline"}
+                              className={`w-full h-[60px] justify-start text-left font-normal ${
+                                !deliveryDate ? "text-muted-foreground" : ""
+                              }`}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {deliveryDate ? (
+                                format(deliveryDate, "PPP")
+                              ) : (
+                                <span>
+                                  {quotation &&
+                                    format(quotation.deliveryDate, "PPP")}
+                                </span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={deliveryDate}
+                              onSelect={(date) =>
+                                handleDeliverySelect(date || new Date())
+                              }
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="w-[500px] flex space-x-[12px]">
+                {/* Quotation Date */}
+                <FormField
+                  control={form.control}
+                  name="quotationDate"
+                  render={() => (
+                    <FormItem className="w-1/2">
+                      <FormLabel className="text-[16px] font-bold">
+                        Quotation Date
+                      </FormLabel>
+                      <FormControl>
+                        <Popover
+                          open={isQuotationDateOpen}
+                          onOpenChange={setQuotationDateOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant={"outline"}
+                              className={`w-full h-[60px] justify-start text-left font-normal ${
+                                !quotationDate ? "text-muted-foreground" : ""
+                              }`}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {quotationDate ? (
+                                format(quotationDate, "PPP")
+                              ) : (
+                                <span>
+                                  {quotation &&
+                                    format(quotation.quotationDate, "PPP")}
+                                </span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={quotationDate}
+                              onSelect={(date) =>
+                                handleQuotationSelect(date || new Date())
+                              }
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Expired Date */}
+                <FormField
+                  control={form.control}
+                  name="expiredDate"
+                  render={() => (
+                    <FormItem className="w-1/2">
+                      <FormLabel className="text-[16px] font-bold">
+                        Expired Date
+                      </FormLabel>
+                      <FormControl>
+                        <Popover
+                          open={isExpiredDateOpen}
+                          onOpenChange={setExpiredDateOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant={"outline"}
+                              className={`w-full h-[60px] justify-start text-left font-normal ${
+                                !expiredDate ? "text-muted-foreground" : ""
+                              }`}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {expiredDate ? (
+                                format(expiredDate, "PPP")
+                              ) : (
+                                <span>
+                                  {quotation &&
+                                    format(quotation.expiredDate, "PPP")}
+                                </span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={expiredDate}
+                              onSelect={(date) =>
+                                handleExpiredSelect(date || new Date())
+                              }
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Status */}
               <FormField
                 control={form.control}
-                name="deliveryDate"
-                render={() => (
-                  <FormItem className="w-1/2">
-                    <FormLabel className="text-[16px] font-bold">
-                      Delivery Date
-                    </FormLabel>
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-bold">Status</FormLabel>
                     <FormControl>
-                      <Popover
-                        open={isDeliveryDateOpen}
-                        onOpenChange={setDeliveryDateOpen}
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={quotation?.status}
                       >
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={`w-full h-[60px] justify-start text-left font-normal ${
-                              !deliveryDate ? "text-muted-foreground" : ""
-                            }`}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {deliveryDate ? (
-                              format(deliveryDate, "PPP")
-                            ) : (
-                              <span>
-                                {quotation && format(quotation.deliveryDate, "PPP")}
-                              </span>
-                            )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={deliveryDate}
-                            onSelect={(date) => handleDeliverySelect(date || new Date())}
-                          />
-                        </PopoverContent>
-                      </Popover>
+                        <SelectTrigger className="w-[500px] h-[60px]">
+                          <SelectValue placeholder={quotation?.status} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Draft">DRAFT</SelectItem>
+                          <SelectItem value="Accepted">ACCEPTED</SelectItem>
+                          <SelectItem value="Rejected">REJECTED</SelectItem>
+                          <SelectItem value="Expried">EXPIRED</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              <FormMessage className="text-[14px]">
+                {form.formState.errors.root?.message}
+              </FormMessage>
             </div>
-
-            <div className="w-[500px] flex space-x-[12px]">
-              {/* Quotation Date */}
-              <FormField
-              control={form.control}
-              name="quotationDate"
-              render={() => (
-                <FormItem className="w-1/2">
-                  <FormLabel className="text-[16px] font-bold">
-                    Quotation Date
-                  </FormLabel>
-                  <FormControl>
-                    <Popover
-                      open={isQuotationDateOpen}
-                      onOpenChange={setQuotationDateOpen}
-                    >
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={`w-full h-[60px] justify-start text-left font-normal ${
-                            !quotationDate ? "text-muted-foreground" : ""
-                          }`}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {quotationDate ? (
-                            format(quotationDate, "PPP")
-                          ) : (
-                            <span>
-                              {quotation && format(quotation.quotationDate, "PPP")}
-                            </span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={quotationDate}
-                          onSelect={(date) => handleQuotationSelect(date || new Date())}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Expired Date */}
-            <FormField
-              control={form.control}
-              name="expiredDate"
-              render={() => (
-                <FormItem className="w-1/2">
-                  <FormLabel className="text-[16px] font-bold">
-                    Expired Date
-                  </FormLabel>
-                  <FormControl>
-                    <Popover
-                      open={isExpiredDateOpen}
-                      onOpenChange={setExpiredDateOpen}
-                    >
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={`w-full h-[60px] justify-start text-left font-normal ${
-                            !expiredDate ? "text-muted-foreground" : ""
-                          }`}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {expiredDate ? (
-                            format(expiredDate, "PPP")
-                          ) : (
-                            <span>{quotation && format(quotation.expiredDate, "PPP")}</span>
-                            )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={expiredDate}
-                            onSelect={(date) => handleExpiredSelect(date || new Date())}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {/* Status */}
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-bold">Status</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={quotation?.status}
-                    >
-                      <SelectTrigger className="w-[500px] h-[60px]">
-                        <SelectValue placeholder={quotation?.status} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Draft">DRAFT</SelectItem>
-                        <SelectItem value="Accepted">ACCEPTED</SelectItem>
-                        <SelectItem value="Rejected">REJECTED</SelectItem>
-                        <SelectItem value="Expired">EXPIRED</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormMessage className="text-[14px]">
-              {form.formState.errors.root?.message}
-            </FormMessage>
-          </div>
-          {/* Button */}
-          <div className="flex justify-center mt-6">
-            <div className="w-1/2 flex gap-2.5">
-              <Link href="/quotations" className="w-1/2 h-14">
-                <Button
-                  className="w-full h-10 text-lg"
-                  variant={"outline"}
-                  type="button"
-                >
-                  Cancel
+            {/* Button */}
+            <div className="flex justify-center mt-6">
+              <div className="w-1/2 flex gap-2.5">
+                <Link href="/quotations" className="w-1/2 h-14">
+                  <Button
+                    className="w-full h-10 text-lg"
+                    variant={"outline"}
+                    type="button"
+                  >
+                    Cancel
+                  </Button>
+                </Link>
+                <Button className="w-1/2 h-10 text-lg" type="submit">
+                  {status === "pending" ? "Updating..." : "Save"}
                 </Button>
-              </Link>
-              <Button className="w-1/2 h-10 text-lg" type="submit">
-                {status === "pending" ? "Updating..." : "Save"}
-              </Button>
+              </div>
             </div>
-          </div>
-        </form>
-      </Form>
+          </form>
+        </Form>
       )}
     </div>
   );
