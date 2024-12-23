@@ -1,26 +1,27 @@
-import { CreateDocumentType } from "@/schema/document.schema";
-import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
-import axios from "axios";
+import { get } from "http";
 
 const documentAction = {
-createDocument: async (documentCreateType: CreateDocumentType) => {
- try {
-      const response = await http.post(
-        `v1/document`,
-        documentCreateType
-      );
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data) {
-        const postError = error.response.data as ErrorType;
-        console.error("Error during update quote request:", postError);
-        throw postError;
-      } else {
-        console.error("Unexpected error during post:", error);
-        throw error;
-      }
-    }
-  }, 
-}
+  async getDocument(shipmentId?: string, type?: string) {
+    const res = await http.get("/v1/document", {
+      params: {
+        shipmentId,
+        type,
+      },
+    });
+    return res.data;
+  },
+  async createDocument(data: any) {
+    const res = await http.post("/v1/document", data);
+    return res.data;
+  },
+  async updateDocument(shipmentId: string, data: any) {
+    const res = await http.patch(`/v1/document/${shipmentId}`, data);
+    return res.data;
+  },
+  async getDocumentById(id: string) {
+    const res = await http.get(`/v1/document/${id}`);
+    return res.data;
+  },
+};
 export default documentAction;
