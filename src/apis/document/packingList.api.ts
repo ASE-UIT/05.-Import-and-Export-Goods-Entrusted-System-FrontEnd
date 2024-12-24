@@ -1,9 +1,9 @@
-import { CreateDocumentType, GetPackingListDocumentByIdType } from "@/schema/document.schema";
+import { CreateDocumentType, GetPackingListDocumentByIdType } from "@/schema/document/packinglist.schema";
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
 import axios from "axios";
 
-const documentAction = {
+const packingListAction = {
 createDocument: async (documentCreateType: CreateDocumentType) => {
  try {
       const response = await http.post(
@@ -40,4 +40,4 @@ createDocument: async (documentCreateType: CreateDocumentType) => {
     }
   }, 
 }
-export default documentAction;
+export default packingListAction;
