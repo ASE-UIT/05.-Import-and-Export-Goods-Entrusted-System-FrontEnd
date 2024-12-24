@@ -1,7 +1,7 @@
 "use client";
 
-import { columns } from "@/app/(pages)/document/packing-list/_components/columns";
-import { DataTable } from "@/app/(pages)/document/packing-list/_components/data-table";
+import { columns } from "@/app/(pages)/document/customs-declaration/_components/columns";
+import { DataTable } from "@/app/(pages)/document/customs-declaration/_components/data-table";
 import useAuth from "@/hooks/use-auth";
 import useDocument from "@/hooks/use-document";
 import useUser from "@/hooks/use-user";
@@ -42,7 +42,7 @@ export default function Page() {
       setCustomsDeclare(
         document.filter(
           (item) =>
-            item.type === "PACKING_LIST"
+            item.type === "CUSTOM_IMPORT" || item.type === "CUSTOM_EXPORT",
         ),
       );
     }
@@ -56,7 +56,7 @@ export default function Page() {
     <div className="flex w-full flex-col p-[24px]">
       <div className="flex w-full flex-col gap-[20px]">
         <div className="flex items-center justify-between">
-          <span className="text-3xl font-bold">Packing List</span>
+          <span className="text-3xl font-bold">Customs Declaration</span>
         </div>
         {customsDeclare && (
           <DataTable columns={columns} data={customsDeclare} />
