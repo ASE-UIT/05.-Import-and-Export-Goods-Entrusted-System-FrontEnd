@@ -10,6 +10,7 @@ import {
   FileText,
   LayoutDashboard,
   Receipt,
+  ReceiptText,
   Settings,
   Truck,
   UserCheck,
@@ -37,17 +38,13 @@ function MenuItem({ icon, title, path }: MenuItemProps) {
   return (
     <Link href={path}>
       <div
-        className={`
-          flex items-center px-4 py-2.5 mx-2 space-x-3 text-sm rounded-lg
-          transition-all duration-200 ease-in-out
-          ${
-            isActive
-              ? "bg-primary text-white shadow-sm"
-              : "text-white/90 hover:bg-white/10"
-          }
-        `}
+        className={`mx-2 flex items-center space-x-3 rounded-lg px-4 py-2.5 text-sm transition-all duration-200 ease-in-out ${
+          isActive
+            ? "bg-primary text-white shadow-sm"
+            : "text-white/90 hover:bg-white/10"
+        } `}
       >
-        <span className="w-5 h-5">{icon}</span>
+        <span className="h-5 w-5">{icon}</span>
         <span className="font-medium">{title}</span>
       </div>
     </Link>
@@ -62,7 +59,7 @@ function Section({ children, title }: SectionProps) {
   return (
     <div className="py-1.5">
       {title && (
-        <h3 className="px-6 mb-1.5 text-xs font-semibold text-white/60 uppercase tracking-wider">
+        <h3 className="mb-1.5 px-6 text-xs font-semibold uppercase tracking-wider text-white/60">
           {title}
         </h3>
       )}
@@ -102,6 +99,7 @@ export default function Sidebar() {
           title="Shipments"
           path="/shipment"
         />
+        <MenuItem icon={<ReceiptText />} title="Contracts" path="/contracts" />
         <MenuItem icon={<Truck />} title="Freight" path="/freight" />
         <MenuItem icon={<FileText />} title="Documents" path="/document" />
       </>
@@ -109,8 +107,8 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="w-[--sidebar-width] min-h-screen bg-secondary fixed left-0 top-0">
-      <div className="flex flex-col h-full">
+    <div className="fixed left-0 top-0 min-h-screen w-[--sidebar-width] bg-secondary">
+      <div className="flex h-full flex-col">
         {/* Logo or Brand Section */}
         <div className="p-4">
           <h1 className="text-lg font-bold text-white">Dashboard</h1>
@@ -170,11 +168,6 @@ export default function Sidebar() {
             </>
           )}
         </nav>
-
-        {/* Settings Section at Bottom */}
-        <div className="p-3 border-t border-white/10">
-          <MenuItem icon={<Settings />} title="Settings" path="/settings" />
-        </div>
       </div>
     </div>
   );

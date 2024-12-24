@@ -1,34 +1,13 @@
-import importDocumentAction from "@/apis/document/importCusDec.api";
-import { importDocumentData } from "@/schema/document/importDocument.schema";
+import documentAction from "@/apis/document/document.api";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 
-export const useDocument = () => {
-  const queryClient = useQueryClient();
-
-  const useGetImportDocumentById = (id: number) => {
+const useDocument = {
+  useGetDocument(userId?: string, type?: string) {
     return useQuery({
-      queryKey: ["importDocument", id],
-      queryFn: () => {
-        return importDocumentAction.getImportDocument(id);
-      },
+      queryKey: ["documents"],
+      queryFn: () => documentAction.getDocument(userId, type),
     });
-  };
-
-  const useCreateImportDocument = () => {
-    return useMutation({
-      mutationFn: (data: importDocumentData) =>
-        importDocumentAction.createImportDocument(data),
-      onSettled: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["importDocument"],
-        });
-      },
-    });
-  };
-
-  return {
-    queryClient,
-    useGetImportDocumentById,
-    useCreateImportDocument,
-  };
+  },
 };
+
+export default useDocument;

@@ -1,6 +1,8 @@
+
 "use client";
 
 import Barcode from "@/components/ui/barcode";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -9,7 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useContract from "@/hooks/use-contract";
+import useImportCusDec from "@/hooks/use-import-cus-dec";
 import useShipmentTracking from "@/hooks/use-shipment-tracking";
+import { toast } from "@/hooks/use-toast";
+import { ErrorType } from "@/types/error.type";
+import { Shipment } from "@/types/shipment.type";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Page() {
@@ -21,16 +29,55 @@ export default function Page() {
   const { useGetShipment } = useShipmentTracking;
 
   const { data: shipmentData } = useGetShipment();
-  
+  const { data: documents } = useImportCusDec.useGetImportCusDec(
+    undefined,
+    undefined,
+    "CUSTOM_IMPORT",
+  );
+  const create = useImportCusDec.useCreateImportCusDec();
+  const { data: contracts } = useContract.useGetContracts();
+  const [shipmentNotDocument, setShipmentNotDocument] = useState<Shipment[]>();
+
+  useEffect(() => {
+    if (shipmentData && documents) {
+      const shipmentIds = shipmentData.results.map((shipment) => shipment.id);
+      const documentShipmentIds = Array.isArray(documents?.data)
+        ? documents.data.map((document) => document.shipmentId)
+        : [];
+      const shipmentNotDocument = shipmentIds.filter(
+        (shipmentId) => !documentShipmentIds.includes(shipmentId),
+      );
+      setShipmentNotDocument(
+        shipmentData.results.filter((shipment) =>
+          shipmentNotDocument.includes(shipment.id),
+        ),
+      );
+    }
+  }, [shipmentData, documents]);
 
   const [shipmentId, setShipmentId] = useState("");
-  const [ngayGioGui, setNgayGioGui] = useState(new Date().toISOString().split("T")[0]);
-  const [ngayGioDangKy, setNgayGioDangKy] = useState(new Date().toISOString().split("T")[0]);
-  const [giayPhepNgay, setGiayPhepNgay] = useState(new Date().toISOString().split("T")[0]);
-  const [giayPhepHetHan, setGiayPhepHetHan] = useState(new Date().toISOString().split("T")[0]);
-  const [hopDongNgay, setHopDongNgay] = useState(new Date().toISOString().split("T")[0]);
-  const [hopDongHetHan, setHopDongHetHan] = useState(new Date().toISOString().split("T")[0]);
-  const [ngayDen, setNgayDen] = useState(new Date().toISOString().split("T")[0]);
+  const [ngayGioGui, setNgayGioGui] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [ngayGioDangKy, setNgayGioDangKy] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [giayPhepNgay, setGiayPhepNgay] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [giayPhepHetHan, setGiayPhepHetHan] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [hopDongNgay, setHopDongNgay] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [hopDongHetHan, setHopDongHetHan] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [ngayDen, setNgayDen] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [loading, setLoading] = useState(false);
 
   const [contractId, setContractId] = useState("");
 
@@ -81,17 +128,17 @@ export default function Page() {
     loaiHinh: "",
     hoaDonThuongMai: "",
     giayPhepSo: "",
-    giayPhepNgay: "",
-    giayPhepHetHan: "",
+    giayPhepNgay: new Date().toISOString().split("T")[0],
+    giayPhepHetHan: new Date().toISOString().split("T")[0],
     hopDong: "",
-    hopDongNgay: "",
-    hopDongHetHan: "",
+    hopDongNgay: new Date().toISOString().split("T")[0],
+    hopDongHetHan: new Date().toISOString().split("T")[0],
     vanDon: "",
     cangXepHang: "",
     cangDoHang: "",
     phuongTienVanTai: "",
     tenSoHieu: "",
-    ngayDen: "",
+    ngayDen: new Date().toISOString().split("T")[0],
     nuocXuatKhau: "",
     dieuKienGiaoHang: "",
     phuongThucThanhToan: "",
@@ -115,6 +162,8 @@ export default function Page() {
       },
     ]);
   };
+
+  const router = useRouter();
 
   const addContainerRow = () => {
     setContainerRows([
@@ -150,19 +199,36 @@ export default function Page() {
   };
 
   useEffect(() => {
-  updateSingleField("hopDong", contractId)
+    updateSingleField("hopDong", contractId);
   }, [contractId]);
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    updateSingleField("hopDongNgay", hopDongNgay);
+  }, [hopDongNgay]);
+
+  useEffect(() => {
+    updateSingleField("hopDongHetHan", hopDongHetHan);
+  }, [hopDongHetHan]);
+
+  const handleSubmit = async () => {
+    if (loading) return;
+    setLoading(true);
     const formSubmit = {
       shipmentId,
-      type: "CUSTOM_IMPORT",
-      docNumber: formState.soToKhai,
+      type: "CUSTOM_IMPORT" as const,
+      docNumber: Number(formState.soToKhai),
       fields: { ...formState, productRows, containerRows },
-    }
-
-    console.log(formSubmit);
-
+    };
+    await create.mutateAsync(formSubmit, {
+      onSuccess: () => {
+        toast({
+          title: "Success",
+          description: "Create import customs declaration successfully",
+        });
+        router.push("/document/customs-declaration");
+      },
+    });
+    setLoading(false);
   };
 
   return (
@@ -173,6 +239,16 @@ export default function Page() {
         }
         style={{ fontFamily: '"Times New Roman", Times, serif' }}
       >
+        <div>
+          <div className="flex items-center justify-between">
+            <span className="text-3xl font-bold">Customs Declaration</span>
+            <Button
+              onClick={() => router.push("/document/customs-declaration/")}
+            >
+              Back
+            </Button>
+          </div>
+        </div>
         <div className="flex w-full flex-col gap-[20px]">
           <div className="mx-[150px] my-[20px] flex flex-col items-center justify-between">
             <div className="flex w-full items-center justify-between">
@@ -229,12 +305,10 @@ export default function Page() {
                     <input
                       type="date"
                       value={ngayGioGui}
-                      onChange={(e) =>
-                      {
-                        setNgayGioGui(e.target.value)
-                        updateSingleField("ngayGioGui", e.target.value)
-                      }
-                      }
+                      onChange={(e) => {
+                        setNgayGioGui(e.target.value);
+                        updateSingleField("ngayGioGui", e.target.value);
+                      }}
                       placeholder="   -"
                       className="font-normal"
                     ></input>
@@ -255,13 +329,11 @@ export default function Page() {
                     Ngày, giờ đăng ký:
                     <input
                       type="date"
-                      value={ ngayGioDangKy}
-                      onChange={(e) =>
-                      {
-                        setNgayGioDangKy(e.target.value)
-                        updateSingleField("ngayGioDangKy", e.target.value)
-                      }
-                      }
+                      value={ngayGioDangKy}
+                      onChange={(e) => {
+                        setNgayGioDangKy(e.target.value);
+                        updateSingleField("ngayGioDangKy", e.target.value);
+                      }}
                       placeholder="   -"
                       className="font-normal"
                     ></input>
@@ -295,25 +367,45 @@ export default function Page() {
                 <Select
                   value={shipmentId}
                   onValueChange={(value) => {
-                  setShipmentId(value)
-                  setContractId(shipmentData?.results.find((shipment) => shipment.id === value)?.contractId || "")
-                  }
-                  }
+                    setShipmentId(value);
+                    const contractId =
+                      shipmentNotDocument?.find(
+                        (shipment) => shipment.id === value,
+                      )?.contractId || "";
+                    setContractId(contractId);
+                    const contract = contracts?.data?.find(
+                      (contract) => contract.id === contractId,
+                    );
+                    setHopDongNgay(
+                      contract?.contractDate
+                        ? new Date(contract.contractDate)
+                            .toISOString()
+                            .split("T")[0]
+                        : "",
+                    );
+                    setHopDongHetHan(
+                      contract?.endDate
+                        ? new Date(contract.endDate).toISOString().split("T")[0]
+                        : "",
+                    );
+                  }}
                 >
                   <SelectTrigger className="ml-2 w-[300px]">
                     <SelectValue placeholder="Filter" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      {shipmentData?.results &&
-                        shipmentData.results.map((shipment) => (
-                          <SelectItem
-                            value={shipment.id}
-                            key={shipment.id}
-                          >
+                      {shipmentNotDocument?.length === 0 ? (
+                        <SelectItem disabled value="no-shipment">
+                          No shipment available
+                        </SelectItem>
+                      ) : (
+                        shipmentNotDocument?.map((shipment) => (
+                          <SelectItem value={shipment.id} key={shipment.id}>
                             {shipment.id}
                           </SelectItem>
-                        ))}
+                        ))
+                      )}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -419,7 +511,7 @@ export default function Page() {
                     </div>
                   </div>
                   <div className={"flex" + borderB}>
-                    <div className={"flex flex-col flex-[0.5]" + borderR}>
+                    <div className={"flex flex-[0.5] flex-col" + borderR}>
                       6. Hóa đơn thương mại:
                       <input
                         onChange={(e) =>
@@ -445,14 +537,12 @@ export default function Page() {
                         <input
                           type="date"
                           value={giayPhepNgay}
-                          onChange={(e) =>
-                          {
-                            setGiayPhepNgay(e.target.value)
-                            updateSingleField("giayPhepNgay", e.target.value)
-                          }
-                          }
+                          onChange={(e) => {
+                            setGiayPhepNgay(e.target.value);
+                            updateSingleField("giayPhepNgay", e.target.value);
+                          }}
                           placeholder="   -"
-                          className="w-32 font-normal "
+                          className="w-32 font-normal"
                         ></input>
                       </div>
                       <div className="flex flex-col">
@@ -460,12 +550,10 @@ export default function Page() {
                         <input
                           type="date"
                           value={giayPhepHetHan}
-                          onChange={(e) =>
-                          {
-                            setGiayPhepHetHan(e.target.value)
-                            updateSingleField("giayPhepHetHan", e.target.value)
-                          }
-                          }
+                          onChange={(e) => {
+                            setGiayPhepHetHan(e.target.value);
+                            updateSingleField("giayPhepHetHan", e.target.value);
+                          }}
                           placeholder="   -"
                           className="w-32 font-normal"
                         ></input>
@@ -481,7 +569,7 @@ export default function Page() {
                           readOnly
                           value={contractId}
                           placeholder="   -"
-                          className="w-full font-normal text-[13px] h-[24px]"
+                          className="h-[24px] w-full text-[13px] font-normal"
                         ></input>
                       </div>
                       <div className="flex flex-col">
@@ -489,12 +577,11 @@ export default function Page() {
                         <input
                           type="date"
                           value={hopDongNgay}
-                          onChange={(e) =>
-                          {
-                            setHopDongNgay(e.target.value)
-                            updateSingleField("hopDongNgay", e.target.value)
-                          }
-                          }
+                          readOnly
+                          onChange={(e) => {
+                            setHopDongNgay(e.target.value);
+                            updateSingleField("hopDongNgay", e.target.value);
+                          }}
                           placeholder="   -"
                           className="w-32 font-normal"
                         ></input>
@@ -504,12 +591,11 @@ export default function Page() {
                         <input
                           type="date"
                           value={hopDongHetHan}
-                          onChange={(e) =>
-                          {
-                            setHopDongHetHan(e.target.value)
-                            updateSingleField("hopDongHetHan", e.target.value)
-                          }
-                          }
+                          readOnly
+                          onChange={(e) => {
+                            setHopDongHetHan(e.target.value);
+                            updateSingleField("hopDongHetHan", e.target.value);
+                          }}
                           placeholder="  -"
                           className="w-32 font-normal"
                         ></input>
@@ -517,7 +603,7 @@ export default function Page() {
                     </div>
                   </div>
                   <div className={"flex" + borderB}>
-                    <div className={"flex flex-col flex-[0.5]" + borderR}>
+                    <div className={"flex flex-[0.5] flex-col" + borderR}>
                       9. Vận đơn (số/ngày):
                       <input
                         onChange={(e) =>
@@ -527,7 +613,7 @@ export default function Page() {
                         className="w-full font-normal"
                       ></input>
                     </div>
-                    <div className={"flex flex-col flex-[0.5]" + borderR}>
+                    <div className={"flex flex-[0.5] flex-col" + borderR}>
                       10. Cảng xếp hàng:
                       <input
                         onChange={(e) =>
@@ -537,7 +623,7 @@ export default function Page() {
                         className="w-full font-normal"
                       ></input>
                     </div>
-                    <div className="flex flex-col flex-[0.5]">
+                    <div className="flex flex-[0.5] flex-col">
                       11. Cảng dỡ hàng:
                       <input
                         onChange={(e) =>
@@ -578,18 +664,16 @@ export default function Page() {
                         <input
                           type="date"
                           value={ngayDen}
-                          onChange={(e) =>
-                          {
-                            setNgayDen(e.target.value)
-                            updateSingleField("ngayDen", e.target.value)
-                          }
-                          }
+                          onChange={(e) => {
+                            setNgayDen(e.target.value);
+                            updateSingleField("ngayDen", e.target.value);
+                          }}
                           placeholder="  -"
                           className="font-normal"
                         ></input>
                       </div>
                     </div>
-                    <div className="flex flex-col flex-[0.5]">
+                    <div className="flex flex-[0.5] flex-col">
                       13. Nước xuất khẩu:
                       <input
                         onChange={(e) =>
@@ -601,7 +685,7 @@ export default function Page() {
                     </div>
                   </div>
                   <div className={"flex" + borderB}>
-                    <div className={"flex flex-col flex-[1]" + borderR}>
+                    <div className={"flex flex-[1] flex-col" + borderR}>
                       14. Điều kiện giao hàng:
                       <input
                         onChange={(e) =>
@@ -611,7 +695,7 @@ export default function Page() {
                         className="font-normal"
                       ></input>
                     </div>
-                    <div className="flex flex-col flex-[1]">
+                    <div className="flex flex-[1] flex-col">
                       15. Phương thức thanh toán:
                       <input
                         onChange={(e) =>
@@ -626,7 +710,7 @@ export default function Page() {
                     </div>
                   </div>
                   <div className="flex">
-                    <div className={"flex flex-col flex-[1]" + borderR}>
+                    <div className={"flex flex-[1] flex-col" + borderR}>
                       16. Đồng tiền thanh toán:
                       <input
                         onChange={(e) =>
@@ -636,7 +720,7 @@ export default function Page() {
                         className="font-normal"
                       ></input>
                     </div>
-                    <div className="flex flex-col flex-[1]">
+                    <div className="flex flex-[1] flex-col">
                       17. Tỷ giá tính thuế:
                       <input
                         onChange={(e) =>
@@ -853,7 +937,12 @@ export default function Page() {
                     <td className="border-[1px] border-b-0 border-t-0"></td>
                     <td className="border-[1px] border-b-0 border-t-0"></td>
                     <td className="flex items-end justify-start font-bold">
-                      Cộng: {containerRows.reduce((acc, row) => acc + (Number(row.trongLuong) || 0), 0)} <span className="ml-1 font-normal"></span>
+                      Cộng:{" "}
+                      {containerRows.reduce(
+                        (acc, row) => acc + (Number(row.trongLuong) || 0),
+                        0,
+                      )}{" "}
+                      <span className="ml-1 font-normal"></span>
                     </td>
                   </tr>
                 </tbody>
@@ -908,12 +997,9 @@ export default function Page() {
           </div>
         </div>
         <div className="flex justify-center">
-          <button
-            onClick={handleSubmit}
-            className="h-[50px] w-[200px] rounded-lg bg-blue-500 text-white"
-          >
-            Submit Document
-          </button>
+          <Button onClick={handleSubmit} disabled={loading}>
+            {loading ? "Loading..." : "Submit"}
+          </Button>
         </div>
       </div>
     </>
