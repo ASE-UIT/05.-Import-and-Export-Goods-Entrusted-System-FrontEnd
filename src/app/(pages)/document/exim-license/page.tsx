@@ -1,7 +1,7 @@
 "use client";
 
-import { columns } from "@/app/(pages)/document/im_ex-license/_components/columns";
-import { DataTable } from "@/app/(pages)/document/im_ex-license/_components/data-table";
+import { columns } from "@/app/(pages)/document/exim-license/_components/columns";
+import { DataTable } from "@/app/(pages)/document/exim-license/_components/data-table";
 import useAuth from "@/hooks/use-auth";
 import useDocument from "@/hooks/use-document";
 import useUser from "@/hooks/use-user";
@@ -40,10 +40,7 @@ export default function Page() {
   useEffect(() => {
     if (document) {
       setCustomsDeclare(
-        document.filter(
-          (item) =>
-            item.type === "EXIM_LISENCE"
-        ),
+        document.filter((item) => item.type === "EXIM_LISENCE"),
       );
     }
   }, [document]);
