@@ -16,8 +16,11 @@ import { Shipment } from "@/types/shipment.type";
 import useCustomer from "@/hooks/use-customer";
 import useFreight from "@/hooks/use-freight";
 import useQuoteRequest from "@/hooks/use-quote-request";
+import useAuth from "@/hooks/use-auth";
+import { redirect } from "next/navigation";
 
 export default function Dashboard() {
+  const { data: user } = useAuth.useGetSession();
   const {
     data: shipments,
     isLoading: isLoadingShipments,
@@ -32,6 +35,12 @@ export default function Dashboard() {
   const { data: freight } = getAllFreight;
 
   const { data: quoteRequest } = useQuoteRequest.useGetQuoteRequest();
+
+  useEffect(() => {
+    if (user?.role?.name === "CLIENT") {
+      redirect("/quote-request");
+    }
+  }, [user]);
 
   const activeStatuses = [
     "DOCUMENT_VERIFICATION",
