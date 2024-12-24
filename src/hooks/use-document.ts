@@ -1,4 +1,5 @@
 import packingListAction from "@/apis/document/packingList.api";
+import forwarderProviderListAction from "@/apis/document/forwarderProvider.api";
 import * as docAction from "@/apis/document/document.api";
 import { toast } from "@/hooks/use-toast";
 import { CreateDocumentType } from "@/schema/document/packinglist.schema";
@@ -57,6 +58,22 @@ const useDocument = {
         retry: 0,
         });
     },
+
+    useGetForwarderProviderListById(id: string) {
+      return useQuery({
+      queryKey: ["document", id],
+      queryFn: async () => {
+          try {
+          const result = await forwarderProviderListAction.getDocumentById(id);
+          return result;
+          } catch (error) {
+          console.error("Error during get document:", error);
+          throw error;
+          }
+      },
+      retry: 0,
+      });
+  },
 };
 
 export default useDocument;

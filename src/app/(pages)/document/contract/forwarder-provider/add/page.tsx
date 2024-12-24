@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import useDocument from "@/hooks/use-document";
-import { CreateDocumentType } from "@/schema/document.schema";
+import { CreateDocumentType } from "@/schema/document/forwarderProvider.schema";
 import { before } from "node:test";
 import useShipmentTracking from "@/hooks/use-shipment-tracking";
 
@@ -133,7 +133,7 @@ const formSchema = z.object({
 });
 export default function PackingList() {
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [shippingDate, setShippingDate] = useState<Date | undefined>(undefined);
+  const [timeA, setTimeA] = useState<Date | undefined>(undefined);
   const [rows, setRows] = useState(
     Array(1).fill({ qty: "", description: "", weight: "", productNumber: "" })
   );
@@ -259,7 +259,7 @@ export default function PackingList() {
   }, [date]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Packing List Data:", values);
+    console.log("Forwarder Provider List Data:", values);
     const fields = {
       date: values.date,
       rows: values.rows,
