@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import useDocument from "@/hooks/use-document";
-import { CreateDocumentType } from "@/schema/document.schema";
+import { CreateDocumentType } from "@/schema/document/packinglist.schema";
 import useShipmentTracking from "@/hooks/use-shipment-tracking";
 
 const formSchema = z.object({
