@@ -95,7 +95,7 @@ export const columns: ColumnDef<Document>[] = [
       return (
         <div>
           <Link
-            href={`/document/bill/airwaybill/${row.getValue("shipmentId")}`}
+            href={`/document/bill/air-waybill/${row.getValue("shipmentId")}`}
           >
             <button className="text-blue-500">View</button>
           </Link>

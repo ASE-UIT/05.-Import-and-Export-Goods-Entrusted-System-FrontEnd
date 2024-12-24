@@ -153,6 +153,7 @@ export default function AirWayBill(data: any) {
                 <Input
                   type="text"
                   placeholder="Doc Number"
+                  readOnly={!!data}
                   value={field.value}
                   onChange={(e) => field.onChange(parseInt(e.target.value))}
                   className="basic-2/3 w-[445px] text-sm border border-gray-300 rounded-md"
@@ -170,6 +171,7 @@ export default function AirWayBill(data: any) {
                   <Input
                     type="text"
                     placeholder="Name"
+                    readOnly={!!data}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
                     className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
@@ -183,6 +185,7 @@ export default function AirWayBill(data: any) {
                   <Textarea
                     placeholder="Address"
                     value={field.value}
+                    readOnly={!!data}
                     onChange={(e) => field.onChange(e.target.value)}
                     className="w-full h-16 p-2 border border-gray-300 rounded-md"
                   />
@@ -199,6 +202,7 @@ export default function AirWayBill(data: any) {
                   <Input
                     type="text"
                     placeholder="Name"
+                    readOnly={!!data}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
                     className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
@@ -212,6 +216,7 @@ export default function AirWayBill(data: any) {
                   <Textarea
                     placeholder="Address"
                     value={field.value}
+                    readOnly={!!data}
                     onChange={(e) => field.onChange(e.target.value)}
                     className="w-full h-16 p-2 border border-gray-300 rounded-md"
                   />
@@ -231,6 +236,7 @@ export default function AirWayBill(data: any) {
                     type="text"
                     placeholder="Name"
                     value={field.value}
+                    readOnly={!!data}
                     onChange={(e) => field.onChange(e.target.value)}
                     className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
                   />
@@ -280,6 +286,7 @@ export default function AirWayBill(data: any) {
                   <Input
                     type="text"
                     placeholder="Name"
+                    readOnly={!!data}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
                     className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
@@ -301,6 +308,7 @@ export default function AirWayBill(data: any) {
                     <Input
                       type="number"
                       placeholder="Name"
+                      readOnly={!!data}
                       value={field.value}
                       onChange={(e) => field.onChange(e.target.value)}
                       className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
@@ -317,6 +325,7 @@ export default function AirWayBill(data: any) {
                     <Input
                       type="number"
                       placeholder="Name"
+                      readOnly={!!data}
                       value={field.value}
                       onChange={(e) => field.onChange(e.target.value)}
                       className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
@@ -333,6 +342,7 @@ export default function AirWayBill(data: any) {
                     <Input
                       type="number"
                       placeholder="Name"
+                      readOnly={!!data}
                       value={field.value}
                       onChange={(e) => field.onChange(e.target.value)}
                       className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
@@ -352,6 +362,7 @@ export default function AirWayBill(data: any) {
                 <Textarea
                   placeholder="Nature and Quantity of Goods"
                   value={field.value}
+                  readOnly={!!data}
                   onChange={(e) => field.onChange(e.target.value)}
                   className="w-full h-24 p-2 border border-gray-300 rounded-md"
                 ></Textarea>
