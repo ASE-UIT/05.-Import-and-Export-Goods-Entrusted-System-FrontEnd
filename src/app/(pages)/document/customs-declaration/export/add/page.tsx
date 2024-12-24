@@ -1,8 +1,22 @@
-"use client"
+"use client";
 
 import Barcode from "@/components/ui/barcode";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import useContract from "@/hooks/use-contract";
+import useExportCusDec from "@/hooks/use-export-cus-dec";
+import useShipmentTracking from "@/hooks/use-shipment-tracking";
+import { toast } from "@/hooks/use-toast";
+import { Shipment } from "@/types/shipment.type";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Page() {
   const border = " border-r-[1px] border-b-[1px]";
@@ -10,14 +24,57 @@ export default function Page() {
   const borderLT = " border-l-[1px] border-t-[1px]";
   const borderR = " border-r-[1px]";
 
+  const { useGetShipment } = useShipmentTracking;
+
+  const { data: shipmentData } = useGetShipment();
+  const { data: documents } = useExportCusDec.useGetExportCusDec(
+    undefined,
+    undefined,
+    "CUSTOM_EXPORT",
+  );
+  const { data: contracts } = useContract.useGetContracts();
+  const [shipmentNotDocument, setShipmentNotDocument] = useState<Shipment[]>();
+  const { mutateAsync: create } = useExportCusDec.useCreateExportCusDec();
+
+  useEffect(() => {
+    if (shipmentData && documents) {
+      const shipmentIds = shipmentData.results.map((shipment) => shipment.id);
+      const documentShipmentIds = Array.isArray(documents?.data)
+        ? documents.data.map((document) => document.shipmentId)
+        : [];
+      const shipmentNotDocument = shipmentIds.filter(
+        (shipmentId) => !documentShipmentIds.includes(shipmentId),
+      );
+      setShipmentNotDocument(
+        shipmentData.results.filter((shipment) =>
+          shipmentNotDocument.includes(shipment.id),
+        ),
+      );
+    }
+  }, [shipmentData, documents]);
+
   const [shipmentId, setShipmentId] = useState("");
-  const [ngayGioGui, setNgayGioGui] = useState(new Date().toISOString().split("T")[0]);
-  const [ngayGioDangKy, setNgayGioDangKy] = useState(new Date().toISOString().split("T")[0]);
-  const [giayPhepNgay, setGiayPhepNgay] = useState(new Date().toISOString().split("T")[0]);
-  const [giayPhepHetHan, setGiayPhepHetHan] = useState(new Date().toISOString().split("T")[0]);
-  const [hopDongNgay, setHopDongNgay] = useState(new Date().toISOString().split("T")[0]);
-  const [hopDongHetHan, setHopDongHetHan] = useState(new Date().toISOString().split("T")[0]);
-  const [ngayDen, setNgayDen] = useState(new Date().toISOString().split("T")[0]);
+  const [ngayGioGui, setNgayGioGui] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [ngayGioDangKy, setNgayGioDangKy] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [giayPhepNgay, setGiayPhepNgay] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [giayPhepHetHan, setGiayPhepHetHan] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [hopDongNgay, setHopDongNgay] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [hopDongHetHan, setHopDongHetHan] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [ngayDen, setNgayDen] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [loading, setLoading] = useState(false);
 
   const [contractId, setContractId] = useState("");
@@ -83,8 +140,8 @@ export default function Page() {
     giayPhepNgay: new Date().toISOString().split("T")[0],
     giayPhepHetHan: new Date().toISOString().split("T")[0],
     hopDong: "",
-    hopDongNgay: "",
-    hopDongHetHan: "",
+    hopDongNgay: new Date().toISOString().split("T")[0],
+    hopDongHetHan: new Date().toISOString().split("T")[0],
     hoaDonThuongMai: "",
     cuaKhauXuatHang: "",
     nuocNhapKhau: "",
@@ -93,11 +150,9 @@ export default function Page() {
     dongTienThanhToan: "",
     tyGiaTinhThue: "",
 
-
     //section 24
-    tongSoTienThueVaThuKhacBangChu: ""
-
-  })
+    tongSoTienThueVaThuKhacBangChu: "",
+  });
 
   const addProductsRow = () => {
     setProductRows([
@@ -150,38 +205,72 @@ export default function Page() {
     setProductRows(updatedRows);
   };
 
-  const handleInputChangeContainer = (id: number, field: string, value: string) => {
+  const handleInputChangeContainer = (
+    id: number,
+    field: string,
+    value: string,
+  ) => {
     const updatedRows = containerRows.map((row) =>
       row.id === id ? { ...row, [field]: value } : row,
     );
     setContainerRows(updatedRows);
   };
 
-  const handleInputChangeThueAndThu = (id: number, field: string, value: string) => {
+  const handleInputChangeThueAndThu = (
+    id: number,
+    field: string,
+    value: string,
+  ) => {
     const updatedRows = thueAndThu.map((row) =>
       row.id === id ? { ...row, [field]: value } : row,
     );
     setThueAndThu(updatedRows);
   };
-
+  const router = useRouter();
   const handleFormInputChange = (field: string, value: string) => {
-    setFormState({
-      ...formState,
-      [field]: value
-    })
-  }
+    setFormState((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
+  useEffect(() => {
+    handleFormInputChange("hopDongNgay", hopDongNgay);
+  }, [hopDongNgay]);
+
+  useEffect(() => {
+    handleFormInputChange("hopDongHetHan", hopDongHetHan);
+  }, [hopDongHetHan]);
+
+  useEffect(() => {
+    handleFormInputChange("hopDong", contractId);
+  }, [contractId]);
 
   const handleSubmit = async () => {
+    if (loading) return;
+    setLoading(true);
     const formSubmit = {
       shipmentId,
       type: "CUSTOM_EXPORT" as const,
       docNumber: Number(formState.soToKhai),
-      fields:{
-        ... formState, productRows, containerRows, thueAndThu
-      }
-    }
-    console.log(formSubmit);
-  }
+      fields: {
+        ...formState,
+        productRows,
+        containerRows,
+        thueAndThu,
+      },
+    };
+    await create(formSubmit, {
+      onSuccess: () => {
+        toast({
+          title: "Success",
+          description: "Create export customs declaration successfully",
+        });
+        router.push("/document/customs-declaration");
+      },
+    });
+    setLoading(false);
+  };
 
   return (
     <>
@@ -191,6 +280,16 @@ export default function Page() {
         }
         style={{ fontFamily: '"Times New Roman", Times, serif' }}
       >
+        <div>
+          <div className="flex items-center justify-between">
+            <span className="text-3xl font-bold">Customs Declaration</span>
+            <Button
+              onClick={() => router.push("/document/customs-declaration/")}
+            >
+              Back
+            </Button>
+          </div>
+        </div>
         <div className="flex w-full flex-col gap-[20px]">
           <div className="mx-[150px] my-[20px] flex flex-col items-center justify-between">
             <div className="flex w-full items-center justify-between">
@@ -205,79 +304,161 @@ export default function Page() {
             <div className="w-full text-[20px] font-bold">Cục Hải Quan</div>
             <div className="flex w-full justify-end">HQ/2024/NK</div>
             <div className="flex w-full flex-col border-[1px]">
-              <div className="flex w-full ">
+              <div className="flex w-full">
                 <div className={"flex-1" + border}>
                   <div>
-                    <p className="font-bold">Chi cục Hải quan đăng ký tờ khai:</p>
+                    <p className="font-bold">
+                      Chi cục Hải quan đăng ký tờ khai:
+                    </p>
                     <input
                       onChange={(e) =>
-                        handleFormInputChange("chiCucHaiQuanDangKy", e.target.value)
+                        handleFormInputChange(
+                          "chiCucHaiQuanDangKy",
+                          e.target.value,
+                        )
                       }
                       placeholder="   -"
-                      className="font-normal w-full"
+                      className="w-full font-normal"
                     />
                   </div>
                   <div>
                     <p className="font-bold">Chi cục Hải quan cửa khẩu xuất:</p>
                     <input
                       onChange={(e) =>
-                        handleFormInputChange("chiCucHaiQuanCuaKhauXuat", e.target.value)
+                        handleFormInputChange(
+                          "chiCucHaiQuanCuaKhauXuat",
+                          e.target.value,
+                        )
                       }
                       placeholder="   -"
-                      className="font-normal  w-full"
+                      className="w-full font-normal"
                     />
                   </div>
                 </div>
-                
                 <div className={"flex-[0.75]" + border}>
-                  <div className="font-bold">Số tờ khai:
+                  <div className="flex flex-col font-bold">
+                    Số tham chiếu:
                     <input
                       onChange={(e) =>
-                        handleFormInputChange("soToKhai", e.target.value)
-                      }
-                      placeholder="   -"
-                      className="font-normal w-full"
-                    />
-                  </div>
-                  <div className="font-bold flex flex-col">Ngày, giờ đăng ký:
-                  <input
-                      type="date"
-                      value={ ngayGioDangKy}
-                      onChange={(e) =>
-                      {
-                        setNgayGioDangKy(e.target.value)
-                        handleFormInputChange("ngayGioDangKy", e.target.value)
-                      }
+                        handleFormInputChange("soThamChieu", e.target.value)
                       }
                       placeholder="   -"
                       className="font-normal"
                     ></input>
                   </div>
-                  <div className="font-bold">Số lượng phụ lục tờ khai:
+                  <div className="flex flex-col font-bold">
+                    Ngày, giờ gửi:
+                    <input
+                      type="date"
+                      value={ngayGioGui}
+                      onChange={(e) => {
+                        setNgayGioGui(e.target.value);
+                        handleFormInputChange("ngayGioGui", e.target.value);
+                      }}
+                      placeholder="   -"
+                      className="font-normal"
+                    ></input>
+                  </div>
+                </div>
+                <div className={"flex-[0.75]" + border}>
+                  <div className="font-bold">
+                    Số tờ khai:
+                    <input
+                      onChange={(e) =>
+                        handleFormInputChange("soToKhai", e.target.value)
+                      }
+                      placeholder="   -"
+                      className="w-full font-normal"
+                    />
+                  </div>
+                  <div className="flex flex-col font-bold">
+                    Ngày, giờ đăng ký:
+                    <input
+                      type="date"
+                      value={ngayGioDangKy}
+                      onChange={(e) => {
+                        setNgayGioDangKy(e.target.value);
+                        handleFormInputChange("ngayGioDangKy", e.target.value);
+                      }}
+                      placeholder="   -"
+                      className="font-normal"
+                    ></input>
+                  </div>
+                  <div className="font-bold">
+                    Số lượng phụ lục tờ khai:
                     <input
                       onChange={(e) =>
                         handleFormInputChange("soLuongPhuLuc", e.target.value)
                       }
                       placeholder="   -"
-                      className="font-normal w-full"
+                      className="w-full font-normal"
                     />
                   </div>
                 </div>
                 <div className={"flex-[0.75] text-red-500" + borderB}>
-                  <div className="font-bold">Công chức đăng ký tờ khai
+                  <div className="font-bold">
+                    Công chức đăng ký tờ khai
                     <input
                       onChange={(e) =>
                         handleFormInputChange("congChucDangKy", e.target.value)
                       }
                       placeholder="   -"
-                      className="font-normal w-full"
+                      className="w-full font-normal"
                     />
                   </div>
                 </div>
               </div>
+              <div className="mt-1 flex w-full items-center border-b-[1px] pb-1">
+                ShipmentID:
+                <Select
+                  value={shipmentId}
+                  onValueChange={(value) => {
+                    setShipmentId(value);
+                    const contractId =
+                      shipmentNotDocument?.find(
+                        (shipment) => shipment.id === value,
+                      )?.contractId || "";
+                    setContractId(contractId);
+                    const contract = contracts?.data?.find(
+                      (contract) => contract.id === contractId,
+                    );
+                    setHopDongNgay(
+                      contract?.contractDate
+                        ? new Date(contract.contractDate)
+                            .toISOString()
+                            .split("T")[0]
+                        : "",
+                    );
+                    setHopDongHetHan(
+                      contract?.endDate
+                        ? new Date(contract.endDate).toISOString().split("T")[0]
+                        : "",
+                    );
+                  }}
+                >
+                  <SelectTrigger className="ml-2 w-[300px]">
+                    <SelectValue placeholder="Filter" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {shipmentNotDocument?.length === 0 ? (
+                        <SelectItem disabled value="no-shipment">
+                          No shipment available
+                        </SelectItem>
+                      ) : (
+                        shipmentNotDocument?.map((shipment) => (
+                          <SelectItem value={shipment.id} key={shipment.id}>
+                            {shipment.id}
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className={"flex w-full"}>
                 <div className={"flex flex-1 flex-col" + borderR}>
-                <div className={"flex flex-1 flex-col" + borderB}>
+                  <div className={"flex flex-1 flex-col" + borderB}>
                     <div className="flex flex-col">
                       1. Người xuất khẩu:
                       <input
@@ -302,13 +483,14 @@ export default function Page() {
                     </div>
                   </div>
                   <div className={"flex-1" + borderB}>
-                    <div>2. Người nhập khẩu:
+                    <div>
+                      2. Người nhập khẩu:
                       <input
                         onChange={(e) =>
                           handleFormInputChange("nguoiNhapKhau", e.target.value)
                         }
                         placeholder="   -"
-                        className="font-normal w-full"
+                        className="w-full font-normal"
                       />
                     </div>
                   </div>
@@ -363,91 +545,105 @@ export default function Page() {
                 </div>
                 <div className="flex flex-[2.25] flex-col">
                   <div className={borderB}>
-                    <div>5. Loại hình:
+                    <div>
+                      5. Loại hình:
                       <input
                         onChange={(e) =>
                           handleFormInputChange("loaiHinh", e.target.value)
                         }
                         placeholder="   -"
-                        className="font-normal w-full"
+                        className="w-full font-normal"
                       />
                     </div>
                   </div>
                   <div className={"flex" + borderB}>
                     <div className={"flex-[0.5]" + borderR}>
-                      <div>6. Giấy phép số:
+                      <div>
+                        6. Giấy phép số:
                         <input
                           onChange={(e) =>
                             handleFormInputChange("giayPhepSo", e.target.value)
                           }
                           placeholder="   -"
-                          className="font-normal w-full"
+                          className="w-full font-normal"
                         />
                       </div>
-                      <div>Ngày
+                      <div>
+                        Ngày
                         <input
                           type="date"
-                          value={ giayPhepNgay}
-                          onChange={(e) =>
-                          {
-                            setGiayPhepNgay(e.target.value)
-                            handleFormInputChange("giayPhepNgay", e.target.value)
-                          }
-                          }
+                          value={giayPhepNgay}
+                          onChange={(e) => {
+                            setGiayPhepNgay(e.target.value);
+                            handleFormInputChange(
+                              "giayPhepNgay",
+                              e.target.value,
+                            );
+                          }}
                           placeholder="   -"
                           className="ml-2 font-normal"
                         ></input>
                       </div>
-                      <div>Ngày hết hạn
+                      <div>
+                        Ngày hết hạn
                         <input
                           type="date"
-                          value={ giayPhepHetHan}
-                          onChange={(e) =>
-                          {
-                            setGiayPhepHetHan(e.target.value)
-                            handleFormInputChange("giayPhepHetHan", e.target.value)
-                          }
-                          }
+                          value={giayPhepHetHan}
+                          onChange={(e) => {
+                            setGiayPhepHetHan(e.target.value);
+                            handleFormInputChange(
+                              "giayPhepHetHan",
+                              e.target.value,
+                            );
+                          }}
                           placeholder="   -"
                           className="ml-2 font-normal"
                         ></input>
                       </div>
                     </div>
                     <div className="flex-[0.5]">
-                      <div>7. Hợp đồng:
+                      <div>
+                        7. Hợp đồng:
                         <input
                           onChange={(e) =>
                             handleFormInputChange("hopDong", e.target.value)
                           }
+                          readOnly
                           value={contractId}
                           placeholder="   -"
-                          className="font-normal w-full"
+                          className="w-full font-normal"
                         />
                       </div>
-                      <div>Ngày
+                      <div>
+                        Ngày
                         <input
                           type="date"
-                          value={ hopDongNgay}
-                          onChange={(e) =>
-                          {
-                            setHopDongNgay(e.target.value)
-                            handleFormInputChange("hopDongNgay", e.target.value)
-                          }
-                          }
+                          value={hopDongNgay}
+                          onChange={(e) => {
+                            setHopDongNgay(e.target.value);
+                            handleFormInputChange(
+                              "hopDongNgay",
+                              e.target.value,
+                            );
+                          }}
+                          readOnly
                           placeholder="   -"
                           className="ml-2 font-normal"
                         ></input>
                       </div>
-                      <div>Ngày hết hạn
+                      <div>
+                        Ngày hết hạn
                         <input
                           type="date"
-                          value={ hopDongHetHan}
-                          onChange={(e) =>
-                          {
-                            setHopDongHetHan(e.target.value)
-                            handleFormInputChange("hopDongHetHan", e.target.value)
-                          }
-                          }
+                          value={hopDongHetHan}
+                          onChange={(e) => {
+                            setHopDongHetHan(e.target.value);
+                            handleFormInputChange(
+                              "hopDongHetHan",
+                              e.target.value,
+                            );
+                          }}
+                          readOnly
                           placeholder="   -"
                           className="ml-2 font-normal"
                         ></input>
@@ -459,7 +655,10 @@ export default function Page() {
                       8. Hóa đơn thương mại:
                       <input
                         onChange={(e) =>
-                          handleFormInputChange("hoaDonThuongMai", e.target.value)
+                          handleFormInputChange(
+                            "hoaDonThuongMai",
+                            e.target.value,
+                          )
                         }
                         placeholder="   -"
                         className="font-normal"
@@ -469,15 +668,19 @@ export default function Page() {
                       9. Cửa khẩu xuất hàng:
                       <input
                         onChange={(e) =>
-                          handleFormInputChange("cuaKhauXuatHang", e.target.value)
+                          handleFormInputChange(
+                            "cuaKhauXuatHang",
+                            e.target.value,
+                          )
                         }
                         placeholder="   -"
                         className="font-normal"
-                        ></input>
+                      ></input>
                     </div>
                   </div>
                   <div className={"flex" + borderB}>
-                    <div className="flex-[1] flex">10. Nước nhập khẩu:
+                    <div className="flex flex-[1]">
+                      10. Nước nhập khẩu:
                       <input
                         onChange={(e) =>
                           handleFormInputChange("nuocNhapKhau", e.target.value)
@@ -492,16 +695,23 @@ export default function Page() {
                       11. Điều kiện giao hàng:
                       <input
                         onChange={(e) =>
-                          handleFormInputChange("dieuKienGiaoHang", e.target.value)
+                          handleFormInputChange(
+                            "dieuKienGiaoHang",
+                            e.target.value,
+                          )
                         }
                         placeholder="   -"
                         className="font-normal"
                       ></input>
                     </div>
-                    <div className="flex-[1]">12. Phương thức thanh toán:
+                    <div className="flex-[1]">
+                      12. Phương thức thanh toán:
                       <input
                         onChange={(e) =>
-                          handleFormInputChange("phuongThucThanhToan", e.target.value)
+                          handleFormInputChange(
+                            "phuongThucThanhToan",
+                            e.target.value,
+                          )
                         }
                         placeholder="   -"
                         className="font-normal"
@@ -513,13 +723,17 @@ export default function Page() {
                       13. Đồng tiền thanh toán:
                       <input
                         onChange={(e) =>
-                          handleFormInputChange("dongTienThanhToan", e.target.value)
+                          handleFormInputChange(
+                            "dongTienThanhToan",
+                            e.target.value,
+                          )
                         }
                         placeholder="   -"
                         className="font-normal"
                       ></input>
                     </div>
-                    <div className="flex-[1] flex-col flex">14. Tỷ giá tính thuế:
+                    <div className="flex flex-[1] flex-col">
+                      14. Tỷ giá tính thuế:
                       <input
                         onChange={(e) =>
                           handleFormInputChange("tyGiaTinhThue", e.target.value)
@@ -533,7 +747,7 @@ export default function Page() {
               </div>
               <table className="border-collapse">
                 <thead>
-                <tr>
+                  <tr>
                     <td className="border-b-[1px] border-t-[1px]">Số TT</td>
                     <td className="border-[1px]">15. Mô tả hàng hóa</td>
                     <td className="border-[1px]">16.Mã số hàng hóa</td>
@@ -582,7 +796,7 @@ export default function Page() {
                           }
                         />
                       </td>
-                     
+
                       <td className="border-[1px]">
                         <input
                           type="number"
@@ -644,7 +858,7 @@ export default function Page() {
 
               <table className="border-collapse">
                 <thead>
-                <tr>
+                  <tr>
                     <td className="border-b-[1px]" rowSpan={2}>
                       Số TT
                     </td>
@@ -683,7 +897,11 @@ export default function Page() {
                           className="w-full border-none p-1 outline-none"
                           value={row.triGiaTinhThue}
                           onChange={(e) =>
-                            handleInputChangeThueAndThu(row.id, "triGiaTinhThue", e.target.value)
+                            handleInputChangeThueAndThu(
+                              row.id,
+                              "triGiaTinhThue",
+                              e.target.value,
+                            )
                           }
                         />
                       </td>
@@ -693,7 +911,11 @@ export default function Page() {
                           className="w-full border-none p-1 outline-none"
                           value={row.thueXuat}
                           onChange={(e) =>
-                            handleInputChangeThueAndThu(row.id, "thueXuat", e.target.value)
+                            handleInputChangeThueAndThu(
+                              row.id,
+                              "thueXuat",
+                              e.target.value,
+                            )
                           }
                         />
                       </td>
@@ -703,7 +925,11 @@ export default function Page() {
                           className="w-full border-none p-1 outline-none"
                           value={row.tienThue}
                           onChange={(e) =>
-                            handleInputChangeThueAndThu(row.id, "tienThue", e.target.value)
+                            handleInputChangeThueAndThu(
+                              row.id,
+                              "tienThue",
+                              e.target.value,
+                            )
                           }
                         />
                       </td>
@@ -713,7 +939,11 @@ export default function Page() {
                           className="w-full border-none p-1 outline-none"
                           value={row.triGiaThuKhac}
                           onChange={(e) =>
-                            handleInputChangeThueAndThu(row.id, "triGiaThuKhac", e.target.value)
+                            handleInputChangeThueAndThu(
+                              row.id,
+                              "triGiaThuKhac",
+                              e.target.value,
+                            )
                           }
                         />
                       </td>
@@ -723,7 +953,11 @@ export default function Page() {
                           className="w-full border-none p-1 outline-none"
                           value={row.tyLe}
                           onChange={(e) =>
-                            handleInputChangeThueAndThu(row.id, "tyLe", e.target.value)
+                            handleInputChangeThueAndThu(
+                              row.id,
+                              "tyLe",
+                              e.target.value,
+                            )
                           }
                         />
                       </td>
@@ -733,7 +967,11 @@ export default function Page() {
                           className="w-full border-none p-1 outline-none"
                           value={row.soTien}
                           onChange={(e) =>
-                            handleInputChangeThueAndThu(row.id, "soTien", e.target.value)
+                            handleInputChangeThueAndThu(
+                              row.id,
+                              "soTien",
+                              e.target.value,
+                            )
                           }
                         />
                       </td>
@@ -757,9 +995,14 @@ export default function Page() {
                       className="border-[1px] border-b-0 border-t-0 text-end font-bold"
                       colSpan={2}
                     >
-                      Cộng:
+                      Cộng:{" "}
                     </td>
-                    <td className="border-[1px] border-b-0 border-t-0"></td>
+                    <td className="border-[1px] border-b-0 border-t-0">
+                      {thueAndThu.reduce(
+                        (acc, curr) => acc + Number(curr.tienThue),
+                        0,
+                      )}
+                    </td>
                     <td
                       className="border-[1px] border-b-0 border-t-0 text-end font-bold"
                       colSpan={2}
@@ -767,7 +1010,13 @@ export default function Page() {
                       Cộng:
                     </td>
 
-                    <td className="border-t-[1px]"></td>
+                    <td className="border-t-[1px]">
+                      {" "}
+                      {thueAndThu.reduce(
+                        (acc, curr) => acc + Number(curr.soTien),
+                        0,
+                      )}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -775,10 +1024,32 @@ export default function Page() {
                 <tbody>
                   <tr>
                     <td className="border-t-[1px]">
-                      <div>
+                      <div className="flex items-center gap-2">
                         24. Tổng số tiền thuế và thu khác (ô 22+23) bằng số:
+                        <p>
+                          {thueAndThu.reduce(
+                            (acc, curr) => acc + Number(curr.tienThue),
+                            0,
+                          ) +
+                            thueAndThu.reduce(
+                              (acc, curr) => acc + Number(curr.soTien),
+                              0,
+                            )}
+                        </p>
                       </div>
-                      <div>Bằng chữ:</div>
+                      <div className="flex items-center">
+                        Bằng chữ:
+                        <input
+                          onChange={(e) =>
+                            handleFormInputChange(
+                              "tongSoTienThueVaThuKhacBangChu",
+                              e.target.value,
+                            )
+                          }
+                          placeholder="   -"
+                          className="ml-2 w-[90%] font-normal"
+                        />
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -790,7 +1061,7 @@ export default function Page() {
               </table>
               <table className="border-collapse border-t-[1px]">
                 <thead>
-                <tr>
+                  <tr>
                     <td className="border-b-[1px]">Số TT</td>
                     <td className="border-[1px] border-t-0">
                       a. Số hiệu container
@@ -816,7 +1087,11 @@ export default function Page() {
                           className="w-full border-none p-1 outline-none"
                           value={row.soHieu}
                           onChange={(e) =>
-                            handleInputChangeContainer(row.id, "soHieu", e.target.value)
+                            handleInputChangeContainer(
+                              row.id,
+                              "soHieu",
+                              e.target.value,
+                            )
                           }
                         />
                       </td>
@@ -826,7 +1101,11 @@ export default function Page() {
                           className="w-full border-none p-1 outline-none"
                           value={row.soLuongKien}
                           onChange={(e) =>
-                            handleInputChangeContainer(row.id, "soLuongKien", e.target.value)
+                            handleInputChangeContainer(
+                              row.id,
+                              "soLuongKien",
+                              e.target.value,
+                            )
                           }
                         />
                       </td>
@@ -836,7 +1115,11 @@ export default function Page() {
                           className="w-full border-none p-1 outline-none"
                           value={row.trongLuong}
                           onChange={(e) =>
-                            handleInputChangeContainer(row.id, "trongLuong", e.target.value)
+                            handleInputChangeContainer(
+                              row.id,
+                              "trongLuong",
+                              e.target.value,
+                            )
                           }
                         />
                       </td>
@@ -846,7 +1129,11 @@ export default function Page() {
                           className="w-full border-none p-1 outline-none"
                           value={row.diaDiemDongHang}
                           onChange={(e) =>
-                            handleInputChangeContainer(row.id, "diaDiemDongHang", e.target.value)
+                            handleInputChangeContainer(
+                              row.id,
+                              "diaDiemDongHang",
+                              e.target.value,
+                            )
                           }
                         />
                       </td>
@@ -858,6 +1145,10 @@ export default function Page() {
                     <td className="border-[1px] border-b-0 border-t-0"></td>
                     <td className="border-[1px] border-b-0 border-t-0 font-bold">
                       Cộng:
+                      {containerRows.reduce(
+                        (acc, curr) => acc + Number(curr.trongLuong),
+                        0,
+                      )}
                     </td>
                     <td className="flex items-end justify-start"></td>
                   </tr>
@@ -871,7 +1162,6 @@ export default function Page() {
                       </button>
                     </td>
                   </tr>
-                
                 </tbody>
               </table>
               <table className="border-t-[1px]">
@@ -922,9 +1212,8 @@ export default function Page() {
           </div>
         </div>
         <div className="flex justify-center">
-          <Button 
-          onClick={handleSubmit}>
-            Submit Document
+          <Button onClick={handleSubmit} disabled={loading}>
+            {loading ? "Loading..." : "Submit"}
           </Button>
         </div>
       </div>
