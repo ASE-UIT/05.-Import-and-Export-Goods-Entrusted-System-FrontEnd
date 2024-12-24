@@ -70,10 +70,9 @@ export default function AirWayBill(data: any) {
         }
       : {},
   });
-  console.log(form.formState.errors)
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!data || Object.keys(data).length === 0) {
+    if (!(Object.keys(data).length === 0) || !(Object.keys(data).length === 0)) {
       createDocument({
         shipmentId: values.shipmentId,
         type: "AIRWAY_BILL",
@@ -151,9 +150,9 @@ export default function AirWayBill(data: any) {
               name="docNumber"
               render={({ field }) => (
                 <Input
-                  type="text"
+                  type="number"
                   placeholder="Doc Number"
-                  readOnly={!!data}
+                  readOnly={!(Object.keys(data).length === 0)}
                   value={field.value}
                   onChange={(e) => field.onChange(parseInt(e.target.value))}
                   className="basic-2/3 w-[445px] text-sm border border-gray-300 rounded-md"
@@ -171,7 +170,7 @@ export default function AirWayBill(data: any) {
                   <Input
                     type="text"
                     placeholder="Name"
-                    readOnly={!!data}
+                    readOnly={!(Object.keys(data).length === 0)}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
                     className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
@@ -185,7 +184,7 @@ export default function AirWayBill(data: any) {
                   <Textarea
                     placeholder="Address"
                     value={field.value}
-                    readOnly={!!data}
+                    readOnly={!(Object.keys(data).length === 0)}
                     onChange={(e) => field.onChange(e.target.value)}
                     className="w-full h-16 p-2 border border-gray-300 rounded-md"
                   />
@@ -202,7 +201,7 @@ export default function AirWayBill(data: any) {
                   <Input
                     type="text"
                     placeholder="Name"
-                    readOnly={!!data}
+                    readOnly={!(Object.keys(data).length === 0)}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
                     className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
@@ -216,7 +215,7 @@ export default function AirWayBill(data: any) {
                   <Textarea
                     placeholder="Address"
                     value={field.value}
-                    readOnly={!!data}
+                    readOnly={!(Object.keys(data).length === 0)}
                     onChange={(e) => field.onChange(e.target.value)}
                     className="w-full h-16 p-2 border border-gray-300 rounded-md"
                   />
@@ -236,7 +235,7 @@ export default function AirWayBill(data: any) {
                     type="text"
                     placeholder="Name"
                     value={field.value}
-                    readOnly={!!data}
+                    readOnly={!(Object.keys(data).length === 0)}
                     onChange={(e) => field.onChange(e.target.value)}
                     className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
                   />
@@ -286,7 +285,7 @@ export default function AirWayBill(data: any) {
                   <Input
                     type="text"
                     placeholder="Name"
-                    readOnly={!!data}
+                    readOnly={!(Object.keys(data).length === 0)}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
                     className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
@@ -308,7 +307,7 @@ export default function AirWayBill(data: any) {
                     <Input
                       type="number"
                       placeholder="Name"
-                      readOnly={!!data}
+                      readOnly={!(Object.keys(data).length === 0)}
                       value={field.value}
                       onChange={(e) => field.onChange(e.target.value)}
                       className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
@@ -325,7 +324,7 @@ export default function AirWayBill(data: any) {
                     <Input
                       type="number"
                       placeholder="Name"
-                      readOnly={!!data}
+                      readOnly={!(Object.keys(data).length === 0)}
                       value={field.value}
                       onChange={(e) => field.onChange(e.target.value)}
                       className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
@@ -342,7 +341,7 @@ export default function AirWayBill(data: any) {
                     <Input
                       type="number"
                       placeholder="Name"
-                      readOnly={!!data}
+                      readOnly={!(Object.keys(data).length === 0)}
                       value={field.value}
                       onChange={(e) => field.onChange(e.target.value)}
                       className="w-full text-sm mb-3 p-2 border border-gray-300 rounded-md"
@@ -362,7 +361,7 @@ export default function AirWayBill(data: any) {
                 <Textarea
                   placeholder="Nature and Quantity of Goods"
                   value={field.value}
-                  readOnly={!!data}
+                  readOnly={!(Object.keys(data).length === 0)}
                   onChange={(e) => field.onChange(e.target.value)}
                   className="w-full h-24 p-2 border border-gray-300 rounded-md"
                 ></Textarea>
@@ -414,7 +413,7 @@ export default function AirWayBill(data: any) {
           </div>
         </div>
         <div className="w-full flex justify-center">
-          {!data.data && <Button type="submit">Save</Button>}
+          {!data && <Button type="submit">Save</Button>}
         </div>
       </form>
     </Form>

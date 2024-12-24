@@ -1,6 +1,6 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-import AirWayBill from "../../../../document/bill/components/airwaybill";
+import AirWayBill from "../components/airwaybill";
 import { Button } from "@/components/ui/button";
 import useDocumentAirWayBill from "@/hooks/use-air-waybill";
 
