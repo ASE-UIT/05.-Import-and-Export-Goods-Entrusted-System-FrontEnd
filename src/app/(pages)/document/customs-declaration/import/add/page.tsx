@@ -1,4 +1,3 @@
-
 "use client";
 
 import Barcode from "@/components/ui/barcode";

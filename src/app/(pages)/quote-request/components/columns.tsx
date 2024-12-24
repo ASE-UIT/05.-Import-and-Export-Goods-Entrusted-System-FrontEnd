@@ -24,6 +24,22 @@ export const columns: ColumnDef<QuoteRequest>[] = [
     cell: ({ row }) => <div>{row.getValue("user_id")}</div>,
   },
   {
+    accessorKey: "quote_request_id",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Quote Request ID
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+  },
+  {
     accessorKey: "request_date",
     header: ({ column }) => {
       return (
