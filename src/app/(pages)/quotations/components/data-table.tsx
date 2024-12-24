@@ -41,7 +41,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const router = useRouter();
   const path = usePathname();
@@ -65,14 +65,19 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex w-full justify-between pb-[10px]">
         <DataTableFilter table={table} />
-        <Button variant="default" onClick={() => router.push(`${path}/add`)}>
-          <CirclePlus className="mr-2" />
-          <span>
-            Add{" "}
-            {path.slice(1).charAt(0).toUpperCase() +
-              path.slice(2).replace(/s$/, "")}
-          </span>
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => router.push("/service")}>
+            View Services
+          </Button>
+          <Button variant="default" onClick={() => router.push(`${path}/add`)}>
+            <CirclePlus className="mr-2" />
+            <span>
+              Add{" "}
+              {path.slice(1).charAt(0).toUpperCase() +
+                path.slice(2).replace(/s$/, "")}
+            </span>
+          </Button>
+        </div>
       </div>
       <div className="rounded-md">
         {isLoading ? (
@@ -80,55 +85,55 @@ export function DataTable<TData, TValue>({
         ) : error ? (
           <div className="flex items-center justify-center">Error: {error}</div>
         ) : (
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      )}
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        )}
       </div>
       {table.getRowModel().rows?.length > 0 && (
         <DataTablePagination table={table} />
