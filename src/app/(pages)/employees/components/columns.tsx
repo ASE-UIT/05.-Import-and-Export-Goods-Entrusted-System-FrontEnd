@@ -2,21 +2,18 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Pencil, Trash2 } from "lucide-react";
-import { IEmployee } from ".";
-import { useState } from "react";
-import { DialogFooter } from "@/components/ui/dialog";
+import { ArrowUpDown } from "lucide-react";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { EmployeeResType } from "@/types/employee.type";
+import Link from "next/link";
 
-export const columns: ColumnDef<IEmployee>[] = [
+export const columns: ColumnDef<EmployeeResType>[] = [
+  {
+    accessorKey: "id",
+    header: "ID",
+    cell: ({ row }) => <div>{row.getValue("id")}</div>,
+  },
+
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -75,7 +72,7 @@ export const columns: ColumnDef<IEmployee>[] = [
     ),
   },
   {
-    accessorKey: "date_of_birth",
+    accessorKey: "dob",
     header: ({ column }) => {
       return (
         <Button
@@ -90,28 +87,12 @@ export const columns: ColumnDef<IEmployee>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-[#202224]">{row.getValue("date_of_birth")}</div>
+      <div className="text-[#202224]">
+        {new Date(row.getValue("dob")).toLocaleDateString()}
+      </div>
     ),
   },
-  {
-    accessorKey: "fixed_salary",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Fixed Salary
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="text-[#202224]">{row.getValue("fixed_salary")}</div>
-    ),
-  },
+
   {
     accessorKey: "address",
     header: ({ column }) => {
@@ -132,51 +113,74 @@ export const columns: ColumnDef<IEmployee>[] = [
     ),
   },
   {
-    id: "actions",
-    cell: ({ row }) => {
-      const id = row.original.id;
-      const [open, setOpen] = useState(false);
-
-      const handleEdit = () => {
-        window.location.href = `${window.location.pathname}/update/${id}`;
-      };
-
-      const handleDelete = () => {
-        console.log("Delete clicked for ID:", id);
-      };
-
+    accessorKey: "position",
+    header: ({ column }) => {
       return (
-        <div className="flex space-x-2">
-          <Button
-            variant="default"
-            className="aspect-square p-[6px] h-auto w-auto"
-            onClick={handleEdit}
-          >
-            <Pencil className=" aspect-square w-5 h-5"></Pencil>
-          </Button>
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Position
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="text-[#202224]">{row.getValue("position")}</div>
+    ),
+  },
 
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button
-                className="aspect-square p-[6px] h-auto w-auto"
-                variant="destructive"
-                onClick={handleDelete}
-              >
-                <Trash2 className=" aspect-square w-5 h-5"></Trash2>
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <p>Are you sure you want to delete this employee?</p>
-              <DialogFooter>
-                <Button variant="ghost" onClick={() => setOpen(false)}>
-                  Cancel
-                </Button>
-                <Button variant="destructive" onClick={handleDelete}>
-                  Confirm Delete
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+  {
+    accessorKey: "baseSalary",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Base Salary
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="text-[#202224]">{row.getValue("baseSalary")}</div>
+    ),
+  },
+
+  {
+    accessorKey: "coefficientSalary",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Coefficient Salary
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="text-[#202224]">{row.getValue("coefficientSalary")}</div>
+    ),
+  },
+
+  {
+    id: "action",
+    header: "Action",
+    cell: ({ row }) => {
+      return (
+        <div>
+          <Link href={`/employees/update/${row.getValue("id")}`}>
+            <button className="text-blue-500">Edit</button>
+          </Link>
         </div>
       );
     },

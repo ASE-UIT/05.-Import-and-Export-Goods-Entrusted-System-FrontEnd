@@ -1,9 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,28 +17,52 @@ import {
 import { Input } from "@/components/ui/input";
 import {
   Select,
-  SelectTrigger,
   SelectContent,
   SelectItem,
+  SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"; // Nhập Select
-
-const formSchema = z.object({
-  name: z.string(),
-  contactrep: z.string(),
-  email: z.string().email(),
-  phone: z.string(),
-  address: z.string(),
-  country: z.string(),
-});
+} from "@/components/ui/select";
+import { useProvider } from "@/hooks/use-provider";
+import { providerSchema } from "@/schema/provider.schema";
+import { useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { ErrorType } from "@/types/error.type";
 
 export default function AddProvider() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const { useCreateProvider } = useProvider();
+  const createProvider = useCreateProvider();
+
+  const form = useForm<z.infer<typeof providerSchema>>({
+    resolver: zodResolver(providerSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof providerSchema>) {
+    if (loading) return;
+    setLoading(true);
+    try {
+      await createProvider.mutateAsync(values, {
+        onSuccess: () => {
+          toast({
+            title: "Success",
+            description: "Provider added successfully",
+          });
+          router.push("/provider");
+        },
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          (error as ErrorType).errors?.[0]?.message ||
+          (error as ErrorType).message ||
+          "Something went wrong",
+        variant: "destructive",
+      });
+    }
+    setLoading(false);
   }
 
   return (
@@ -65,14 +89,13 @@ export default function AddProvider() {
                 </FormItem>
               )}
             />
-
             {/* Contact Representative as Select */}
             <FormField
               control={form.control}
-              name="contactrep"
+              name="status"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">ContactRep</FormLabel>
+                  <FormLabel className="font-bold">Status</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -82,9 +105,8 @@ export default function AddProvider() {
                         <SelectValue placeholder="Select a representative" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="01">Representative 01</SelectItem>
-                        <SelectItem value="02">Representative 02</SelectItem>
-                        <SelectItem value="03">Representative 03</SelectItem>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="inactive">Inactive</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -154,8 +176,12 @@ export default function AddProvider() {
                   Cancel
                 </Button>
               </Link>
-              <Button className="w-1/2 h-10 text-lg" type="submit">
-                Save
+              <Button
+                className="w-1/2 h-10 text-lg"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "Add Provider"}
               </Button>
             </div>
           </div>

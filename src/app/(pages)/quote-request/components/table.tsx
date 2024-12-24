@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Button } from "../../../../components/ui/button";
 import { CirclePlus } from "lucide-react";
@@ -7,6 +5,7 @@ import { PATH_NAME } from "@/configs";
 import {
   ColumnDef,
   ColumnFiltersState,
+  Row,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -26,25 +25,31 @@ import {
 } from "@/components/ui/table";
 
 import { useRouter } from "next/navigation";
-import { DataTablePagination } from "../../shipment/tracking/components/pagination";
+import { DataTablePagination } from "./data-table-pagination";
 import { DataTableFilter } from "./filter";
 import StatusBadge, { Status } from "@/components/status-badge";
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+import { CustomDialog } from "./popup";
+interface DataTableProps {
+  columns: ColumnDef<QuoteRequest, unknown>[];
+  data: QuoteRequest[];
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable({ columns, data }: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [isPopupOpen, setIsPopupOpen] = React.useState(false);
+  const [quoteRequestId, setQuoteRequestId] = React.useState<string | null>(
+    null
+  );
   const router = useRouter();
-
-  const table = useReactTable({
+  const handleRowClick = async (row: Row<QuoteRequest>) => {
+    const id = row.original.quote_request_id;
+    setQuoteRequestId(id);
+    setIsPopupOpen(true);
+  };
+  const table = useReactTable<QuoteRequest>({
     data,
     columns,
     onSortingChange: setSorting,
@@ -70,14 +75,6 @@ export function DataTable<TData, TValue>({
           >
             <CirclePlus className="mr-2" />
             <span>Create quote request</span>
-          </Button>
-          <Button
-            variant="default"
-            onClick={() => router.push(`${PATH_NAME.QUOTE_REQUEST}/send`)}
-            className="bg-accent hover:bg-accent"
-          >
-            <CirclePlus className="mr-2" />
-            <span>Send quote request</span>
           </Button>
         </div>
       </div>
@@ -107,10 +104,12 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  onClick={() => handleRowClick(row)}
+                  className="cursor-pointer"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {cell.column.columnDef.accessorKey === "status" ? (
+                      {cell.column.id === "status" ? (
                         <StatusBadge status={cell.getValue() as Status} />
                       ) : (
                         flexRender(
@@ -135,6 +134,12 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
+      {isPopupOpen && quoteRequestId && (
+        <CustomDialog
+          quoteRequestId={quoteRequestId}
+          setIsPopupOpen={setIsPopupOpen}
+        />
+      )}
       <DataTablePagination table={table} />
     </div>
   );

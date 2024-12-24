@@ -5,10 +5,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
 export type TableShipmentTracking = {
-  shipment_id: number;
-  tracking_id: number;
+  shipment_id: string;
   shipment_type: string;
   location: string;
+  client: string;
   status: string;
 };
 
@@ -16,10 +16,6 @@ export const columns: ColumnDef<TableShipmentTracking>[] = [
   {
     accessorKey: "shipment_id",
     header: "Shipment ID",
-  },
-  {
-    accessorKey: "tracking_id",
-    header: "Tracking ID",
   },
   {
     accessorKey: "shipment_type",
@@ -54,6 +50,10 @@ export const columns: ColumnDef<TableShipmentTracking>[] = [
       );
     },
     cell: ({ row }) => <div>{row.getValue("location")}</div>,
+  },
+  {
+    accessorKey: "client",
+    header: "Client",
   },
   {
     accessorKey: "status",

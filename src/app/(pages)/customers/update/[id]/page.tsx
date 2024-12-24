@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -16,8 +16,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera } from "lucide-react";
-import { useParams } from "next/navigation";
+import { Camera, LoaderCircle } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import useCustomer from "@/hooks/use-customer";
+import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string(),
@@ -26,7 +28,7 @@ const formSchema = z.object({
   phone: z.string(),
   tax_id: z.string(),
   address: z.string(),
-  legal_rep_name: z.string(),
+  legal_rep_name: z.string().optional(),
   file: z
     .instanceof(File)
     .refine((file) => file.size < 10000000, {
@@ -39,8 +41,20 @@ export default function UpdateCustomerPage() {
   const { id: customerId } = useParams<{ id: string }>();
   const [preview, setPreview] = useState<string | null>(null);
 
+  const { useDetailsCustomer } = useCustomer();
+  const { data: customer } = useDetailsCustomer(customerId);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    values: {
+      name: customer?.name ?? "",
+      short_name: customer?.shortName ?? "",
+      email: customer?.email ?? "",
+      phone: customer?.phone ?? "",
+      tax_id: customer?.taxId ?? "",
+      address: customer?.address ?? "",
+      legal_rep_name: customer?.legalRep.name ?? "",
+    },
   });
 
   const onPickFile = useCallback(
@@ -52,15 +66,47 @@ export default function UpdateCustomerPage() {
         form.setValue("file", acceptedFile);
         form.clearErrors("file");
       } catch (error) {
+        console.log(error);
         setPreview(null);
         form.resetField("file");
       }
     },
     [form]
   );
+  const router = useRouter();
+  const { useUpdateCustomer } = useCustomer();
+  const { mutate: updateCustomer, isPending } = useUpdateCustomer();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    updateCustomer(
+      {
+        id: customerId,
+        body: {
+          name: values.name,
+          shortName: values.short_name,
+          email: values.email,
+          phone: values.phone,
+          taxId: values.tax_id,
+          address: values.address,
+        },
+      },
+      {
+        onSuccess: () => {
+          toast({
+            title: "Success",
+            description: "Customer update successfully",
+          });
+          router.push("/customers");
+        },
+        onError: (error) => {
+          toast({
+            title: "Error",
+            description: error.message,
+            variant: "destructive",
+          });
+        },
+      }
+    );
   }
 
   return (
@@ -78,7 +124,9 @@ export default function UpdateCustomerPage() {
             <FormField
               control={form.control}
               name="file"
-              render={({ field: { value, onChange, ...fieldProps } }) => (
+              render={({
+                field: { value: _value, onChange, ...fieldProps },
+              }) => (
                 <FormItem className="w-full">
                   <FormControl>
                     <div className="flex flex-col items-center gap-4">
@@ -187,6 +235,7 @@ export default function UpdateCustomerPage() {
                 )}
               />
               <FormField
+                disabled
                 control={form.control}
                 name="legal_rep_name"
                 render={({ field }) => (
@@ -213,7 +262,14 @@ export default function UpdateCustomerPage() {
                 </FormItem>
               )}
             />
-            <Button className="w-full h-14 text-lg" type="submit">
+            <Button
+              disabled={isPending}
+              className="w-full h-14 text-lg"
+              type="submit"
+            >
+              {isPending && (
+                <LoaderCircle size={20} className="mr-2 animate-spin" />
+              )}
               Submit
             </Button>
           </div>

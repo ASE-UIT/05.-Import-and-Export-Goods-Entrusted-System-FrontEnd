@@ -1,10 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { z } from "zod";
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,32 +13,68 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useParams } from "next/navigation";
 
-const formSchema = z.object({
-  name: z.string(),
-  contactrep: z.string(),
-  email: z.string().email(),
-  phone: z.string(),
-  address: z.string(),
-  country: z.string(),
-});
+import { ContactRepBody, ContactRepBodyType } from "@/schema/contactRep.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
-export default function UpdateContactrep() {
-  const { id: contactrepId } = useParams<{ id: string }>();
+import useContactRep from "@/hooks/use-contactRep";
+import { useEffect } from "react";
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+import { toast } from "@/hooks/use-toast";
+
+
+
+export default function UpdateContactRep() {
+  const form = useForm<ContactRepBodyType>({
+    resolver: zodResolver(ContactRepBody),
   });
+  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  const { useUpdateContactRep, useDetailsContactRep } = useContactRep();
+
+  const { mutate: updateContactRep, isPending } = useUpdateContactRep();
+
+  const { data } = useDetailsContactRep(id);
+  const contactRep = data?.results[0];
+
+  useEffect(() => {
+    if (contactRep) {
+      form.reset(contactRep);
+    }
+  }, [contactRep, form]);
+
+  function onSubmit(values: ContactRepBodyType) {
+    if (isPending) return;
+
+    updateContactRep(
+      { id, body: values },
+      {
+        onSuccess: () => {
+          router.push("/contactrep");
+          // alert("ContactRep updated successfully");
+
+          toast({
+            title: "Success",
+            description: "ContactRep updated successfully",
+            variant: "default",
+          });
+        },
+        onError: (error) => {
+          const { field, message } = (error as any).errors[0];
+          form.setError(field, { type: "manual", message: message });
+        },
+      }
+    );
   }
 
   return (
     <div className="flex flex-col items-center p-[24px] w-full">
       <div className="flex w-full justify-between items-end">
-        <span className="text-3xl font-bold">Update Contactrep</span>
+        <span className="text-3xl font-bold">
+          Update Contact representatives
+        </span>
       </div>
       <Form {...form}>
         <form
@@ -54,7 +87,9 @@ export default function UpdateContactrep() {
               name="name"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Name</FormLabel>
+                  <FormLabel className="font-bold">
+                    Name
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Name" {...field} />
                   </FormControl>
@@ -67,9 +102,15 @@ export default function UpdateContactrep() {
               name="email"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Email</FormLabel>
+                  <FormLabel className="font-bold">
+                    Email
+                  </FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="Email" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="Email"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -80,9 +121,15 @@ export default function UpdateContactrep() {
               name="phone"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">Phone</FormLabel>
+                  <FormLabel className="font-bold">
+                    Phone
+                  </FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder="Phone" {...field} />
+                    <Input
+                      type="tel"
+                      placeholder="Phone"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -97,7 +144,11 @@ export default function UpdateContactrep() {
               >
                 <Link href="/contactrep">Cancel</Link>
               </Button>
-              <Button className="w-1/2 h-10 text-lg" type="submit">
+              <Button
+                className="w-1/2 h-10 text-lg"
+                type="submit"
+                disabled={isPending}
+              >
                 Save
               </Button>
             </div>

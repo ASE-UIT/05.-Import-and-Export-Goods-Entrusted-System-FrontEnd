@@ -3,36 +3,51 @@ import {
   ChevronRightIcon,
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
-} from "@radix-ui/react-icons";
-import { Table } from "@tanstack/react-table";
-import { useState, useEffect } from "react";
+} from '@radix-ui/react-icons';
+import { Table } from '@tanstack/react-table';
+import { useState, useEffect } from 'react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
+  setQueryParams: React.Dispatch<React.SetStateAction<CustomerQueryParams>>;
 }
 
 export function DataTablePagination<TData>({
   table,
+  setQueryParams,
 }: DataTablePaginationProps<TData>) {
   const pageCount = table.getPageCount();
   const [currentPage, setCurrentPage] = useState(
     table.getState().pagination.pageIndex
   );
+  const [currentLimit, setCurrentLimit] = useState(
+    table.getState().pagination.pageSize
+  );
 
   useEffect(() => {
-    setCurrentPage(table.getState().pagination.pageIndex);
-  }, [table.getState().pagination.pageIndex]);
+    setQueryParams((prev) => ({
+      ...prev,
+      page: currentPage + 1,
+    }));
+  }, [currentPage, setQueryParams]);
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      limit: currentLimit,
+    }));
+  }, [currentLimit, setQueryParams]);
 
   return (
     <div className="flex flex-row-reverse items-end justify-between pt-[10px]">
@@ -40,16 +55,16 @@ export function DataTablePagination<TData>({
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Rows per page</p>
           <Select
-            value={`${table.getState().pagination.pageSize}`}
+            value={`${currentLimit}`}
             onValueChange={(value) => {
-              table.setPageSize(Number(value));
+              setCurrentLimit(Number(value));
             }}
           >
             <SelectTrigger className="h-[32px] w-[64px]">
-              <SelectValue placeholder={table.getState().pagination.pageSize} />
+              <SelectValue placeholder={currentLimit} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[5, 10, 20].map((pageSize) => (
+              {[1, 5, 10, 20].map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
                 </SelectItem>
@@ -61,7 +76,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="size-[32px] p-0"
-            onClick={() => table.setPageIndex(0)}
+            onClick={() => setCurrentPage(0)}
             disabled={!table.getCanPreviousPage()}
           >
             <DoubleArrowLeftIcon className="size-[16px]" />
@@ -69,7 +84,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="size-[32px] p-0"
-            onClick={() => table.previousPage()}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
             disabled={!table.getCanPreviousPage()}
           >
             <ChevronLeftIcon className="size-[16px]" />
@@ -97,7 +112,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="size-[32px] p-0"
-            onClick={() => table.nextPage()}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
             disabled={!table.getCanNextPage()}
           >
             <ChevronRightIcon className="size-[16px]" />
@@ -105,7 +120,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="size-[32px] p-0"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            onClick={() => setCurrentPage(pageCount - 1)}
             disabled={!table.getCanNextPage()}
           >
             <DoubleArrowRightIcon className="size-[16px]" />

@@ -1,13 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
-
 export const columns: ColumnDef<QuoteRequest>[] = [
   {
-    accessorKey: "customer_id",
+    accessorKey: "user_id",
     header: ({ column }) => {
       return (
         <Button
@@ -16,12 +16,28 @@ export const columns: ColumnDef<QuoteRequest>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Customer ID
+          User ID
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("customer_id")}</div>,
+    cell: ({ row }) => <div>{row.getValue("user_id")}</div>,
+  },
+  {
+    accessorKey: "quote_request_id",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Quote Request ID
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "request_date",

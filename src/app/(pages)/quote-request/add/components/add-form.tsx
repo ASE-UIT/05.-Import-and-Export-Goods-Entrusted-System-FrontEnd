@@ -19,7 +19,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import DropdownMenuCustom from "./dropdown-menu";
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 import {
   Popover,
   PopoverContent,
@@ -27,50 +28,114 @@ import {
 } from "@radix-ui/react-popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-
+import { useRouter } from "next/navigation";
+import useQuoteRequest from "@/hooks/use-quote-request";
+import { CreateQuoteRequestType } from "@/schema/quote-request.schema";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import useAuth from "@/hooks/use-auth";
 const formSchema = z.object({
-  customer_name: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  origin: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  destination: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  delivery_end_date: z.date(),
-  delivery_start_date: z.date(),
-  weight: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  height: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  length: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  width: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  requestDate: z.string(),
+  userId: z.string(),
+  cargoInsurance: z.boolean(),
+  origin: z.string(),
+  destination: z.string(),
+  packageType: z.string(),
+  shipmentType: z.string(),
+  shipmentReadyDate: z.string(),
+  shipmentDeadline: z.string(),
+  weight: z.string(),
+  height: z.string(),
+  width: z.string(),
+  length: z.string(),
 });
 
 export default function QuoteRequestAddForm() {
-  // ...
+  const [shipmentReadyDate, setShipmentReadyDate] = useState<Date | undefined>(
+    undefined
+  );
+  const [shipmentDeadline, setShipmentDeadline] = useState<Date | undefined>(
+    undefined
+  );
+  const [requestDate, setRequestDate] = useState<Date | undefined>(undefined);
+  const [selectedPackageType, setSelectedPackageType] = useState<string | null>(
+    null
+  );
+  const [selectedShipmentType, setSelectedShipmentType] = useState<
+    string | null
+  >(null);
+
+  const router = useRouter();
+
+  const { mutate: CreateQuoteRequest } =
+    useQuoteRequest.useCreateQuoteRequest(router);
+  // const { data: customerData } = useQuoteRequest.useGetCustomerInfo();
+  const { data: session } = useAuth.useGetSession();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      customer_name: "",
+      userId: "",
+      requestDate: "",
       origin: "",
       destination: "",
+      shipmentReadyDate: "",
+      shipmentDeadline: "",
+      packageType: "",
+      cargoInsurance: false,
+      weight: "",
+      height: "",
       length: "",
+      width: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
 
+  useEffect(() => {
+    if (shipmentReadyDate)
+      form.setValue(
+        "shipmentReadyDate",
+        format(shipmentReadyDate, "yyyy-MM-dd")
+      );
+  }, [shipmentReadyDate]);
+
+  useEffect(() => {
+    if (shipmentDeadline)
+      form.setValue("shipmentDeadline", format(shipmentDeadline, "yyyy-MM-dd"));
+  }, [shipmentDeadline]);
+
+  useEffect(() => {
+    if (requestDate)
+      form.setValue("requestDate", format(requestDate, "yyyy-MM-dd"));
+  }, [requestDate]);
+  useEffect(() => {
+    if (session) form.setValue("userId", session.id);
+  }, [session]);
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+    const createQuoteRequest: CreateQuoteRequestType = {
+      requestDate: values.requestDate,
+      userId: values.userId,
+      cargoInsurance: values.cargoInsurance,
+      origin: values.origin,
+      destination: values.destination,
+      packageType: values.packageType,
+      shipmentType: values.shipmentType,
+      shipmentReadyDate: values.shipmentReadyDate,
+      shipmentDeadline: values.shipmentDeadline,
+      weight: values.weight ? parseInt(values.weight, 10) : 0,
+      height: values.weight ? parseInt(values.height, 10) : 0,
+      width: values.weight ? parseInt(values.width, 10) : 0,
+      length: values.weight ? parseInt(values.length, 10) : 0,
+    };
+    console.log(createQuoteRequest);
+    CreateQuoteRequest(createQuoteRequest);
+  }
   return (
     <Form {...form}>
       <form
@@ -81,19 +146,47 @@ export default function QuoteRequestAddForm() {
           <div className="flex-1">
             <FormField
               control={form.control}
-              name="customer_name"
+              name="requestDate"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-lg">Customer Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Input" {...field} className="w-1/2 " />
-                  </FormControl>
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-lg">Request Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-1/2 h-[60px] pl-3 text-lg font-normal flex items-center justify-start hover:bg-primary",
+                            !field.value && "text-black"
+                          )}
+                        >
+                          <CalendarIcon className="h-4 w-4 mr-2" />
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="w-auto p-0 bg-white rounded-md border"
+                      align="start"
+                    >
+                      <Calendar
+                        mode="single"
+                        selected={new Date(field.value)}
+                        onSelect={(date) => setRequestDate(date)}
+                      />
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
         </div>
+
         <div className="flex w-full gap-2.5">
           <div className="flex-1">
             <FormField
@@ -105,9 +198,7 @@ export default function QuoteRequestAddForm() {
                   <FormControl>
                     <Input placeholder="Origin" {...field} className="w-full" />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
+
                   <FormMessage />
                 </FormItem>
               )}
@@ -127,9 +218,7 @@ export default function QuoteRequestAddForm() {
                       className="w-full"
                     />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
+
                   <FormMessage />
                 </FormItem>
               )}
@@ -141,7 +230,7 @@ export default function QuoteRequestAddForm() {
           <div className="flex-1">
             <FormField
               control={form.control}
-              name="delivery_start_date"
+              name="shipmentReadyDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel className="text-lg">Delivery Start Date</FormLabel>
@@ -170,11 +259,8 @@ export default function QuoteRequestAddForm() {
                     >
                       <Calendar
                         mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
+                        selected={new Date(field.value)}
+                        onSelect={(date) => setShipmentReadyDate(date)}
                       />
                     </PopoverContent>
                   </Popover>
@@ -186,7 +272,7 @@ export default function QuoteRequestAddForm() {
           <div className="flex-1">
             <FormField
               control={form.control}
-              name="delivery_end_date"
+              name="shipmentDeadline"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel className="text-lg">Delivery End Date</FormLabel>
@@ -216,11 +302,8 @@ export default function QuoteRequestAddForm() {
                     >
                       <Calendar
                         mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
+                        selected={new Date(field.value)}
+                        onSelect={(date) => setShipmentDeadline(date)}
                       />
                     </PopoverContent>
                   </Popover>
@@ -230,20 +313,74 @@ export default function QuoteRequestAddForm() {
             />
           </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox id="terms" />
-          <label
-            htmlFor="terms"
-            className="text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            Cargo Insurance
-          </label>
-        </div>
+
+        <FormField
+          control={form.control}
+          name="cargoInsurance"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="terms"
+                  checked={field.value}
+                  onCheckedChange={(checked) => field.onChange(checked)}
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Cargo Insurance
+                </label>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="flex flex-col gap-2.5 p-2.5 rounded-md border">
           <div className="flex justify-between items-center">
             <span className="text-1xl font-bold">Package Information :</span>
           </div>
-          <DropdownMenuCustom />
+          <FormField
+            control={form.control}
+            name="packageType"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center space-x-2">
+                  <DropdownMenuCustom<z.infer<typeof formSchema>>
+                    options={["DRY", "FREEZE"]}
+                    label="Package Type"
+                    selectedOption={selectedPackageType}
+                    setSelectedOption={setSelectedPackageType}
+                    field={field}
+                  />
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex justify-between items-center">
+            <span className="text-1xl font-bold">Shipment Type :</span>
+          </div>
+          <FormField
+            control={form.control}
+            name="shipmentType"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center space-x-2">
+                  <DropdownMenuCustom<z.infer<typeof formSchema>>
+                    options={["AIR", "LAND", "FCL", "LCL"]}
+                    label="Shipment Type"
+                    selectedOption={selectedShipmentType}
+                    setSelectedOption={setSelectedShipmentType}
+                    field={field}
+                  />
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <div className="flex w-full gap-2.5">
             <div className="flex-1">
               <FormField
@@ -257,6 +394,7 @@ export default function QuoteRequestAddForm() {
                         placeholder="Weight"
                         {...field}
                         className="w-full"
+                        type="number"
                       />
                     </FormControl>
                     <FormMessage />
@@ -276,6 +414,7 @@ export default function QuoteRequestAddForm() {
                         placeholder="Height"
                         {...field}
                         className="w-full"
+                        type="number"
                       />
                     </FormControl>
                     <FormMessage />
@@ -298,6 +437,7 @@ export default function QuoteRequestAddForm() {
                         placeholder="Length"
                         {...field}
                         className="w-full"
+                        type="number"
                       />
                     </FormControl>
                     <FormMessage />
@@ -317,6 +457,7 @@ export default function QuoteRequestAddForm() {
                         placeholder="Width"
                         {...field}
                         className="w-full"
+                        type="number"
                       />
                     </FormControl>
                     <FormMessage />
@@ -327,7 +468,7 @@ export default function QuoteRequestAddForm() {
           </div>
         </div>
         <div className="flex mb-6">
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Create</Button>
         </div>
       </form>
     </Form>

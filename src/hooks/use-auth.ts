@@ -7,8 +7,8 @@ const useAuth = {
   useLogin() {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: (loginDetails: LoginBodyType) =>
-        authAction.login(loginDetails),
+      mutationFn: async (loginDetails: LoginBodyType) =>
+        await authAction.login(loginDetails),
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ["user-session"],
@@ -34,6 +34,22 @@ const useAuth = {
         }
       },
       retry: 0,
+    });
+  },
+
+  useLogout() {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: async () => await authAction.logout(),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["user-session"],
+        });
+      },
+      onError: (error: ErrorType) => {
+        console.error("Error during logout:", error);
+        throw error;
+      },
     });
   },
 };

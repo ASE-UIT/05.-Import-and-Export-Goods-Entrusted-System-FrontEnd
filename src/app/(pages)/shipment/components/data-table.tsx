@@ -24,12 +24,9 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "../../../../components/ui/button";
-import { Input } from "../../../../components/ui/input";
 import * as dataTableFilter from "./data-filter";
 import { CirclePlus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
-import { PATH_NAME } from "@/configs";
-import { Pagination } from "@/components/ui/pagination";
 import { DataTablePagination } from "./data-pagination";
 
 interface DataTableProps<TData, TValue> {
@@ -43,7 +40,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const router = useRouter();
   const path = usePathname();
@@ -62,12 +59,18 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
   });
-
   return (
     <div className="w-full">
-      <div className="flex w-full justify-between pb-[10px] mb-[20px]">
+      <div className="mb-[20px] flex w-full justify-between pb-[10px]">
         <dataTableFilter.DataTableFilter table={table} />
         <div className="flex gap-3">
+          <Button
+            variant="outline"
+            onClick={() => router.push(`${path}/tracking`)}
+          >
+            <span>Shipment Tracking </span>
+          </Button>
+
           <Button variant="default" onClick={() => router.push(`${path}/add`)}>
             <CirclePlus className="mr-2" />
             <span>Add </span>
@@ -86,7 +89,7 @@ export function DataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -105,7 +108,7 @@ export function DataTable<TData, TValue>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

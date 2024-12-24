@@ -1,9 +1,11 @@
 "use client";
 
+import { useProvider } from "@/hooks/use-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,31 +19,74 @@ import {
 import { Input } from "@/components/ui/input";
 import {
   Select,
-  SelectTrigger,
   SelectContent,
   SelectItem,
+  SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"; // Nhập Select
-import { useParams } from "next/navigation";
+} from "@/components/ui/select";
 
-const formSchema = z.object({
-  name: z.string(),
-  contactrep: z.string(),
-  email: z.string().email(),
-  phone: z.string(),
-  address: z.string(),
-  country: z.string(),
-});
+import { providerSchema } from "@/schema/provider.schema";
+import { useParams, useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
+import { ErrorType } from "@/types/error.type";
 
 export default function UpdateProvider() {
   const { id: providerId } = useParams<{ id: string }>();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { useGetProviderById, useUpdateProvider } = useProvider();
+  const [loading, setLoading] = useState(false);
+
+  const updateMutation = useUpdateProvider();
+
+  const form = useForm<z.infer<typeof providerSchema>>({
+    resolver: zodResolver(providerSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  const { data: provider } = useGetProviderById(providerId);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (provider) {
+      console.log(provider);
+      if (provider.results) {
+        const providerData = provider.results[0];
+
+        form.reset({
+          name: providerData.name,
+          email: providerData.email,
+          phone: providerData.phone,
+          address: providerData.address,
+          country: providerData.country,
+          status: providerData.status as "active" | "inactive",
+        });
+      }
+    }
+  }, [provider, form]);
+
+  async function onSubmit(values: z.infer<typeof providerSchema>) {
+    if (loading) return;
+    setLoading(true);
+    try {
+      await updateMutation.mutateAsync({
+        id: providerId,
+        data: values,
+      });
+      toast({
+        title: "Success",
+        description: "Provider updated successfully",
+      });
+      router.push("/provider");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          (error as ErrorType).errors?.[0]?.message ||
+          (error as ErrorType).message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -72,22 +117,22 @@ export default function UpdateProvider() {
             {/* Contact Representative as Select */}
             <FormField
               control={form.control}
-              name="contactrep"
+              name="status"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="font-bold">ContactRep</FormLabel>
+                  <FormLabel className="font-bold">Status</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={field.value}
+                      defaultValue={provider?.results[0].status}
                     >
                       <SelectTrigger className="w-full h-[60px]">
-                        <SelectValue placeholder="Select a representative" />
+                        <SelectValue placeholder="Select a status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="01">Representative 01</SelectItem>
-                        <SelectItem value="02">Representative 02</SelectItem>
-                        <SelectItem value="03">Representative 03</SelectItem>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="inactive">Inactive</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -157,8 +202,12 @@ export default function UpdateProvider() {
                   Cancel
                 </Button>
               </Link>
-              <Button className="w-1/2 h-10 text-lg" type="submit">
-                Save
+              <Button
+                className="w-1/2 h-10 text-lg"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "Update"}
               </Button>
             </div>
           </div>

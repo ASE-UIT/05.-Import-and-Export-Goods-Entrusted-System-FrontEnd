@@ -54,7 +54,7 @@ interface ShipmentTracking {
   status: ShipmentStatus;
   location: string;
   client: string;
-  shipment_type: ShipmentType
+  shipment_type: ShipmentType;
 }
 
 ContractStatus = "Pending" | "Active" | "Expired" | "Terminated";
@@ -80,8 +80,8 @@ QuoteReqStatus =
   "Cancelled";
 
 interface QuoteRequest {
-  quote_request_id: number;
-  customer_id: number;
+  quote_request_id: string;
+  user_id: string;
   request_date: string;
   status: QuoteReqStatus;
   create_at: string;
@@ -102,7 +102,8 @@ interface Provider {
 }
 
 interface ContactRep {
-  contactrep_id: number;
+  // contactrep_id: number;
+  id: string;
   name: string;
   email: string;
   phone: string;

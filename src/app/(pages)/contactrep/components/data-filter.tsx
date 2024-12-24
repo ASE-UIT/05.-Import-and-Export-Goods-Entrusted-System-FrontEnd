@@ -1,33 +1,40 @@
 "use client";
 
-import { Table } from "@tanstack/react-table";
-
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
+import { Table } from "@tanstack/react-table";
 import { Search } from "lucide-react";
+import { SetStateAction, useState } from "react";
 
 interface DataTableToolbarProps<TData> {
+  setQueryParams: React.Dispatch<SetStateAction<ContactRepQueryParams>>;
+  filterableColumns: string[];
   table: Table<TData>;
 }
 
 export function DataTableFilter<TData>({
-  table,
+  setQueryParams,
+  filterableColumns,
 }: DataTableToolbarProps<TData>) {
-  const filterableColumns = table.getAllColumns().filter(
-    (column) => column.id !== 'action' 
-  ).map((column) => column.id);
+  const [currentFilter, setCurrentFilter] = useState<string>(
+    filterableColumns[0]
+  );
+  const handleAssignFilter = (value: string) => {
+    setTimeout(() => {
+      setQueryParams((prev: ContactRepQueryParams) => ({
+        ...prev,
+        [currentFilter]: value,
+      }));
+    }, 300);
+  };
 
-  const [currentFilter, setCurrentFilter] = useState<string>(filterableColumns[0]);
-  console.log(filterableColumns);
   return (
     <div className="flex gap-[5px] items-center">
       <div className="w-[300px] ">
@@ -37,24 +44,30 @@ export function DataTableFilter<TData>({
             type="search"
             placeholder="Search"
             onChange={(event) =>
-              table.getColumn(currentFilter)?.setFilterValue(event.target.value)
+              handleAssignFilter(event.target.value)
             }
             className="pl-8 h-2.25"
           />
         </div>
       </div>
-      <Select onValueChange={(value) => setCurrentFilter(value)}>
+      <Select
+        value={currentFilter}
+        onValueChange={(value) => setCurrentFilter(value)}
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Filter" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-             {filterableColumns.map((title) => (
+            {filterableColumns.map((title) => (
               <SelectItem value={title} key={title}>
                 {title
-                  .replace(/([A-Z])/g, " $1")
+                  .split("_")
+                  .join(" ")
                   .toLowerCase()
-                  .replace(/\b\w/g, (char) => char.toUpperCase())}
+                  .replace(/\b\w/g, (char) =>
+                    char.toUpperCase()
+                  )}
               </SelectItem>
             ))}
           </SelectGroup>
