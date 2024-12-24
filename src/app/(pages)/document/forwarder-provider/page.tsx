@@ -33,6 +33,8 @@ import { useRouter } from "next/navigation";
 import useDocument from "@/hooks/use-document";
 import { CreateDocumentType } from "@/schema/document.schema";
 import { before } from "node:test";
+import useShipmentTracking from "@/hooks/use-shipment-tracking";
+
 
 const formSchema = z.object({
   date: z.string(),
@@ -128,13 +130,23 @@ const formSchema = z.object({
   signatureB: z.string(),
   shipmentId: z.string(),
   docNumber: z.string(),
-  documentNumber: z.string(),
 });
 export default function PackingList() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [shippingDate, setShippingDate] = useState<Date | undefined>(undefined);
   const [rows, setRows] = useState(
     Array(1).fill({ qty: "", description: "", weight: "", productNumber: "" })
+  );
+
+  const {
+    data: shipments,
+    isLoading: isLoadingShipments,
+    error: shipmentError,
+  } = useShipmentTracking.useGetShipment(
+    undefined,
+    undefined,
+    undefined,
+    undefined
   );
 
   const router = useRouter();
@@ -180,7 +192,6 @@ export default function PackingList() {
       positionB: "",
       numberA: "",
       numberB: "",
-      documentNumber: "",
       fresh: "",
       freshNum: "",
       fade: "",
@@ -255,7 +266,7 @@ export default function PackingList() {
       signatureA: values.signatureA,
       signatureB: values.signatureB,
       place: values.place,
-      documentNumber: values.documentNumber,
+      docNumber: values.docNumber,
       nameA: values.nameA,
       addressA: values.addressA,
       taxA: values.taxA,
@@ -357,7 +368,7 @@ export default function PackingList() {
               <div className="w-full flex justify-center">
                 <FormField
                   control={form.control}
-                  name="documentNumber" 
+                  name="docNumber" 
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="italic text-lg">Số hợp đồng</FormLabel>
@@ -371,7 +382,40 @@ export default function PackingList() {
                     </FormItem>
                   )}
                 />
+
               </div>
+              <FormField
+            control={form.control}
+            name="shipmentId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-lg">Shipment</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-full h-[60px] text-lg ">
+                      <SelectValue placeholder="Shipment" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {shipments ? (
+                        shipments.results.map((it) => (
+                          <SelectItem key={it.id} value={it.id}>
+                            {it.id}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <div className="flex items-center justify-center">
+                          No Customer Available
+                        </div>
+                      )}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
+          />
               <div className="flex">
                 <FormField
                     control={form.control}
