@@ -92,9 +92,7 @@ export const columns: ColumnDef<Document>[] = [
     cell: ({ row }) => {
       return (
         <div>
-          <Link
-            href={`/document/im_ex-license/${row.getValue("id")}`}
-          >
+          <Link href={`/document/exim-license/${row.getValue("id")}`}>
             <button className="text-blue-500">View</button>
           </Link>
         </div>

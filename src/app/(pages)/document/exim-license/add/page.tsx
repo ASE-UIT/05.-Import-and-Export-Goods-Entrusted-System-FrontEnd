@@ -59,7 +59,7 @@ function ImportExportForm() {
   const [expiryDate, setExpiryDate] = useState<Date | undefined>(undefined);
   const [issuedDate, setIssuedDate] = useState<Date | undefined>(undefined);
   const [estimatedTime, setEstimatedTime] = useState<Date | undefined>(
-    undefined
+    undefined,
   );
 
   const router = useRouter();
@@ -73,13 +73,13 @@ function ImportExportForm() {
     undefined,
     undefined,
     undefined,
-    undefined
+    undefined,
   );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      companyName:"",
+      companyName: "",
       address: "",
       phone: "",
       fax: "",
@@ -115,8 +115,10 @@ function ImportExportForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Exim Data:", values);
+
+    // Kiểm tra các trường trong `fields`
     const fields = {
-      companyName:values.companyName,
+      companyName: values.companyName,
       address: values.address,
       phone: values.phone,
       fax: values.fax,
@@ -131,19 +133,36 @@ function ImportExportForm() {
       executionTimes: values.executionTimes,
       expiryDate: values.expiryDate,
     };
+
+    // Tìm các trường chưa được điền
+    const emptyFields = Object.entries(fields).filter(
+      ([_, value]) => !value || value === "",
+    );
+
+    // Nếu có trường nào trống, hiển thị thông báo lỗi
+    if (emptyFields.length > 0) {
+      const missingFields = emptyFields.map(([key]) => key).join(", ");
+      alert(`Create failed: Missing required fields ${missingFields}`);
+      console.error("Create failed: Missing required fields");
+      return; // Dừng lại, không tiếp tục tạo tài liệu
+    }
+
+    // Nếu tất cả trường đã được điền, tiếp tục xử lý
     const createQuoteRequest: CreateDocumentType = {
       shipmentId: values.shipmentId,
       type: "EXIM_LISENCE",
       docNumber: values.docNumber ? parseInt(values.docNumber, 10) : 0,
       fields,
     };
+
     console.log(createQuoteRequest);
     CreateDocument(createQuoteRequest);
   }
+
   return (
-    <div className="w-full max-w-5xl mx-auto p-8 border border-gray-300 shadow-md bg-white">
-      <h2 className="text-2xl font-bold text-center mb-4">Exim License</h2>
-      <div className="container mx-auto p-6 max-w-screen-lg"></div>
+    <div className="mx-auto w-full max-w-5xl border border-gray-300 bg-white p-8 shadow-md">
+      <h2 className="mb-4 text-center text-2xl font-bold">Exim License</h2>
+      <div className="container mx-auto max-w-screen-lg p-6"></div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Shipment ID */}
@@ -158,7 +177,7 @@ function ImportExportForm() {
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
-                    <SelectTrigger className="w-full h-[60px] text-lg ">
+                    <SelectTrigger className="h-[60px] w-full text-lg">
                       <SelectValue placeholder="Shipment" />
                     </SelectTrigger>
                     <SelectContent>
@@ -191,7 +210,26 @@ function ImportExportForm() {
                   <Input
                     placeholder="Enter doc number"
                     {...field}
-                    type="number"
+                    className="input-underline"
+                    style={{
+                      WebkitAppearance: "none",
+                      MozAppearance: "textfield",
+                    }}
+                    onKeyDown={(e) => {
+                      // Chỉ cho phép các phím số (0-9) và các phím điều hướng
+                      if (
+                        !(
+                          (e.key >= "0" && e.key <= "9") || // Các phím số
+                          e.key === "Backspace" || // Xóa ký tự
+                          e.key === "ArrowLeft" || // Mũi tên trái
+                          e.key === "ArrowRight" || // Mũi tên phải
+                          e.key === "Delete" || // Phím Delete
+                          e.key === "Tab" // Phím Tab
+                        )
+                      ) {
+                        e.preventDefault(); // Ngăn mọi phím không hợp lệ
+                      }
+                    }}
                   />
                 </FormControl>
               </FormItem>
@@ -200,8 +238,8 @@ function ImportExportForm() {
 
           {/* Điều 1 */}
           <div className="mb-4">
-            <h3 className="text-lg font-bold mb-2">Company Information</h3>
-            <div className="grid grid-cols-2 gap-4 items-center">
+            <h3 className="mb-2 text-lg font-bold">Company Information</h3>
+            <div className="grid grid-cols-2 items-center gap-4">
               {/* Company Name */}
               <FormField
                 control={form.control}
@@ -276,9 +314,7 @@ function ImportExportForm() {
                 name="businessLicense"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-lg">
-                      Business License
-                    </FormLabel>
+                    <FormLabel className="text-lg">Business License</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter company's  Business License"
@@ -326,10 +362,10 @@ function ImportExportForm() {
             </div>
           </div>
           <div className="mb-4">
-            <h3 className="text-lg font-bold mb-2">
-            Article 1: Import (Export) Information
+            <h3 className="mb-2 text-lg font-bold">
+              Article 1: Import (Export) Information
             </h3>
-            <div className="grid grid-cols-2 gap-4 items-center">
+            <div className="grid grid-cols-2 items-center gap-4">
               {/* Nhập khẩu (xuất khẩu) */}
               <FormField
                 control={form.control}
@@ -390,7 +426,9 @@ function ImportExportForm() {
                 name="transportConditions"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Means and Conditions of Transportation</FormLabel>
+                    <FormLabel>
+                      Means and Conditions of Transportation
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Means and Conditions of Transportation"
@@ -426,9 +464,7 @@ function ImportExportForm() {
                 name="executionTimes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                    Number of Import (Export) Operations
-                    </FormLabel>
+                    <FormLabel>Number of Import (Export) Operations</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="number"
@@ -451,14 +487,15 @@ function ImportExportForm() {
               <span className="font-semibold">
                 {form.watch("companyName") || "........"}
               </span>{" "}
-              Shall be responsible for complying with the provisions of the Law on Drug Prevention and Control.
+              Shall be responsible for complying with the provisions of the Law
+              on Drug Prevention and Control.
             </p>
           </div>
           {/* Điều 3 */}
           <div className="mb-4">
             <FormLabel className="text-lg">Article 3:</FormLabel>
             <p>
-            This license is valid until the end of:
+              This license is valid until the end of:
               <FormField
                 control={form.control}
                 name="expiryDate"

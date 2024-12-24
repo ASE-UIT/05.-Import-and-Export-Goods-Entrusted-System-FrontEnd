@@ -90,7 +90,7 @@ const useDocument = {
           description: "Document created successfully",
           duration: 10000,
         });
-        router.push("/quote-request");
+        router.push("/document/exim-license");
       },
       onError: (error: ErrorType) => {
         console.error("Error during create:", error);
