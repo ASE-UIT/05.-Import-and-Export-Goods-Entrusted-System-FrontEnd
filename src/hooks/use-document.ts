@@ -1,7 +1,7 @@
-import documentAction from "@/apis/document.api";
+import packingListAction from "@/apis/document/packingList.api";
 import * as docAction from "@/apis/document/document.api";
 import { toast } from "@/hooks/use-toast";
-import { CreateDocumentType } from "@/schema/document.schema";
+import { CreateDocumentType } from "@/schema/document/packinglist.schema";
 import { ErrorType } from "@/types/error.type";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ const useDocument = {
     const queryClient = useQueryClient();
     return useMutation({
       mutationFn: (createDocumentBody: CreateDocumentType) =>
-        documentAction.createDocument(createDocumentBody),
+        packingListAction.createDocument(createDocumentBody),
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ["document"],
@@ -42,6 +42,21 @@ const useDocument = {
       },
     });
   },
+  useGetPackingListDocumentById(id: string) {
+        return useQuery({
+        queryKey: ["document", id],
+        queryFn: async () => {
+            try {
+            const result = await packingListAction.getDocumentById(id);
+            return result;
+            } catch (error) {
+            console.error("Error during get document:", error);
+            throw error;
+            }
+        },
+        retry: 0,
+        });
+    },
 };
 
 export default useDocument;
