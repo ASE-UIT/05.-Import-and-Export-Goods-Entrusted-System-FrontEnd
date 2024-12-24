@@ -93,7 +93,7 @@ export const columns: ColumnDef<Document>[] = [
       return (
         <div>
           <Link
-            href={`/document/contract/${row.getValue("id")}`}
+            href={`/document/contract/customer_forwarder/${row.getValue("id")}`}
           >
             <button className="text-blue-500">View</button>
           </Link>

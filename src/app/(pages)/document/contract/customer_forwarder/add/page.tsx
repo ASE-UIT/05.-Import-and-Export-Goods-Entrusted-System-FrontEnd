@@ -346,7 +346,7 @@ export default function CustomerForwarderContract() {
                         </div>
                     </div>
                     <h2 className="mt-1">Chúng tôi gồm có:</h2>
-                    {/* Party B*/}
+                    {/* Party A*/}
                     <h2 className="mt-1 font-bold">Bên A (Bên ủy thác)</h2>
                     <div className="grid grid-cols-1 gap-2">
                         <div className="flex gap-x-2">
