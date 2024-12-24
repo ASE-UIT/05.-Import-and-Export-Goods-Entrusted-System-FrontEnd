@@ -23,11 +23,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Button } from "../../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import * as dataTableFilter from "./data-filter";
 import { CirclePlus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { DataTablePagination } from "./data-pagination";
+import useAuth from "@/hooks/use-auth";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -38,6 +39,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const { data: user } = useAuth.useGetSession();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -59,23 +61,30 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
   });
+
   return (
     <div className="w-full">
       <div className="mb-[20px] flex w-full justify-between pb-[10px]">
         <dataTableFilter.DataTableFilter table={table} />
-        <div className="flex gap-3">
-          <Button
-            variant="outline"
-            onClick={() => router.push(`${path}/tracking`)}
-          >
-            <span>Shipment Tracking </span>
-          </Button>
+        {user?.role.name !== "CLIENT" && (
+          <div className="flex gap-3">
+            <Button
+              variant="default"
+              onClick={() => router.push(`${path}/import/add`)}
+            >
+              <CirclePlus className="mr-2" />
+              <span>Add Import Customs Declaration</span>
+            </Button>
 
-          <Button variant="default" onClick={() => router.push(`${path}/add`)}>
-            <CirclePlus className="mr-2" />
-            <span>Add </span>
-          </Button>
-        </div>
+            <Button
+              variant="default"
+              onClick={() => router.push(`${path}/export/add`)}
+            >
+              <CirclePlus className="mr-2" />
+              <span>Add Export Customs Declaration</span>
+            </Button>
+          </div>
+        )}
       </div>
       <div className="rounded-md">
         <Table>
