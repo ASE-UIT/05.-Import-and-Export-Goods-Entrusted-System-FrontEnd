@@ -13,7 +13,7 @@ export default function DocumentDetails() {
   const { data: documentData } = useDocument.useGetPackingListDocumentById(documentId);
 
   const handleBack = () => {
-    router.push("/document"); // Navigate back to /document
+    router.push("/document/packing-list"); // Navigate back to /document
   };
 
   if (!documentData) {
