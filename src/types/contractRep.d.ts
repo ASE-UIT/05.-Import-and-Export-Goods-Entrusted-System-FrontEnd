@@ -16,4 +16,6 @@ type ContactRepResponse = {
   name: string;
   email: string;
   phone: string;
+  branch_location: string;
+  provider_id: string;
 };

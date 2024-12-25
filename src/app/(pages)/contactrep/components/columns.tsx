@@ -70,6 +70,39 @@ export const columns: ColumnDef<ContactRep>[] = [
     cell: ({ row }) => row.getValue("phone"),
   },
   {
+    accessorKey: "branch_location",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Branch Location
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("branch_location"),
+  },
+  {
+    accessorKey: "provider_name",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="pl-0"
+          variant="ghost"
+          style={{ backgroundColor: "transparent" }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Provider
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("provider_name"),
+  },
+
+  {
     id: "action",
     header: "Action",
     cell: ({ row }) => (
