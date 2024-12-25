@@ -131,7 +131,7 @@ export default function PackingList() {
     const createQuoteRequest: CreateDocumentType = {
       shipmentId: values.shipmentId,
       type: "PACKING_LIST",
-      docNumber: values.docNumber ? parseInt(values.docNumber, 10) : 0,
+      docNumber: values.docNumber,
       fields,
     };
     console.log(createQuoteRequest);
