@@ -42,7 +42,7 @@ export default function Page() {
       setAirWaybill(
         document.filter(
           (item) =>
-            item.type === "AIRWAY_BILL" ,
+            item.type === "AIRWAY_BILL" || item.type === 'LANDING_BILL' ,
         ),
       );
     }

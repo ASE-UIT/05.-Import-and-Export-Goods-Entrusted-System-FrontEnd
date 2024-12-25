@@ -29,6 +29,7 @@ import { CirclePlus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { DataTablePagination } from "./data-pagination";
 import useAuth from "@/hooks/use-auth";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -68,13 +69,22 @@ export function DataTable<TData, TValue>({
         <dataTableFilter.DataTableFilter table={table} />
         {user?.role.name !== "CLIENT" && (
           <div className="flex gap-3">
-            <Button
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+              <Button
               variant="default"
-              onClick={() => router.push(`${path}/add`)}
             >
               <CirclePlus className="mr-2" />
-              <span>Add Air Waybill</span>
+              <span>Add Bill</span>
             </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onClick={() => router.push(`${path}/air-waybill/add`)}>Add Airway Bill</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push(`${path}/landing-bill/add`)}>Add Landing Bill</DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         )}
       </div>
