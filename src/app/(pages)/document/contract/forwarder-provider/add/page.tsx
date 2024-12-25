@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import useDocument from "@/hooks/use-document";
-import { CreateDocumentType } from "@/schema/document/forwarderProvider.schema";
+import { CreateForwarderType } from "@/schema/document/forwarderProvider.schema";
 import { before } from "node:test";
 import useShipmentTracking from "@/hooks/use-shipment-tracking";
 
@@ -134,9 +134,9 @@ const formSchema = z.object({
 export default function PackingList() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [timeA, setTimeA] = useState<Date | undefined>(undefined);
-  const [rows, setRows] = useState(
-    Array(1).fill({ qty: "", description: "", weight: "", productNumber: "" })
-  );
+  const [rows, setRows] = useState([
+    { productName: "", qtyA: "", locationA: "", timeA: "", qtyB: "", locationB: "", timeB: "", note: "" },
+  ]);
 
   const {
     data: shipments,
@@ -150,28 +150,30 @@ export default function PackingList() {
   );
 
   const router = useRouter();
-  const { mutate: CreateDocument } = useDocument.useCreateDocument(router);
+  const { mutate: CreateDocument } = useDocument.useCreateForwarder(router);
 
   const addRow = () => {
     setRows((prev) => [
       ...prev,
-      { qty: "", description: "", weight: "", productNumber: "" },
+      { productName: "", qtyA: "", locationA: "", timeA: "", qtyB: "", locationB: "", timeB:"", note: "" },
     ]);
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       date: "",
-      rows: Array(1).fill({
-        productName: "",
-        qtyA: "",
-        locationA: "",
-        timeA: "",
-        qtyB: "",
-        locationB: "",
-        timeB: "",
-        note: "",
-      }),
+      rows: [
+        {
+          productName: "",
+          qtyA: "",
+          locationA: "",
+          timeA: "",
+          qtyB: "",
+          locationB: "",
+          timeB: "",
+          note: "",
+        },
+      ],
       signatureA: "",
       signatureB: "",
       shipmentId: "",
@@ -253,6 +255,17 @@ export default function PackingList() {
       ver: "",
     },
   });
+
+  const handleInputChange = (index: number, field: string, value: string) => {
+    setRows((prevRows) =>
+      prevRows.map((row, i) =>
+        i === index
+          ? { ...row, [field]: value } 
+          : row 
+      )
+    );
+  };
+  
 
   useEffect(() => {
     if (date) form.setValue("date", format(date, "yyyy-MM-dd"));
@@ -342,12 +355,13 @@ export default function PackingList() {
       meetDate: values.meetDate,
       ver: values.ver,
     };
-    const createQuoteRequest: CreateDocumentType = {
+    const createQuoteRequest: CreateForwarderType = {
       shipmentId: values.shipmentId,
       type: "FORWARDER_PROVIDER_CONTRACT",
-      docNumber: values.docNumber ? parseInt(values.docNumber, 10) : 0,
+      docNumber: values.docNumber || '',
       fields,
     };
+    
     console.log(createQuoteRequest);
     CreateDocument(createQuoteRequest);
   }
@@ -1103,7 +1117,11 @@ export default function PackingList() {
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <Input type="date" placeholder="Time" />
+                              <Input
+                                type="date"
+                                placeholder="Time A"
+                                {...field}
+                              />
                             </FormControl>
                           </FormItem>
                         )}
@@ -1149,16 +1167,21 @@ export default function PackingList() {
                     <td className="border border-gray-400 p-2">
                       <FormField
                         control={form.control}
-                        name={`rows.${index}.locationB`}
+                        name={`rows.${index}.timeB`}
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <Input type="date" placeholder= "Time" />
+                              <Input
+                                type="date"
+                                placeholder="Time B"
+                                {...field}
+                              />
                             </FormControl>
                           </FormItem>
                         )}
                       />
                     </td>
+
 
                     <td className="border border-gray-400 p-2">
                       <FormField
@@ -1167,12 +1190,17 @@ export default function PackingList() {
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <Input placeholder= "Note" />
+                              <Input
+                                type="text"
+                                placeholder="Location"
+                                {...field}
+                              />
                             </FormControl>
                           </FormItem>
                         )}
                       />
                     </td>
+
                   </tr>
                 ))}
               </tbody>

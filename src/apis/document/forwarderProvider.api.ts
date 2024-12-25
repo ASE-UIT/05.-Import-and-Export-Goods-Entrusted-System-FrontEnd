@@ -1,10 +1,10 @@
-import { CreateDocumentType, GetForwarderProviderListByIdType } from "@/schema/document/forwarderProvider.schema";
+import { CreateForwarderType, GetForwarderProviderListByIdType } from "@/schema/document/forwarderProvider.schema";
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
 import axios from "axios";
 
 const forwarderProviderListAction = {
-createDocument: async (documentCreateType: CreateDocumentType) => {
+createDocument: async (documentCreateType: CreateForwarderType) => {
  try {
       const response = await http.post(
         `v1/document`,
