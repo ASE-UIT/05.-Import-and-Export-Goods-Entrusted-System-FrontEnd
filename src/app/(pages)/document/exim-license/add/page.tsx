@@ -31,7 +31,10 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import useDocument from "@/hooks/use-document";
-import { CreateDocumentType } from "@/schema/document/im_ex-license.schema";
+import {
+  CreateEximDocumentType,
+  createEximDocumentType,
+} from "@/schema/document/im_ex-license.schema";
 import useShipmentTracking from "@/hooks/use-shipment-tracking";
 
 // Define schema only once
@@ -149,7 +152,7 @@ function ImportExportForm() {
     }
 
     // Nếu tất cả trường đã được điền, tiếp tục xử lý
-    const createQuoteRequest: CreateDocumentType = {
+    const createQuoteRequest: CreateEximDocumentType = {
       shipmentId: values.shipmentId,
       type: "EXIM_LISENCE",
       docNumber: values.docNumber ? String(values.docNumber) : "0",
@@ -457,6 +460,10 @@ function ImportExportForm() {
                         className="input-underline"
                         type="number"
                         {...field}
+                        onInput={(e) => {
+                          const input = e.target as HTMLInputElement; // Ép kiểu EventTarget thành HTMLInputElement
+                          input.value = input.value.replace(/[^0-9]/g, ""); // Loại bỏ các ký tự không phải số
+                        }}
                       />
                     </FormControl>
                   </FormItem>
