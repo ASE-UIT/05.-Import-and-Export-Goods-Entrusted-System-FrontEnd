@@ -1,7 +1,7 @@
 export type Document = {
   id: string;
   type: string;
-  docNumber: number;
+  docNumber: string;
   userId: string;
   fields: Record<string, any>;
   schema: Record<string, any>;
