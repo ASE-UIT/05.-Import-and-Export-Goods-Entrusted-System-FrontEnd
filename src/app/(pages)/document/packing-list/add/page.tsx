@@ -64,7 +64,11 @@ export default function PackingList() {
 
   const router = useRouter();
   const { mutate: CreateDocument } = useDocument.useCreateDocument(router);
-
+  const {
+      data: documents
+    } = useDocument.useGetAllDocument(
+      "PACKING_LIST"
+    );
   const {
     data: shipments,
     isLoading: isLoadingShipments,
@@ -75,6 +79,14 @@ export default function PackingList() {
     undefined,
     undefined
   );
+  const documentShipmentIds = documents?.data?.map(doc => doc.shipmentId);
+  console.log("document id "+ documentShipmentIds);
+
+  const filteredShipments = shipments?.results.filter(
+    shipment => !documentShipmentIds?.includes(shipment.id)
+  );
+  console.log("shipment id"+filteredShipments);
+  
 
   const addRow = () => {
     setRows((prev) => [
@@ -307,8 +319,8 @@ export default function PackingList() {
                           <SelectValue placeholder="Shipment" />
                         </SelectTrigger>
                         <SelectContent>
-                          {shipments ? (
-                            shipments.results.map((it) => (
+                          {filteredShipments ? (
+                            filteredShipments.map((it) => (
                               <SelectItem key={it.id} value={it.id}>
                                 {it.id}
                               </SelectItem>
@@ -334,7 +346,6 @@ export default function PackingList() {
                       <Input
                         placeholder="Enter doc number"
                         {...field}
-                        type="number"
                       />
                     </FormControl>
                   </FormItem>

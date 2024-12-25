@@ -13,6 +13,12 @@ const useDocument = {
       queryFn: () => docAction.default.getDocument(userId, type),
     });
   },
+  useGetAllDocument(type?: string) {
+    return useQuery({
+      queryKey: ["documents"],
+      queryFn: () => docAction.default.getAllDocument(type),
+    });
+  },
 
   useCreateDocument(router: ReturnType<typeof useRouter>) {
     const queryClient = useQueryClient();
@@ -28,7 +34,7 @@ const useDocument = {
           description: "Document created successfully",
           duration: 10000,
         });
-        router.push("/quote-request");
+        router.push("/document/packing-list");
       },
       onError: (error: ErrorType) => {
         console.error("Error during create:", error);
