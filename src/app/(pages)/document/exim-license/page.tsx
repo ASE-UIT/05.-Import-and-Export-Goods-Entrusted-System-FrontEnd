@@ -1,7 +1,7 @@
 "use client";
 
-import { columns } from "@/app/(pages)/document/bill/_components/columns";
-import { DataTable } from "@/app/(pages)/document/bill/_components/data-table";
+import { columns } from "@/app/(pages)/document/exim-license/_components/columns";
+import { DataTable } from "@/app/(pages)/document/exim-license/_components/data-table";
 import useAuth from "@/hooks/use-auth";
 import useDocument from "@/hooks/use-document";
 import useUser from "@/hooks/use-user";
@@ -21,7 +21,7 @@ export default function Page() {
   } = useAuth.useGetSession();
 
   const [document, setDocument] = useState<Document[]>();
-  const [airWaybill, setAirWaybill] = useState<Document[]>();
+  const [customsDeclare, setCustomsDeclare] = useState<Document[]>();
 
   useEffect(() => {
     if (user?.role.name === "CLIENT") {
@@ -39,11 +39,8 @@ export default function Page() {
 
   useEffect(() => {
     if (document) {
-      setAirWaybill(
-        document.filter(
-          (item) =>
-            item.type === "AIRWAY_BILL" ,
-        ),
+      setCustomsDeclare(
+        document.filter((item) => item.type === "EXIM_LISENCE"),
       );
     }
   }, [document]);
@@ -56,10 +53,10 @@ export default function Page() {
     <div className="flex w-full flex-col p-[24px]">
       <div className="flex w-full flex-col gap-[20px]">
         <div className="flex items-center justify-between">
-          <span className="text-3xl font-bold">Air Waybill</span>
+          <span className="text-3xl font-bold">Import/Export License</span>
         </div>
-        {airWaybill && (
-          <DataTable columns={columns} data={airWaybill} />
+        {customsDeclare && (
+          <DataTable columns={columns} data={customsDeclare} />
         )}
       </div>
     </div>

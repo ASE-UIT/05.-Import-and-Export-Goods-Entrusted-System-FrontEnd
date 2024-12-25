@@ -161,59 +161,46 @@ export const columns: ColumnDef<IShipmentFormat>[] = [
     header: "Status",
     cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
   },
-  {
-    id: "action",
-    header: "Action",
-    cell: ({ row }) => {
-      const shipment = row.original as IShipmentFormat; // Ép kiểu cho row.original
+  // {
+  //   id: "action",
+  //   header: "Action",
+  //   cell: ({ row }) => {
+  //     const shipment = row.original as IShipmentFormat; // Ép kiểu cho row.original
 
-      // let linkTo: string;
+  //     // let linkTo: string;
 
-      // if (shipment.shipmentType === "LCL" || shipment.shipmentType === "FCL") {
-      //   linkTo =
-      //     shipment.origin === shipment.destination
-      //       ? `/shipment/details/seaimport/` // Đường dẫn cho sea import
-      //       : `/shipment/details/seaexport/`; // Đường dẫn cho sea export
-      // } else if (shipment.shipmentType === "AIR") {
-      //   linkTo =
-      //     shipment.origin === shipment.destination
-      //       ? `/shipment/details/airimport/` // Đường dẫn cho air import
-      //       : `/shipment/details/airexport/`; // Đường dẫn cho air export
-      // } else if (shipment.shipmentType === "LAND") {
-      //   linkTo =
-      //     shipment.origin === shipment.destination
-      //       ? `/shipment/details/landimport/` // Đường dẫn cho land import
-      //       : `/shipment/details/landexport/`; // Đường dẫn cho land export
-      // } else {
-      //   linkTo = `/shipment/details/other/${shipment.shipmentId}`; // Đường dẫn mặc định nếu không thuộc các loại trên
-      // }
+  //     // if (shipment.shipmentType === "LCL" || shipment.shipmentType === "FCL") {
+  //     //   linkTo =
+  //     //     shipment.origin === shipment.destination
+  //     //       ? `/shipment/details/seaimport/` // Đường dẫn cho sea import
+  //     //       : `/shipment/details/seaexport/`; // Đường dẫn cho sea export
+  //     // } else if (shipment.shipmentType === "AIR") {
+  //     //   linkTo =
+  //     //     shipment.origin === shipment.destination
+  //     //       ? `/shipment/details/airimport/` // Đường dẫn cho air import
+  //     //       : `/shipment/details/airexport/`; // Đường dẫn cho air export
+  //     // } else if (shipment.shipmentType === "LAND") {
+  //     //   linkTo =
+  //     //     shipment.origin === shipment.destination
+  //     //       ? `/shipment/details/landimport/` // Đường dẫn cho land import
+  //     //       : `/shipment/details/landexport/`; // Đường dẫn cho land export
+  //     // } else {
+  //     //   linkTo = `/shipment/details/other/${shipment.shipmentId}`; // Đường dẫn mặc định nếu không thuộc các loại trên
+  //     // }
 
-      return (
-        <div>
-          {/* <Link href={linkTo}>
-            <button
-              className="text-blue-500"
-              aria-label={`Edit ${shipment.shipmentId}`}
-            >
-              View details
-            </button>
-          </Link> */}
-          <Dialog>
-            <DialogTrigger>
-              <button>View</button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[1025px]">
-              <DialogHeader>
-                <DialogTitle>Inport/Export form</DialogTitle>
-                <ImportExportForm />
-              </DialogHeader>
-              <DialogFooter>
-                <Button type="submit">Request</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-      );
-    },
-  },
+  //     return (
+  //       <div>
+  //         {/* <Link href={linkTo}>
+  //           <button
+  //             className="text-blue-500"
+  //             aria-label={`Edit ${shipment.shipmentId}`}
+  //           >
+  //             View details
+  //           </button>
+  //         </Link> */}
+
+  //       </div>
+  //     );
+  //   },
+  // },
 ];

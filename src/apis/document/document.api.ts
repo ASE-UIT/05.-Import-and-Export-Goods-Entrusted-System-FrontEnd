@@ -27,6 +27,23 @@ const documentAction = {
       }
     }
   },
+  async getDocumentById(id: string) {
+    try {
+      const res = await http.get<EximResponseWrapper<Document>>(
+        `/v1/document/${id}`,
+      );
+      return res.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const documentError = error.response.data as ErrorType;
+        console.error("Error during get document:", documentError);
+        throw documentError;
+      } else {
+        console.error("Unexpected error during get document:", error);
+        throw error;
+      }
+    }
+     }, 
 };
 
 export default documentAction;

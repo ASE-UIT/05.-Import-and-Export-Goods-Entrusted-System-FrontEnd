@@ -92,10 +92,11 @@ export const columns: ColumnDef<Document>[] = [
     cell: ({ row }) => {
       const path =
         row.getValue("type") === "CUSTOM_IMPORT" ? "import" : "export";
+      const billType = row.getValue("type") === 'AIRWAY_BILL' ? 'air-waybill' : (row.getValue("type") === 'LANDING_BILL' ? 'landing-bill' : '')
       return (
         <div>
           <Link
-            href={`/document/bill/air-waybill/${row.getValue("shipmentId")}`}
+            href={`/document/bill/${billType}/${row.getValue("shipmentId")}`}
           >
             <button className="text-blue-500">View</button>
           </Link>

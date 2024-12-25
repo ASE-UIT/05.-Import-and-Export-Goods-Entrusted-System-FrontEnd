@@ -32,7 +32,7 @@ export type ExportCustomsDeclaration = {
   shipmentId: string;
   userId: string;
   type: string;
-  docNumber: number;
+  docNumber: string;
   fields: {
     chiCucHaiQuanDangKy: string;
     chiCucHaiQuanCuaKhauXuat: string;

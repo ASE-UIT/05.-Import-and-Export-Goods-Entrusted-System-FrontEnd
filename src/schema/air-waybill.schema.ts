@@ -18,14 +18,14 @@ export const airWayBillSchema = z.object({
 export const createDocumentSchema = z.object({
   shipmentId: z.string(),
   type: z.string(),
-  docNumber: z.number(),
+  docNumber: z.string(),
   fields: z.record(z.string()),
   schema: z.record(z.string()),
 });
 
 export const updateDocumentSchema = z.object({
   type: z.string(),
-  docNumber: z.number(),
+  docNumber: z.string(),
   fields: z.record(z.string()),
   schema: z.record(z.string()),
 });
