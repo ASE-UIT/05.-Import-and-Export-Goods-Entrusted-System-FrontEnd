@@ -14,6 +14,10 @@ const DocumentTypeGrid = () => {
       link: "/document/bill",
     },
     {
+      title: "Air Waybill",
+      link: "/document/bill/air-waybill"
+    },
+    {
       title: "Packing List",
       link: "/document/packing-list",
     },

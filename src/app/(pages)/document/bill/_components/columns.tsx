@@ -1,10 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Document } from "@/types/document/document.type";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
-export const columns: ColumnDef<ContactRep>[] = [
+export const columns: ColumnDef<Document>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -22,7 +23,7 @@ export const columns: ColumnDef<ContactRep>[] = [
     cell: ({ row }) => <div>{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "name",
+    accessorKey: "docNumber",
     header: ({ column }) => {
       return (
         <Button
@@ -31,14 +32,14 @@ export const columns: ColumnDef<ContactRep>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Doc Number
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    cell: ({ row }) => <div>{row.getValue("docNumber")}</div>,
   },
   {
-    accessorKey: "email",
+    accessorKey: "shipmentId",
     header: ({ column }) => {
       return (
         <Button
@@ -47,14 +48,14 @@ export const columns: ColumnDef<ContactRep>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Shipment ID
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("email"),
+    cell: ({ row }) => <div>{row.getValue("shipmentId")}</div>,
   },
   {
-    accessorKey: "phone",
+    accessorKey: "userId",
     header: ({ column }) => {
       return (
         <Button
@@ -63,14 +64,14 @@ export const columns: ColumnDef<ContactRep>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Phone
+          User ID
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("phone"),
+    cell: ({ row }) => row.getValue("userId"),
   },
   {
-    accessorKey: "branch_location",
+    accessorKey: "type",
     header: ({ column }) => {
       return (
         <Button
@@ -79,38 +80,28 @@ export const columns: ColumnDef<ContactRep>[] = [
           style={{ backgroundColor: "transparent" }}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Branch Location
+          Type
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("branch_location"),
+    cell: ({ row }) => row.getValue("type"),
   },
-  {
-    accessorKey: "provider_name",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="pl-0"
-          variant="ghost"
-          style={{ backgroundColor: "transparent" }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Provider
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("provider_name"),
-  },
-
   {
     id: "action",
     header: "Action",
-    cell: ({ row }) => (
-      <div>
-        <Link href={`/contactrep/update/${row.getValue("id")}`}>
-          <button className="text-blue-500">Edit</button>
-        </Link>
-      </div>
-    ),
+    cell: ({ row }) => {
+      const path =
+        row.getValue("type") === "CUSTOM_IMPORT" ? "import" : "export";
+      const billType = row.getValue("type") === 'AIRWAY_BILL' ? 'air-waybill' : (row.getValue("type") === 'LANDING_BILL' ? 'landing-bill' : '')
+      return (
+        <div>
+          <Link
+            href={`/document/bill/${billType}/${row.getValue("shipmentId")}`}
+          >
+            <button className="text-blue-500">View</button>
+          </Link>
+        </div>
+      );
+    },
   },
 ];
