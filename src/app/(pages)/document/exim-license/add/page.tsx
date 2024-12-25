@@ -215,21 +215,6 @@ function ImportExportForm() {
                       WebkitAppearance: "none",
                       MozAppearance: "textfield",
                     }}
-                    onKeyDown={(e) => {
-                      // Chỉ cho phép các phím số (0-9) và các phím điều hướng
-                      if (
-                        !(
-                          (e.key >= "0" && e.key <= "9") || // Các phím số
-                          e.key === "Backspace" || // Xóa ký tự
-                          e.key === "ArrowLeft" || // Mũi tên trái
-                          e.key === "ArrowRight" || // Mũi tên phải
-                          e.key === "Delete" || // Phím Delete
-                          e.key === "Tab" // Phím Tab
-                        )
-                      ) {
-                        e.preventDefault(); // Ngăn mọi phím không hợp lệ
-                      }
-                    }}
                   />
                 </FormControl>
               </FormItem>
