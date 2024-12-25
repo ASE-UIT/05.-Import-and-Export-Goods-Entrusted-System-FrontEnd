@@ -1,10 +1,10 @@
-import { CreateDocumentType, GetCustomerForwarderDocumentByIdType } from "@/schema/document/customer-forwarder.schema";
+import { CreateCustomerForwarderDocumentType, GetCustomerForwarderDocumentByIdType } from "@/schema/document/customer-forwarder.schema";
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
 import axios from "axios";
 
 const customerForwarderListAction = {
-createDocument: async (documentCreateType: CreateDocumentType) => {
+  createCustomerForwarderDocument: async (documentCreateType: CreateCustomerForwarderDocumentType) => {
  try {
       const response = await http.post(
         `v1/document`,
@@ -14,7 +14,7 @@ createDocument: async (documentCreateType: CreateDocumentType) => {
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
         const postError = error.response.data as ErrorType;
-        console.error("Error during update quote request:", postError);
+        console.error("Error during create document:", postError);
         throw postError;
       } else {
         console.error("Unexpected error during post:", error);

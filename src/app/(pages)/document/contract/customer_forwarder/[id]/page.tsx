@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import useDocument from "@/hooks/use-document";
+import useDocument from "@/hooks/use-customer-forwarder";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
@@ -133,7 +133,6 @@ export default function DocumentDetails() {
       <table className="w-full border-collapse table-auto border border-gray-300 rounded-md mb-8">
         <thead>
           <tr className="bg-gray-100">
-            <th className="p-4 text-left text-sm font-medium text-gray-600 border-b">STT</th>
             <th className="p-4 text-left text-sm font-medium text-gray-600 border-b">Tên hàng</th>
             <th className="p-4 text-left text-sm font-medium text-gray-600 border-b">Đơn vị tính</th>
             <th className="p-4 text-left text-sm font-medium text-gray-600 border-b">Số lượng</th>

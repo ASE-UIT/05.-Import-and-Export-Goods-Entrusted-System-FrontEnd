@@ -20,8 +20,8 @@ import { Controller, useForm } from "react-hook-form";
 import { object, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import useDocument from "@/hooks/use-document";
-import { CreateDocumentType } from "@/schema/document/customer-forwarder.schema";
+import useDocument from "@/hooks/use-customer-forwarder";
+import { CreateCustomerForwarderDocumentType } from "@/schema/document/customer-forwarder.schema";
 import useShipmentTracking from "@/hooks/use-shipment-tracking";
 
 const formSchema = z.object({
@@ -93,7 +93,7 @@ export default function CustomerForwarderContract() {
     );
 
     const router = useRouter();
-    const { mutate: CreateDocument } = useDocument.useCreateDocument(router);
+    const { mutate: CreateCustomerForwarderDocument } = useDocument.useCreateCustomerForwarderDocument(router);
 
     const {
         data: shipments,
@@ -180,6 +180,7 @@ export default function CustomerForwarderContract() {
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("Customer Forwarder Contract Data:", values);
         const fields = {
+            
             date: values.date,
             location: values.location,
             A_name: values.A_name,
@@ -230,14 +231,25 @@ export default function CustomerForwarderContract() {
             signB: values.signB,
         };
 
-        const createCustomerForwarder: CreateDocumentType = {
+        const emptyFields = Object.entries(fields).filter(
+            ([_, value]) => !value || value === "",
+        );
+      
+        if (emptyFields.length > 0) {
+            const missingFields = emptyFields.map(([key]) => key).join(", ");
+            alert(`Create failed: Missing required fields ${missingFields}`);
+            console.error("Create failed: Missing required fields");
+            return; 
+        }
+      
+        const createCustomerForwarder: CreateCustomerForwarderDocumentType = {
             shipmentId: values.shipmentId,
             type: "CUSTOMER_FORWARDER_CONTRACT",
-            docNumber: values.docNumber ? parseInt(values.docNumber, 10) : 0,
+            docNumber: values.docNumber ? String(values.docNumber) : "0",
             fields,
         };
         console.log(createCustomerForwarder);
-        CreateDocument(createCustomerForwarder);
+        CreateCustomerForwarderDocument(createCustomerForwarder);
     }
     return (
         <div className="w-full max-w-5xl mx-auto p-8 border border-gray-300 shadow-md bg-white">
@@ -316,6 +328,7 @@ export default function CustomerForwarderContract() {
                                         <FormControl>
                                             <input
                                                 name={field.name}
+                                                type= "date"
                                                 className="border-dotted border-b-2 w-40 py-1 outline-none text-center"
                                                 value={field.value}
                                                 onChange={field.onChange}
@@ -508,6 +521,7 @@ export default function CustomerForwarderContract() {
                                     <FormItem>
                                         <FormControl>
                                             <input
+                                                type="date"
                                                 name={field.name}
                                                 className="border-dotted border-b-2 w-40 py-1 outline-none text-center"
                                                 value={field.value}
@@ -702,6 +716,7 @@ export default function CustomerForwarderContract() {
                                     <FormItem>
                                         <FormControl>
                                             <input
+                                                type="date"
                                                 name={field.name}
                                                 className="border-dotted border-b-2 w-40 py-1 outline-none text-center"
                                                 value={field.value}
@@ -790,11 +805,11 @@ export default function CustomerForwarderContract() {
                                             render={({ field }) => (
                                               <FormItem>
                                                 <FormControl>
-                                                  <Input
+                                                <Input
                                                     type="number"
-                                                    placeholder="Số luợng"
+                                                    placeholder="quantity"
                                                     {...field}
-                                                  />
+                                                />
                                                 </FormControl>
                                               </FormItem>
                                             )}
@@ -924,6 +939,7 @@ export default function CustomerForwarderContract() {
                                         <FormItem>
                                             <FormControl>
                                                 <input
+                                                    type="date"
                                                     name={field.name}
                                                     className="border-dotted border-b-2 w-[300px] py-1 outline-none text-center"
                                                     value={field.value}
@@ -983,6 +999,7 @@ export default function CustomerForwarderContract() {
                                         <FormItem>
                                             <FormControl>
                                                 <input
+                                                    type="date"
                                                     name={field.name}
                                                     className="border-dotted border-b-2 w-40 py-1 outline-none text-center"
                                                     value={field.value}
@@ -1290,6 +1307,7 @@ export default function CustomerForwarderContract() {
                                         <FormItem>
                                             <FormControl>
                                                 <input
+                                                    type="date"
                                                     name={field.name}
                                                     className="border-dotted border-b-2 w-40 py-1 outline-none text-center"
                                                     value={field.value}
