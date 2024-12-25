@@ -22,7 +22,14 @@ const useDocument = {
   useGetAllDocument(type?: string) {
     return useQuery({
       queryKey: ["documents"],
-      queryFn: () => docAction.default.getAllDocument(type),
+      queryFn: () => docAction.default.getDocument(type),
+    });
+  },
+
+  useGetDocumentById(id: string) {
+    return useQuery({
+      queryKey: ["documents", id],
+      queryFn: () => docAction.default.getDocumentById(id),
     });
   },
 
@@ -106,10 +113,14 @@ const useDocument = {
         router.push("/document/contract/forwarder-provider");
       },
       onError: (error: ErrorType) => {
-        console.error("Error during create forwarder provider document:", error);
+        console.error(
+          "Error during create forwarder provider document:",
+          error,
+        );
         toast({
           title: "Create failed",
-          description: "An error occurred while creating forwarder provider document",
+          description:
+            "An error occurred while creating forwarder provider document",
           variant: "destructive",
           duration: 5000,
         });

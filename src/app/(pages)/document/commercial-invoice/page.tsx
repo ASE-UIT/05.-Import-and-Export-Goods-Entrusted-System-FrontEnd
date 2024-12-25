@@ -1,7 +1,7 @@
 "use client";
 
-import { columns } from "@/app/(pages)/document/customs-declaration/_components/columns";
-import { DataTable } from "@/app/(pages)/document/customs-declaration/_components/data-table";
+import { columns } from "@/app/(pages)/document/commercial-invoice/_components/columns";
+import { DataTable } from "@/app/(pages)/document/commercial-invoice/_components/data-table";
 import useAuth from "@/hooks/use-auth";
 import useDocument from "@/hooks/use-document";
 import { Document } from "@/types/document/document.type";
@@ -20,7 +20,7 @@ export default function Page() {
   } = useAuth.useGetSession();
 
   const [document, setDocument] = useState<Document[]>();
-  const [customsDeclare, setCustomsDeclare] = useState<Document[]>();
+  const [commercialInvoices, setCommercialInvoices] = useState<Document[]>();
 
   useEffect(() => {
     if (user?.role.name === "CLIENT") {
@@ -38,11 +38,8 @@ export default function Page() {
 
   useEffect(() => {
     if (document) {
-      setCustomsDeclare(
-        document.filter(
-          (item) =>
-            item.type === "CUSTOM_IMPORT" || item.type === "CUSTOM_EXPORT",
-        ),
+      setCommercialInvoices(
+        document.filter((item) => item.type === "COMMERCIAL_INVOICE"),
       );
     }
   }, [document]);
@@ -55,10 +52,10 @@ export default function Page() {
     <div className="flex w-full flex-col p-[24px]">
       <div className="flex w-full flex-col gap-[20px]">
         <div className="flex items-center justify-between">
-          <span className="text-3xl font-bold">Customs Declaration</span>
+          <span className="text-3xl font-bold">Commercial Invoice</span>
         </div>
-        {customsDeclare && (
-          <DataTable columns={columns} data={customsDeclare} />
+        {commercialInvoices && (
+          <DataTable columns={columns} data={commercialInvoices} />
         )}
       </div>
     </div>

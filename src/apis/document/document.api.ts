@@ -27,15 +27,10 @@ const documentAction = {
       }
     }
   },
-  async getAllDocument(type?: string) {
+  async getDocumentById(id: string) {
     try {
-      const res = await http.get<EximResponseWrapper<Document[]>>(
-        "/v1/document",
-        {
-          params: {
-            type
-          },
-        },
+      const res = await http.get<EximResponseWrapper<Document>>(
+        `/v1/document/${id}`,
       );
       return res.data;
     } catch (error) {
@@ -48,7 +43,7 @@ const documentAction = {
         throw error;
       }
     }
-  },
+     }, 
 };
 
 export default documentAction;
