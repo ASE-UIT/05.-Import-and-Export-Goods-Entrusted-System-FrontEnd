@@ -1,5 +1,4 @@
-import React from 'react';
-import './table.css'
+import React from "react";
 
 type CertificateOfOriginData = {
   shipper?: { name: string; address: string };
@@ -17,27 +16,21 @@ type CertificateOfOriginData = {
     weightGross: number;
     weightNet: number;
   }[];
-
 };
 
-
-
-
-
-
-const CertificateOfOrigin = ({data} : {data: CertificateOfOriginData}) => {
+const CertificateOfOrigin = ({ data }: { data: CertificateOfOriginData }) => {
   const commodities = data?.commodities
-  ? [
-      ...data.commodities,
-      ...Array(8 - data.commodities.length).fill({
-        marks: undefined,
-        description: undefined,
-        quantity: undefined,
-        weightGross: undefined,
-        weightNet: undefined,
-      }),
-    ]
-  : undefined;
+    ? [
+        ...data.commodities,
+        ...Array(8 - data.commodities.length).fill({
+          marks: undefined,
+          description: undefined,
+          quantity: undefined,
+          weightGross: undefined,
+          weightNet: undefined,
+        }),
+      ]
+    : undefined;
   return (
     <div className="border border-black p-6 max-w-6xl w-full mx-auto">
       {/* Header */}
@@ -49,18 +42,27 @@ const CertificateOfOrigin = ({data} : {data: CertificateOfOriginData}) => {
       <div className="grid grid-cols-2 gap-4 border-b border-black pb-4 mb-4">
         <div className="space-y-2">
           <p className="text-sm font-bold">Shipper Name and Address </p>
-          <div className="border border-black h-32"> {data.shipper?.name} <br /> {data.shipper?.address}</div>
+          <div className="border border-black h-32">
+            {" "}
+            {data.shipper?.name} <br /> {data.shipper?.address}
+          </div>
         </div>
         <div className="space-y-2">
           <p className="text-sm font-bold">Forwarding Agent - References</p>
-          <div className="border border-black h-32"> {data.forwardingAgent} </div>
+          <div className="border border-black h-32">
+            {" "}
+            {data.forwardingAgent}{" "}
+          </div>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4 border-b border-black pb-4 mb-4">
         <div className="space-y-2">
           <p className="text-sm font-bold">Consignee Name and Address</p>
-          <div className="border border-black h-32"> {data.consignee?.name} <br /> {data.consignee?.address}</div>
+          <div className="border border-black h-32">
+            {" "}
+            {data.consignee?.name} <br /> {data.consignee?.address}
+          </div>
         </div>
         <div className="space-y-2">
           <p className="text-sm font-bold">Notify Party</p>
@@ -72,11 +74,15 @@ const CertificateOfOrigin = ({data} : {data: CertificateOfOriginData}) => {
       <div className="grid grid-cols-2 gap-4 border-b border-black pb-4 mb-4">
         <div className="space-y-2">
           <p className="text-sm font-bold">Exporting Carrier</p>
-          <div className="border border-black h-16">{data.exportingCarrier}</div>
+          <div className="border border-black h-16">
+            {data.exportingCarrier}
+          </div>
         </div>
         <div className="space-y-2">
           <p className="text-sm font-bold">Country of Manufacture</p>
-          <div className="border border-black h-16">{data.countryOfManufacture}</div>
+          <div className="border border-black h-16">
+            {data.countryOfManufacture}
+          </div>
         </div>
       </div>
 
@@ -93,32 +99,30 @@ const CertificateOfOrigin = ({data} : {data: CertificateOfOriginData}) => {
 
       {/* Section 3: Commodity Description Table */}
       <div className="mb-6">
-      <table>
-            <thead>
-              <tr>
-                <th rowSpan={2} className="text-sm font-bold column-marks" >
-                  Marks & Numbers
-                </th>
-                <th rowSpan={2} className="text-sm font-bold column-description">
-                  Commodity Description
-                </th>
-                <th rowSpan={2} className='column-quantity'>
-                  <p className="text-sm font-bold">Quantity /</p>
-                  <p className="text-sm font-bold">
-                    Unit of Measure
-                  </p>
-                </th>
-                <th colSpan={2} className="text-sm font-bold column-weight">
-                  Weight (kg)
-                </th>
-              </tr>
-              <tr>
-                <th className="text-sm font-bold">Gross</th>
-                <th className="text-sm font-bold">Net</th>
-              </tr>
-            </thead>
-            
-            <tbody>
+        <table>
+          <thead>
+            <tr>
+              <th rowSpan={2} className="text-sm font-bold column-marks">
+                Marks & Numbers
+              </th>
+              <th rowSpan={2} className="text-sm font-bold column-description">
+                Commodity Description
+              </th>
+              <th rowSpan={2} className="column-quantity">
+                <p className="text-sm font-bold">Quantity /</p>
+                <p className="text-sm font-bold">Unit of Measure</p>
+              </th>
+              <th colSpan={2} className="text-sm font-bold column-weight">
+                Weight (kg)
+              </th>
+            </tr>
+            <tr>
+              <th className="text-sm font-bold">Gross</th>
+              <th className="text-sm font-bold">Net</th>
+            </tr>
+          </thead>
+
+          <tbody>
             {commodities?.map((commodity, index) => (
               <tr key={index}>
                 <td>{commodity.marks}</td>
@@ -128,20 +132,26 @@ const CertificateOfOrigin = ({data} : {data: CertificateOfOriginData}) => {
                 <td>{commodity.weightNet}</td>
               </tr>
             ))}
-            </tbody>
-            
-          </table>
+          </tbody>
+        </table>
       </div>
 
       {/* Section 4: Footer */}
       <div className="text-sm space-y-2 border-t border-black pt-4">
         <p>
-          These commodities, technology or software were exported from the United States of America in accordance with
-          the Export Administration Regulations. Diversion contrary to U.S. law prohibited.
+          These commodities, technology or software were exported from the
+          United States of America in accordance with the Export Administration
+          Regulations. Diversion contrary to U.S. law prohibited.
         </p>
-        <p>Dated at ___________________ on the ______ day of ___________________, 20 ________.</p>
+        <p>
+          Dated at ___________________ on the ______ day of ___________________,
+          20 ________.
+        </p>
         <p>Signature of Notary: ____________________________________________</p>
-        <p>Sworn to before me this ______ day of ___________________, 20 ________.</p>
+        <p>
+          Sworn to before me this ______ day of ___________________, 20
+          ________.
+        </p>
         <p>Signature of Notary: ____________________________________________</p>
         <p>
           {`

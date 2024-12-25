@@ -41,8 +41,7 @@ export default function Page() {
     if (document) {
       setAirWaybill(
         document.filter(
-          (item) =>
-            item.type === "AIRWAY_BILL" || item.type === 'LANDING_BILL' ,
+          (item) => item.type === "AIRWAY_BILL" || item.type === "LANDING_BILL",
         ),
       );
     }
@@ -56,11 +55,9 @@ export default function Page() {
     <div className="flex w-full flex-col p-[24px]">
       <div className="flex w-full flex-col gap-[20px]">
         <div className="flex items-center justify-between">
-          <span className="text-3xl font-bold">Air Waybill</span>
+          <span className="text-3xl font-bold">Bill</span>
         </div>
-        {airWaybill && (
-          <DataTable columns={columns} data={airWaybill} />
-        )}
+        {airWaybill && <DataTable columns={columns} data={airWaybill} />}
       </div>
     </div>
   );

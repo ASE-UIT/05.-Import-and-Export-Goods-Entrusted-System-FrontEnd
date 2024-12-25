@@ -1,39 +1,63 @@
-import React from 'react';
-import CertificateOfOrigin from './certificate-of-origin';
+"use client";
 
-const mockData = {
-    shipper: { name: 'Global Export Co., Ltd.', address: '123 International Trade Street, City A, Country X' },
-    forwardingAgent: 'ABC Logistics Ltd.',
-    consignee: { name: 'XYZ Importers, Inc.', address: '789 Market Street, City B, Country Y' },
-    notifyParty: 'DEF Distribution Services',
-    exportingCarrier: 'OceanLine Shipping Co.',
-    countryOfManufacture: 'USA',
-    totalPackages: 50,
-    dateOfExport: 'December 21, 2024',
-    commodities: [
-      {
-        marks: 'AB123',
-        description: 'Electronic Components (IC)',
-        quantity: '100 Units',
-        weightGross: 100,
-        weightNet: 95,
-      },
-      {
-        marks: 'DEF456',
-        description: 'Printed Circuit Boards (PCB)',
-        quantity: '50 Units',
-        weightGross: 80,
-        weightNet: 75,
-      }
-    ],
-  }
+import { columns } from "@/app/(pages)/document/certificate-of-origin/_components/columns";
+import { DataTable } from "@/app/(pages)/document/certificate-of-origin/_components/data-table";
+import useAuth from "@/hooks/use-auth";
+import useDocument from "@/hooks/use-document";
+import { Document } from "@/types/document/document.type";
+import React, { useEffect, useState } from "react";
 
+export default function Page() {
+  const {
+    data: documentAll,
+    isLoading,
+    isError,
+  } = useDocument.useGetDocument();
+  const {
+    data: user,
+    isLoading: userLoading,
+    error: userError,
+  } = useAuth.useGetSession();
 
-  function DocumentPage() {
-    return (
-      <div>
-        <CertificateOfOrigin data={mockData}></CertificateOfOrigin>
+  const [document, setDocument] = useState<Document[]>();
+  const [customsDeclare, setCustomsDeclare] = useState<Document[]>();
+
+  useEffect(() => {
+    if (user?.role.name === "CLIENT") {
+      setDocument(
+        Array.isArray(documentAll?.data)
+          ? documentAll?.data.filter((item) => item.userId === user?.id)
+          : [],
+      );
+    } else {
+      setDocument(
+        documentAll && Array.isArray(documentAll.data) ? documentAll.data : [],
+      );
+    }
+  }, [user, documentAll]);
+
+  useEffect(() => {
+    if (document) {
+      setCustomsDeclare(
+        document.filter((item) => item.type === "ORIGIN_CERTIFICATE"),
+      );
+    }
+  }, [document]);
+
+  if (isLoading || userLoading) return <div>Loading...</div>;
+
+  if (isError || userError) return <div>Error...</div>;
+
+  return (
+    <div className="flex w-full flex-col p-[24px]">
+      <div className="flex w-full flex-col gap-[20px]">
+        <div className="flex items-center justify-between">
+          <span className="text-3xl font-bold">Certificate Origin</span>
+        </div>
+        {customsDeclare && (
+          <DataTable columns={columns} data={customsDeclare} />
+        )}
       </div>
-    );
-  }
-  export default DocumentPage;
+    </div>
+  );
+}
