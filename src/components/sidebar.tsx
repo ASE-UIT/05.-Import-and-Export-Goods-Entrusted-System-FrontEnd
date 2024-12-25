@@ -162,7 +162,7 @@ export default function Sidebar() {
                 <MenuItem
                   icon={<ClipboardMinus />}
                   title="Payments"
-                  path="/payments"
+                  path="/payment"
                 />
               </Section>
             </>

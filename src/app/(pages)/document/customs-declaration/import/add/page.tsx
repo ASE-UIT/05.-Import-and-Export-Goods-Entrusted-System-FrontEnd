@@ -215,7 +215,7 @@ export default function Page() {
     const formSubmit = {
       shipmentId,
       type: "CUSTOM_IMPORT" as const,
-      docNumber: Number(formState.soToKhai),
+      docNumber: formState.soToKhai,
       fields: { ...formState, productRows, containerRows },
     };
     await create.mutateAsync(formSubmit, {

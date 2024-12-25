@@ -3,7 +3,7 @@ import { z } from "zod";
 const exportCustomsDeclarationSchema = z.object({
   shipmentId: z.string().uuid(),
   type: z.literal("CUSTOM_EXPORT"),
-  docNumber: z.number(),
+  docNumber: z.string(),
   fields: z.object({
     chiCucHaiQuanDangKy: z.string(),
     chiCucHaiQuanCuaKhauXuat: z.string(),
