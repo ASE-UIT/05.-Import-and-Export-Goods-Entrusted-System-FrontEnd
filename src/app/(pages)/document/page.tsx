@@ -42,6 +42,7 @@ const DocumentTypeGrid = () => {
       title: "Contracts Forwarder Provider",
       link: "/document/contract/forwarder-provider",
     },
+
   ];
 
   return (
