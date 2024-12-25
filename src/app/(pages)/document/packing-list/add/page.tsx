@@ -48,7 +48,7 @@ const formSchema = z.object({
       description: z.string(),
       weight: z.string(),
       productNumber: z.string(),
-    })
+    }),
   ),
   signature: z.string(),
   instructions: z.string(),
@@ -59,7 +59,7 @@ export default function PackingList() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [shippingDate, setShippingDate] = useState<Date | undefined>(undefined);
   const [rows, setRows] = useState(
-    Array(1).fill({ qty: "", description: "", weight: "", productNumber: "" })
+    Array(1).fill({ qty: "", description: "", weight: "", productNumber: "" }),
   );
 
   const router = useRouter();
@@ -73,7 +73,7 @@ export default function PackingList() {
     undefined,
     undefined,
     undefined,
-    undefined
+    undefined,
   );
 
   const addRow = () => {
@@ -138,19 +138,19 @@ export default function PackingList() {
     CreateDocument(createQuoteRequest);
   }
   return (
-    <div className="w-full max-w-5xl mx-auto p-8 border border-gray-300 shadow-md bg-white">
-      <div className="flex flex-col items-center mb-4">
+    <div className="mx-auto w-full max-w-5xl border border-gray-300 bg-white p-8 shadow-md">
+      <div className="mb-4 flex flex-col items-center">
         <h1 className="text-3xl font-bold">Company Name</h1>
-        <div className="text-sm mt-2 text-center">
+        <div className="mt-2 text-center text-sm">
           <p>Address will go here, City, State, Zip</p>
           <p>Tel: 000-000-0000 | Fax: 000-000-0000</p>
           <p>Email: info@company.com</p>
         </div>
       </div>
 
-      <h2 className="text-2xl font-bold text-center mb-4">Packing List</h2>
+      <h2 className="mb-4 text-center text-2xl font-bold">Packing List</h2>
 
-      <div className=" gap-4 mb-6">
+      <div className="mb-6 gap-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
@@ -190,11 +190,11 @@ export default function PackingList() {
                           <Button
                             variant={"outline"}
                             className={cn(
-                              "w-full h-[60px] pl-3 text-lg font-normal flex items-center justify-start hover:bg-primary",
-                              !field.value && "text-black"
+                              "flex h-[60px] w-full items-center justify-start pl-3 text-lg font-normal hover:bg-primary",
+                              !field.value && "text-black",
                             )}
                           >
-                            <CalendarIcon className="h-4 w-4 mr-2" />
+                            <CalendarIcon className="mr-2 h-4 w-4" />
                             {field.value ? (
                               format(field.value, "PPP")
                             ) : (
@@ -204,7 +204,7 @@ export default function PackingList() {
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent
-                        className="w-auto p-0 bg-white rounded-md border"
+                        className="w-auto rounded-md border bg-white p-0"
                         align="start"
                       >
                         <Calendar
@@ -229,11 +229,11 @@ export default function PackingList() {
                           <Button
                             variant={"outline"}
                             className={cn(
-                              "w-full h-[60px] pl-3 text-lg font-normal flex items-center justify-start hover:bg-primary",
-                              !field.value && "text-black"
+                              "flex h-[60px] w-full items-center justify-start pl-3 text-lg font-normal hover:bg-primary",
+                              !field.value && "text-black",
                             )}
                           >
-                            <CalendarIcon className="h-4 w-4 mr-2" />
+                            <CalendarIcon className="mr-2 h-4 w-4" />
                             {field.value ? (
                               format(field.value, "PPP")
                             ) : (
@@ -243,7 +243,7 @@ export default function PackingList() {
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent
-                        className="w-auto p-0 bg-white rounded-md border"
+                        className="w-auto rounded-md border bg-white p-0"
                         align="start"
                       >
                         <Calendar
@@ -303,7 +303,7 @@ export default function PackingList() {
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
-                        <SelectTrigger className="w-full h-[60px] text-lg ">
+                        <SelectTrigger className="h-[60px] w-full text-lg">
                           <SelectValue placeholder="Shipment" />
                         </SelectTrigger>
                         <SelectContent>
@@ -331,17 +331,13 @@ export default function PackingList() {
                   <FormItem>
                     <FormLabel className="text-lg">Document Number</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Enter doc number"
-                        {...field}
-                        type="number"
-                      />
+                      <Input placeholder="Enter doc number" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
               />
             </div>
-            <table className="w-full border-collapse border border-gray-400 mb-6">
+            <table className="mb-6 w-full border-collapse border border-gray-400">
               <thead>
                 <tr className="bg-gray-200">
                   <th className="border border-gray-400 p-2">Sr #</th>
@@ -429,7 +425,7 @@ export default function PackingList() {
               Add Row
             </Button>
             <div className="mb-6">
-              <h3 className="font-semibold text-lg">Instruction</h3>
+              <h3 className="text-lg font-semibold">Instruction</h3>
               <FormField
                 control={form.control}
                 name="instructions"
@@ -438,7 +434,7 @@ export default function PackingList() {
                     <FormControl>
                       <Textarea
                         placeholder="Enter instructions here"
-                        className="w-full mt-2"
+                        className="mt-2 w-full"
                         {...field}
                       />
                     </FormControl>
@@ -446,10 +442,10 @@ export default function PackingList() {
                 )}
               />
             </div>
-            <div className="mt-8 flex justify-between items-center">
+            <div className="mt-8 flex items-center justify-between">
               <div className="flex-1 text-center">
                 <p className="text-sm font-semibold">Authorized Signatures</p>
-                <div className="border-t mt-4 py-2">
+                <div className="mt-4 border-t py-2">
                   {/* FormField for Signature */}
                   <FormField
                     control={form.control}
