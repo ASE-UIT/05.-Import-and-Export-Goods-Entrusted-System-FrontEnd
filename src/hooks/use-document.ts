@@ -6,6 +6,7 @@ import { ErrorType } from "@/types/error.type";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import eximAction from "@/apis/document/eximLicense.api";
+import { CreateEximDocumentType } from "@/schema/document/im_ex-license.schema";
 
 const useDocument = {
   useGetDocument(userId?: string, type?: string) {
@@ -79,7 +80,7 @@ const useDocument = {
   useCreateEximDocument(router: ReturnType<typeof useRouter>) {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: (createDocumentBody: CreateDocumentType) =>
+      mutationFn: (createDocumentBody: CreateEximDocumentType) =>
         eximAction.createDocument(createDocumentBody),
       onSuccess: () => {
         queryClient.invalidateQueries({

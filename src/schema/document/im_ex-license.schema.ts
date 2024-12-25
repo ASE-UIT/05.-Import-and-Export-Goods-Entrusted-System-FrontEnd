@@ -1,5 +1,5 @@
 import { z } from "zod";
-export const createDocumentType = z
+export const createEximDocumentType = z
   .object({
     shipmentId: z.string().uuid(),
     type: z.string(),
@@ -32,5 +32,5 @@ export const createDocumentType = z
   schema: z.record(z.any()),
   shipmentId: z.string(),
 });
-  export type CreateDocumentType = z.TypeOf<typeof createDocumentType>;
+  export type CreateEximDocumentType = z.TypeOf<typeof createEximDocumentType>;
     export type GetEximDocumentByIdType = z.TypeOf<typeof getEximDocumentById>;

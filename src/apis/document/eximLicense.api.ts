@@ -1,11 +1,11 @@
-import { GetEximDocumentByIdType } from "@/schema/document/im_ex-license.schema";
+import { CreateEximDocumentType, GetEximDocumentByIdType } from "@/schema/document/im_ex-license.schema";
 import { CreateDocumentType, GetPackingListDocumentByIdType } from "@/schema/document/packinglist.schema";
 import { ErrorType } from "@/types/error.type";
 import http from "@/utils/http";
 import axios from "axios";
 
 const eximAction = {
-createDocument: async (documentCreateType: CreateDocumentType) => {
+createDocument: async (documentCreateType: CreateEximDocumentType) => {
  try {
       const response = await http.post(
         `v1/document`,
