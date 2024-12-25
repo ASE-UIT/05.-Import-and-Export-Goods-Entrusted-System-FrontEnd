@@ -7,8 +7,8 @@ const useAuth = {
   useLogin() {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: (loginDetails: LoginBodyType) =>
-        authAction.login(loginDetails),
+      mutationFn: async (loginDetails: LoginBodyType) =>
+        await authAction.login(loginDetails),
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ["user-session"],
@@ -40,7 +40,7 @@ const useAuth = {
   useLogout() {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: () => authAction.logout(),
+      mutationFn: async () => await authAction.logout(),
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ["user-session"],

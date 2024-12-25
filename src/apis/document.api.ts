@@ -1,5 +1,4 @@
 import http from "@/utils/http";
-import { get } from "http";
 
 const documentAction = {
   async getDocument(shipmentId?: string, type?: string) {

@@ -1,21 +1,30 @@
+import packingListAction from "@/apis/document/packingList.api";
+import * as docAction from "@/apis/document/document.api";
+import { toast } from "@/hooks/use-toast";
+import { CreateDocumentType } from "@/schema/document/packinglist.schema";
 import { ErrorType } from "@/types/error.type";
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { toast } from "./use-toast";
-import { CreateDocumentType } from "@/schema/document.schema";
-import documentAction from "@/apis/document.api";
 
 const useDocument = {
+  useGetDocument(userId?: string, type?: string) {
+    return useQuery({
+      queryKey: ["documents"],
+      queryFn: () => docAction.default.getDocument(userId, type),
+    });
+  },
+  useGetDocumentById(id: string) {
+    return useQuery({
+      queryKey: ["documents", id],
+      queryFn: () => docAction.default.getDocumentById(id),
+    });
+  },
+
   useCreateDocument(router: ReturnType<typeof useRouter>) {
     const queryClient = useQueryClient();
     return useMutation({
       mutationFn: (createDocumentBody: CreateDocumentType) =>
-        documentAction.createDocument(createDocumentBody),
+        packingListAction.createDocument(createDocumentBody),
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ["document"],
@@ -39,21 +48,22 @@ const useDocument = {
       },
     });
   },
-  useGetDocument(shipmentId?: string, type?: string, docNumber?: string) {
-    return useQuery({
-      queryKey: ["document", shipmentId],
-      queryFn: () => {
-        return documentAction.getDocument(shipmentId, type);
-      },
-    });
-  },
-  useGetDocumentById(id: string) {
-    return useQuery({
-      queryKey: ["document", id],
-      queryFn: () => {
-        return documentAction.getDocumentById(id);
-      },
-    });
-  },
+  useGetPackingListDocumentById(id: string) {
+        return useQuery({
+        queryKey: ["document", id],
+        queryFn: async () => {
+            try {
+            const result = await packingListAction.getDocumentById(id);
+            return result;
+            } catch (error) {
+            console.error("Error during get document:", error);
+            throw error;
+            }
+        },
+        retry: 0,
+        });
+    },
 };
+
 export default useDocument;
+

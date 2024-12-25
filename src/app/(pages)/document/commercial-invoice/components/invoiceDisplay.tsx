@@ -2,16 +2,10 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-
-interface Product {
-  qty: number;
-  description: string;
-  unitOfMeasure: number;
-  unitPrice: number;
-}
+import { Product } from "@/types/document/commericial-invoice.type";
 
 interface CommercialInvoiceProps {
-  docNumber: number;
+  docNumber: string;
   fields: {
     shipmentId: string;
     seller: string;
@@ -56,13 +50,13 @@ export default function CommercialInvoiceDisplay({
               <div className="font-semibold">SHIPMENT ID</div>
               <div>{fields.shipmentId}</div>
             </div>
-            <div className="border border-b-0 p-4 pt-0 space-y-2">
+            <div className="border border-b-0 p-4 space-y-2">
               <div className="font-semibold">SELLER</div>
               <div>{fields.seller}</div>
             </div>
             <div>
               <div className="border-r border-t px-4 py-4 flex items-center justify-between">
-                <div className="w-3/5 flex justify-between items-center gap-2">
+                <div className="w-3/5 flex items-center gap-4">
                   <span className="font-semibold">INVOICE NUMBER</span>
                   <div>{fields.invoiceNumber}</div>
                 </div>
@@ -74,7 +68,7 @@ export default function CommercialInvoiceDisplay({
                 </div>
               </div>
               <div className="border-r border-t px-4 py-4 flex items-center justify-between">
-                <div className="w-3/5 flex justify-between items-center">
+                <div className="w-3/5 flex gap-4 items-center">
                   <span className="font-semibold text-wrap">
                     CUSTOMER REF NO.
                   </span>
@@ -122,7 +116,7 @@ export default function CommercialInvoiceDisplay({
                   <span className="font-semibold">MODE OF SHIPMENT</span>
                   <span className="font-semibold">BILL OF LADING/AWB</span>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex justify-between">
                   <div>{fields.modeOfShipment}</div>
                   <div>{fields.billOfLadingAWB}</div>
                 </div>
@@ -135,7 +129,7 @@ export default function CommercialInvoiceDisplay({
               <thead>
                 <tr className="border-b">
                   <th className="border-r p-2 w-20">QTY</th>
-                  <th className="border-r p-2 w-1/2">
+                  <th className="border-r p-2">
                     PRODUCT DESCRIPTION AND HARMONIZED CODE
                   </th>
                   <th className="border-r p-2 w-32">UNIT OF MEASURE</th>
@@ -146,19 +140,19 @@ export default function CommercialInvoiceDisplay({
               <tbody>
                 {fields.products.map((product, index) => (
                   <tr key={index}>
-                    <td className="border-r border-b p-2">{product.qty}</td>
-                    <td className="border-r border-b p-2">
+                    <td className="border-r border-b p-2 text-center">{product.qty}</td>
+                    <td className="border-r border-b p-2 text-center">
                       {product.description}
                     </td>
-                    <td className="border-r border-b p-2">
+                    <td className="border-r border-b p-2 text-center">
                       {product.unitOfMeasure}
                     </td>
-                    <td className="border-r border-b p-2">
+                    <td className="border-r border-b p-2 text-center">
                       {product.unitPrice}
                     </td>
                     {index === 0 && (
                       <td
-                        className="p-2 border-b"
+                        className="p-2 border-b text-center"
                         rowSpan={fields.products.length}
                       >
                         {fields.totalPrice}
@@ -174,20 +168,20 @@ export default function CommercialInvoiceDisplay({
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="border-r p-2 w-1/3">PACKAGE MARKS</th>
+                  <th className="border-r p-2">PACKAGE MARKS</th>
                   <th className="border-r p-2">VALUE DETAILS</th>
-                  <th className="p-2">AMOUNTS</th>
+                  <th className="p-2 w-32">AMOUNTS</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="border-r p-2" rowSpan={3}>
+                  <td className="border-r p-2 text-center" rowSpan={3}>
                     {fields.packageMarks}
                   </td>
                   <td className="border-r border-b p-2">
                     <div className="font-semibold">TOTAL COMMERCIAL VALUE</div>
                   </td>
-                  <td className="border-b p-2">
+                  <td className="border-b p-2 text-center">
                     {fields.totalCommercialValue}
                   </td>
                 </tr>
@@ -197,13 +191,13 @@ export default function CommercialInvoiceDisplay({
                       MISC CHARGES (PACKING, INSURANCE, ETC.)
                     </div>
                   </td>
-                  <td className="border-b p-2">{fields.miscCharges}</td>
+                  <td className="border-b p-2 text-center">{fields.miscCharges}</td>
                 </tr>
                 <tr>
                   <td className="border-r p-2">
                     <div className="font-semibold">TOTAL INVOICE VALUE</div>
                   </td>
-                  <td className="p-2">{fields.totalInvoiceValue}</td>
+                  <td className="p-2 text-center">{fields.totalInvoiceValue}</td>
                 </tr>
               </tbody>
             </table>

@@ -1,12 +1,12 @@
 "use client";
 
-import useDocument from "@/hooks/use-document";
 import { useParams } from "next/navigation";
 import CommercialInvoiceDisplay from "../../components/invoiceDisplay";
+import useCommercialInvoice from "@/hooks/use-commercial-invoice";
 
 export default function Page() {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useDocument.useGetDocumentById(id);
+  const { data, isLoading } = useCommercialInvoice.useGetDocumentById(id);
   const invoiceData = data?.data;
   console.log(invoiceData);
   return (

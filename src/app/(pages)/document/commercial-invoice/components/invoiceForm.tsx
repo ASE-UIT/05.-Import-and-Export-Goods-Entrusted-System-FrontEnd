@@ -47,7 +47,7 @@ const formSchema = z.object({
     z.object({
       qty: z.number(),
       description: z.string(),
-      unitOfMeasure: z.number(),
+      unitOfMeasure: z.string(),
       unitPrice: z.number(),
     })
   ),
@@ -77,7 +77,7 @@ export const CommercialInvoiceForm = () => {
       currencyOfSettlement: "",
       modeOfShipment: "",
       billOfLadingAWB: "",
-      products: [{ qty: 0, description: "", unitOfMeasure: 0, unitPrice: 0 }],
+      products: [{ qty: 0, description: "", unitOfMeasure: "", unitPrice: 0 }],
       totalPrice: "",
       packageMarks: "",
       totalCommercialValue: "",
@@ -132,10 +132,9 @@ export const CommercialInvoiceForm = () => {
     const createQuoteRequest = {
       shipmentId: values.shipmentId,
       type: "COMMERCIAL_INVOICE",
-      docNumber: values.docNumber ? parseInt(values.docNumber) : 0,
+      docNumber: values.docNumber,
       fields,
     };
-    console.log(createQuoteRequest);
     CreateDocument(createQuoteRequest);
   }
 
@@ -515,14 +514,11 @@ export const CommercialInvoiceForm = () => {
                             <FormItem>
                               <FormControl>
                                 <Input
-                                  type="number"
-                                  defaultValue={0}
                                   className="w-full"
                                   onChange={(e) => {
                                     const value = e.target.value;
                                     const newProducts = [...products];
-                                    newProducts[index].unitOfMeasure =
-                                      parseInt(value);
+                                    newProducts[index].unitOfMeasure = value;
                                     form.setValue("products", newProducts);
                                   }}
                                 />
@@ -584,7 +580,7 @@ export const CommercialInvoiceForm = () => {
                 onClick={() =>
                   form.setValue("products", [
                     ...products,
-                    { qty: 0, description: "", unitOfMeasure: 0, unitPrice: 0 },
+                    { qty: 0, description: "", unitOfMeasure: "", unitPrice: 0 },
                   ])
                 }
               >
