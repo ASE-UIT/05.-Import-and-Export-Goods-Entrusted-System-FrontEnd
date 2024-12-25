@@ -15,10 +15,6 @@ const DocumentTypeGrid = () => {
       link: "/document/bill",
     },
     {
-      title: "Air Waybill",
-      link: "/document/bill/air-waybill"
-    },
-    {
       title: "Packing List",
       link: "/document/packing-list",
     },
@@ -39,8 +35,12 @@ const DocumentTypeGrid = () => {
       link: "/document/sales-contract",
     },
     {
-      title: "Contract",
-      link: "/document/contract",
+      title: "Contracts Customer Forwarder",
+      link: "/document/contract/customer_forwarder",
+    },
+    {
+      title: "Contracts Forwarder Provider",
+      link: "/document/contract/forwarder-provider",
     },
   ];
 
@@ -68,4 +68,3 @@ const DocumentTypeGrid = () => {
 };
 
 export default DocumentTypeGrid;
-
