@@ -40,7 +40,7 @@ const formSchema = z.object({
   declaredValue: z.string(),
   goodsDescription: z.string(),
   signedDate: z.string(),
-  docNumber: z.number(),
+  docNumber: z.string(),
 });
 
 export default function AirWayBill(data: any) {
@@ -150,11 +150,11 @@ export default function AirWayBill(data: any) {
               name="docNumber"
               render={({ field }) => (
                 <Input
-                  type="number"
+                  type="text"
                   placeholder="Doc Number"
                   readOnly={!(Object.keys(data).length === 0)}
                   value={field.value}
-                  onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  onChange={(e) => field.onChange(e.target.value)}
                   className="basic-2/3 w-[445px] text-sm border border-gray-300 rounded-md"
                 />
               )}
@@ -413,7 +413,7 @@ export default function AirWayBill(data: any) {
           </div>
         </div>
         <div className="w-full flex justify-center">
-          {!data && <Button type="submit">Save</Button>}
+          {(Object.keys(data).length === 0) && <Button type="submit">Save</Button>}
         </div>
       </form>
     </Form>
