@@ -1,61 +1,71 @@
-import React from 'react';
-import CertificateOfOrigin from './components/certificate-of-origin/certificate-of-origin';
+import React from "react";
 
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { FileText } from "lucide-react";
+import Link from "next/link";
 
-const mockData1 = {
-  shipper: { name: 'string', address: 'string' },
-  forwardingAgent: 'string',
-  consignee: { name: 'string', address: 'string' },
-  notifyParty: 'string',
-  exportingCarrier: 'string',
-  countryOfManufacture: 'string',
-  totalPackages: 0,
-  dateOfExport: 'string',
-  commodities: [
+const DocumentTypeGrid = () => {
+  const documentTypes = [
     {
-      marks: 'string',
-      description: 'string',
-      quantity: 'string',
-      weightGross: 0,
-      weightNet: 0,
-    },
-  ],
-}
-
-
-const mockData2 = {
-  shipper: { name: 'Global Export Co., Ltd.', address: '123 International Trade Street, City A, Country X' },
-  forwardingAgent: 'ABC Logistics Ltd.',
-  consignee: { name: 'XYZ Importers, Inc.', address: '789 Market Street, City B, Country Y' },
-  notifyParty: 'DEF Distribution Services',
-  exportingCarrier: 'OceanLine Shipping Co.',
-  countryOfManufacture: 'USA',
-  totalPackages: 50,
-  dateOfExport: 'December 21, 2024',
-  commodities: [
-    {
-      marks: 'AB123',
-      description: 'Electronic Components (IC)',
-      quantity: '100 Units',
-      weightGross: 100,
-      weightNet: 95,
+      title: "Customs Declaration",
+      link: "/document/customs-declaration",
     },
     {
-      marks: 'DEF456',
-      description: 'Printed Circuit Boards (PCB)',
-      quantity: '50 Units',
-      weightGross: 80,
-      weightNet: 75,
-    }
-  ],
-}
+      title: "Bill",
+      link: "/document/bill",
+    },
+    {
+      title: "Packing List",
+      link: "/document/packing-list",
+    },
+    {
+      title: "Commercial Invoice",
+      link: "/document/commercial-invoice",
+    },
+    {
+      title: "Certificate of Origin",
+      link: "/document/certificate-of-origin",
+    },
+    {
+      title: "Exim License",
+      link: "/document/exim-license",
+    },
+    {
+      title: "Sales Contract",
+      link: "/document/sales-contract",
+    },
+    {
+      title: "Contracts Customer Forwarder",
+      link: "/document/contract/customer_forwarder",
+    },
+    {
+      title: "Contracts Forwarder Provider",
+      link: "/document/contract/forwarder-provider",
+    },
 
-function DocumentPage() {
+  ];
+
   return (
-    <div>
-      <CertificateOfOrigin data={mockData1}></CertificateOfOrigin>
+    <div className="container mx-auto p-6">
+      <h1 className="mb-6 text-3xl font-bold">Document Types</h1>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {documentTypes.map((type) => (
+          <Link
+            href={type.link}
+            key={type.title}
+            className="transition-transform hover:scale-105"
+          >
+            <Card className="cursor-pointer hover:bg-gray-50">
+              <CardHeader className="flex flex-row items-center gap-4">
+                <FileText className="h-8 w-8 text-blue-600" />
+                <CardTitle className="text-lg">{type.title}</CardTitle>
+              </CardHeader>
+            </Card>
+          </Link>
+        ))}
+      </div>
     </div>
   );
-}
+};
 
-export default DocumentPage;
+export default DocumentTypeGrid;

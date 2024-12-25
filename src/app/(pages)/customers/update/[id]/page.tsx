@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { useCallback, useEffect, useState } from 'react';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useCallback, useEffect, useState } from "react";
+import { z } from "zod";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,12 +13,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera, LoaderCircle } from 'lucide-react';
-import { useParams } from 'next/navigation';
-import useCustomer from '@/hooks/use-customer';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Camera, LoaderCircle } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import useCustomer from "@/hooks/use-customer";
+import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string(),
@@ -31,7 +32,7 @@ const formSchema = z.object({
   file: z
     .instanceof(File)
     .refine((file) => file.size < 10000000, {
-      message: 'Your file must be less than 10MB.',
+      message: "Your file must be less than 10MB.",
     })
     .optional(),
 });
@@ -46,13 +47,13 @@ export default function UpdateCustomerPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     values: {
-      name: customer?.name ?? '',
-      short_name: customer?.shortName ?? '',
-      email: customer?.email ?? '',
-      phone: customer?.phone ?? '',
-      tax_id: customer?.taxId ?? '',
-      address: customer?.address ?? '',
-      legal_rep_name: customer?.legalRep.name ?? '',
+      name: customer?.name ?? "",
+      short_name: customer?.shortName ?? "",
+      email: customer?.email ?? "",
+      phone: customer?.phone ?? "",
+      tax_id: customer?.taxId ?? "",
+      address: customer?.address ?? "",
+      legal_rep_name: customer?.legalRep.name ?? "",
     },
   });
 
@@ -62,48 +63,51 @@ export default function UpdateCustomerPage() {
       try {
         reader.onload = () => setPreview(reader.result as string);
         reader.readAsDataURL(acceptedFile);
-        form.setValue('file', acceptedFile);
-        form.clearErrors('file');
+        form.setValue("file", acceptedFile);
+        form.clearErrors("file");
       } catch (error) {
         console.log(error);
         setPreview(null);
-        form.resetField('file');
+        form.resetField("file");
       }
     },
     [form]
   );
-
+  const router = useRouter();
   const { useUpdateCustomer } = useCustomer();
-  const {
-    mutate: updateCustomer,
-    isSuccess,
-    isError,
-    isPending,
-  } = useUpdateCustomer();
+  const { mutate: updateCustomer, isPending } = useUpdateCustomer();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    updateCustomer({
-      id: customerId,
-      body: {
-        name: values.name,
-        shortName: values.short_name,
-        email: values.email,
-        phone: values.phone,
-        taxId: values.tax_id,
-        address: values.address,
+    updateCustomer(
+      {
+        id: customerId,
+        body: {
+          name: values.name,
+          shortName: values.short_name,
+          email: values.email,
+          phone: values.phone,
+          taxId: values.tax_id,
+          address: values.address,
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          toast({
+            title: "Success",
+            description: "Customer update successfully",
+          });
+          router.push("/customers");
+        },
+        onError: (error) => {
+          toast({
+            title: "Error",
+            description: error.message,
+            variant: "destructive",
+          });
+        },
+      }
+    );
   }
-
-  useEffect(() => {
-    if (isSuccess) {
-      alert('Update customer successfully');
-    }
-
-    if (isError) {
-      alert('Update customer failed');
-    }
-  }, [isSuccess, isError]);
 
   return (
     <div className="flex flex-col items-center p-[24px] w-[calc(100vw-var(--sidebar-width))]">
@@ -149,7 +153,7 @@ export default function UpdateCustomerPage() {
                       />
                       <Button
                         type="button"
-                        onClick={() => document.getElementById('file')?.click()}
+                        onClick={() => document.getElementById("file")?.click()}
                       >
                         Upload Image
                       </Button>

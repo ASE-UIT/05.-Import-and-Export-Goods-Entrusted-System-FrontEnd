@@ -25,6 +25,7 @@ const statusColors: { [_key in Status]: string } = {
   ON_HOLD: "#3C3C3C",
   ACTIVE: "#108080",
   EXPIRED: "#3C3C3C",
+  EXPRIED: "#3C3C3C",
   TERMINATED: "#060606",
   REJECTED: "#060606",
   IN_PROGRESS: "#108080",
@@ -32,6 +33,7 @@ const statusColors: { [_key in Status]: string } = {
   INACTIVE: "#3C3C3C",
   DRAFT: "#3C3C3C",
   BOOKED: "#108080",
+  PAID: "#108080",
 };
 
 export type Status =
@@ -59,12 +61,14 @@ export type Status =
   | "ON_HOLD"
   | "ACTIVE"
   | "EXPIRED"
+  | "EXPRIED"
   | "TERMINATED"
   | "REJECTED"
   | "IN_PROGRESS"
   | "ACCEPTED"
   | "INACTIVE"
   | "DRAFT"
+  | "PAID"
   | "BOOKED";
 
 const StatusBadge = ({ status }: { status: Status }) => {
@@ -106,7 +110,7 @@ const StatusBadge = ({ status }: { status: Status }) => {
             : "none",
         }}
       >
-        {displayStatus}
+        {displayStatus === "Expried" ? "Expired" : displayStatus}
       </div>
     </div>
   );

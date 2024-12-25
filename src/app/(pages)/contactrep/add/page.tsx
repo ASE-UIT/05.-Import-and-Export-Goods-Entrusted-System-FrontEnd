@@ -12,12 +12,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 
 import { ContactRepBody, ContactRepBodyType } from "@/schema/contactRep.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import useContactRep from "@/hooks/use-contactRep";
+import { useProvider } from "@/hooks/use-provider";
 import { useRouter } from "next/navigation";
 
 export default function AddContactRep() {
@@ -27,10 +35,14 @@ export default function AddContactRep() {
       name: "",
       email: "",
       phone: "",
+      branch_location: "",
     },
   });
 
   const { useCreateContractRep } = useContactRep();
+
+  const { useGetAllProvider } = useProvider()
+  const { data: providers } = useGetAllProvider()
 
   const router = useRouter();
   const { mutate: createContactRep, isPending } = useCreateContractRep();
@@ -110,6 +122,48 @@ export default function AddContactRep() {
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="branch_location"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="font-bold">
+                    Branch Location
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Branch Location"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="provider_id"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="font-bold">Provider</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="h-[60px]">
+                      <FormControl>
+                        <SelectValue placeholder="Provider Name" />
+                      </FormControl>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {providers?.results?.map((provider) => (
+                        <SelectItem key={provider.id} value={provider.id}>
+                          {provider.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

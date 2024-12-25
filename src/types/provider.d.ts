@@ -6,5 +6,4 @@ type ProviderType = {
   address: string;
   country: string;
   status: string;
-  contactRepId: string;
 };

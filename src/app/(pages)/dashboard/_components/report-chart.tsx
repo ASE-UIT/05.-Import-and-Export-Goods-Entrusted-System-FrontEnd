@@ -1,6 +1,14 @@
 "use client";
 
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
@@ -8,18 +16,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { Shipment } from "@/types/shipment.type";
+import { GetQuoteRequestType } from "@/schema/quote-request.schema";
 
 export const description = "A multiple line chart";
-
-const chartData = [
-  { day: "Monday", customers: 186, shipments: 80, quotes: 266 },
-  { day: "Tuesday", customers: 305, shipments: 505, quotes: 123 },
-  { day: "Wednesday", customers: 237, shipments: 357, quotes: 123 },
-  { day: "Thursday", customers: 73, shipments: 190, quotes: 263 },
-  { day: "Friday", customers: 209, shipments: 339, quotes: 427 },
-  { day: "Saturday", customers: 214, shipments: 140, quotes: 354 },
-  { day: "Sunday", customers: 124, shipments: 70, quotes: 194 },
-];
 
 const chartConfig = {
   customers: {
@@ -36,17 +36,16 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-function InfoCard({ title }: { title: string }) {
+function InfoCard({ title, value }: { title: string; value: number }) {
   return (
     <div>
       <div className="w-[260px] p-[10px]">
-        <div className="flex justify-between items-center border-b pt-2 pb-2">
+        <div className="flex items-center justify-between border-b pb-2 pt-2">
           <div className="gap-y-2">
             <h2 className="text-2xl">{title}</h2>
-            <span className="opacity-60">New {title} added</span>
           </div>
           <div className="gap-y-2">
-            <h2 className="text-2xl">1</h2>
+            <h2 className="text-2xl">{value}</h2>
             <span className="opacity-60">-</span>
           </div>
         </div>
@@ -66,7 +65,7 @@ const LegendCard: React.FC = () => {
           {Object.values(chartConfig).map((item, index) => (
             <div key={index} className="flex items-center">
               <div
-                className="w-4 h-4 rounded-full mr-3 shadow-sm"
+                className="mr-3 h-4 w-4 rounded-full shadow-sm"
                 style={{ backgroundColor: item.color }}
               ></div>
               <span className="text-sm font-medium">{item.label}</span>
@@ -78,68 +77,74 @@ const LegendCard: React.FC = () => {
   );
 };
 
-export function ReportChart() {
+type ReportChartProps = {
+  customer: CustomerResponse[] | undefined;
+  shipment: Shipment[] | undefined;
+  quote: GetQuoteRequestType | undefined;
+};
+
+export function ReportChart({ customer, shipment, quote }: ReportChartProps) {
+  const chartData = [
+    {
+      label: "customers",
+      value: customer?.length || 0,
+      fill: chartConfig.customers.color,
+    },
+    {
+      label: "shipments",
+      value: shipment?.length || 0,
+      fill: chartConfig.shipments.color,
+    },
+    {
+      label: "quotes",
+      value: quote?.length || 0,
+      fill: chartConfig.quotes.color,
+    },
+  ];
+
   return (
-    <div className="w-full flex space-x-6">
+    <div className="flex w-full space-x-6">
       <div className="flex flex-col space-y-4">
-        <InfoCard title="Customers" />
-        <InfoCard title="Shipments" />
-        <InfoCard title="Quotes" />
+        <InfoCard title="Customers" value={customer?.length || 0} />
+        <InfoCard title="Shipments" value={shipment?.length || 0} />
+        <InfoCard title="Quotes" value={quote?.length || 0} />
       </div>
-      <div className="flex">
+      <div className="flex w-full">
         <div className="w-full">
-          <div className="space-y-4 mb-8">
-            <h2 className="text-2xl font-bold">Last 7 days statistics</h2>
+          <div className="mb-8">
+            <h2 className="text-center text-2xl font-bold">
+              <span className="text-primary">Report</span> Chart
+            </h2>
           </div>
-          <div className="w-[450px]">
-            <ChartContainer config={chartConfig}>
-              <LineChart
-                accessibilityLayer
+          <div className="w-full">
+            <ChartContainer className="h-[263px] w-full" config={chartConfig}>
+              <BarChart
                 data={chartData}
+                layout="vertical"
                 margin={{
-                  left: 12,
-                  right: 12,
+                  left: 20,
                 }}
+                height={100}
               >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="day"
+                <YAxis
+                  dataKey="label"
+                  type="category"
                   tickLine={false}
+                  tickMargin={10}
                   axisLine={false}
-                  tickMargin={8}
-                  tickFormatter={(value) => value.slice(0, 3)}
+                  tickFormatter={(value) =>
+                    chartConfig[value as keyof typeof chartConfig]?.label
+                  }
                 />
+                <XAxis type="number" />
                 <ChartTooltip
                   cursor={false}
-                  content={<ChartTooltipContent />}
+                  content={<ChartTooltipContent hideLabel />}
                 />
-                <Line
-                  dataKey="customers"
-                  type="monotone"
-                  stroke={chartConfig.customers.color}
-                  strokeWidth={2}
-                  dot={false}
-                />
-                <Line
-                  dataKey="shipments"
-                  type="monotone"
-                  stroke={chartConfig.shipments.color}
-                  strokeWidth={2}
-                  dot={false}
-                />
-                <Line
-                  dataKey="quotes"
-                  type="monotone"
-                  stroke={chartConfig.quotes.color}
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
+                <Bar dataKey="value" layout="vertical" radius={5} />
+              </BarChart>
             </ChartContainer>
           </div>
-        </div>
-        <div className="p-4 flex h-full items-center">
-          <LegendCard />
         </div>
       </div>
     </div>

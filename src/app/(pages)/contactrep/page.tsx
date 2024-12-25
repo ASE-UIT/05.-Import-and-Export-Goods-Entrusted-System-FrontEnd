@@ -4,6 +4,7 @@ import { DataTable } from "@/app/(pages)/contactrep/components/data-table";
 import { columns } from "./components/columns";
 
 import useContactRep from "@/hooks/use-contactRep";
+import { useProvider } from "@/hooks/use-provider";
 import { useEffect, useState } from "react";
 
 export default function ContactRepManagement() {
@@ -20,6 +21,17 @@ export default function ContactRepManagement() {
 
   const { data, isPending, error } = useListContactRep(searchParams);
   const contactRepList = data?.results || [];
+
+  const { useGetAllProvider } = useProvider()
+  const { data: providers } = useGetAllProvider()
+
+  const contactRepWithProvider = contactRepList.map((contactRep) => {
+    const provider = providers?.results.find((provider) => provider.id === contactRep.provider_id);
+    return {
+      ...contactRep,
+      provider_name: provider?.name,
+    };
+  });
 
   const [totalPages, setTotalPages] = useState(0);
   useEffect(() => {
@@ -39,7 +51,7 @@ export default function ContactRepManagement() {
         <DataTable
           columns={columns}
           totalPages={totalPages}
-          data={contactRepList}
+          data={contactRepWithProvider}
           isPending={isPending}
           error={error}
           queryParams={searchParams}
