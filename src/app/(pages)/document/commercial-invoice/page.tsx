@@ -1,47 +1,63 @@
 "use client";
 
-import React from "react";
-import { useRouter } from "next/navigation";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import useCommercialInvoice from "@/hooks/use-commercial-invoice";
+import { columns } from "@/app/(pages)/document/commercial-invoice/_components/columns";
+import { DataTable } from "@/app/(pages)/document/commercial-invoice/_components/data-table";
+import useAuth from "@/hooks/use-auth";
+import useDocument from "@/hooks/use-document";
+import { Document } from "@/types/document/document.type";
+import React, { useEffect, useState } from "react";
 
 export default function Page() {
-  const { data, isLoading } = useCommercialInvoice.useGetDocument(undefined, "COMMERCIAL_INVOICE");
-  const invoiceData = data?.data;
-  const router = useRouter();
+  const {
+    data: documentAll,
+    isLoading,
+    isError,
+  } = useDocument.useGetDocument();
+  const {
+    data: user,
+    isLoading: userLoading,
+    error: userError,
+  } = useAuth.useGetSession();
 
-  const handleViewClick = (id: string) => {
-    router.push(`/document/commercial-invoice/view/${id}`);
-  };
+  const [document, setDocument] = useState<Document[]>();
+  const [commercialInvoices, setCommercialInvoices] = useState<Document[]>();
+
+  useEffect(() => {
+    if (user?.role.name === "CLIENT") {
+      setDocument(
+        Array.isArray(documentAll?.data)
+          ? documentAll?.data.filter((item) => item.userId === user?.id)
+          : [],
+      );
+    } else {
+      setDocument(
+        documentAll && Array.isArray(documentAll.data) ? documentAll.data : [],
+      );
+    }
+  }, [user, documentAll]);
+
+  useEffect(() => {
+    if (document) {
+      setCommercialInvoices(
+        document.filter((item) => item.type === "COMMERCIAL_INVOICE"),
+      );
+    }
+  }, [document]);
+
+  if (isLoading || userLoading) return <div>Loading...</div>;
+
+  if (isError || userError) return <div>Error...</div>;
 
   return (
-    <>
-      {!isLoading && (
-        <div className="fixed top-0 right-0 p-4 mt-[var(--header-height)]">
-          <Button onClick={() => router.push("/document/commercial-invoice/create")}>
-            Create
-          </Button>
+    <div className="flex w-full flex-col p-[24px]">
+      <div className="flex w-full flex-col gap-[20px]">
+        <div className="flex items-center justify-between">
+          <span className="text-3xl font-bold">Commercial Invoice</span>
         </div>
-      )}
-      {!isLoading && invoiceData && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-          {invoiceData.map((invoice: any) => (
-            <Card key={invoice.docNumber} className="shadow-md">
-              <CardContent>
-                <div className="text-lg font-bold">
-                  Document Number: {invoice.docNumber}
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button onClick={() => handleViewClick(invoice.id)}>
-                  View
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      )}
-    </>
+        {commercialInvoices && (
+          <DataTable columns={columns} data={commercialInvoices} />
+        )}
+      </div>
+    </div>
   );
 }

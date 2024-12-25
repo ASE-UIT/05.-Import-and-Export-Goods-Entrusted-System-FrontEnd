@@ -4,7 +4,6 @@ import { columns } from "@/app/(pages)/document/customs-declaration/_components/
 import { DataTable } from "@/app/(pages)/document/customs-declaration/_components/data-table";
 import useAuth from "@/hooks/use-auth";
 import useDocument from "@/hooks/use-document";
-import useUser from "@/hooks/use-user";
 import { Document } from "@/types/document/document.type";
 import React, { useEffect, useState } from "react";
 
