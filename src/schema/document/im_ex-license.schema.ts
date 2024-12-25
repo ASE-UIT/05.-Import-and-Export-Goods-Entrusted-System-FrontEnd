@@ -3,7 +3,7 @@ export const createDocumentType = z
   .object({
     shipmentId: z.string().uuid(),
     type: z.string(),
-    docNumber: z.number(),
+    docNumber: z.string(),
     fields : z.record(z.any()),
     schema : z.record(z.any()).optional(),
   });
@@ -26,7 +26,7 @@ export const createDocumentType = z
   export const getEximDocumentById = z.object({
   id: z.string(),
   type: z.string(),
-  docNumber: z.number(),
+  docNumber: z.string(),
   userId: z.string(),
   fields: fieldsSchema, 
   schema: z.record(z.any()),

@@ -118,6 +118,7 @@ function ImportExportForm() {
 
     // Kiểm tra các trường trong `fields`
     const fields = {
+      docNumber: values.docNumber,
       companyName: values.companyName,
       address: values.address,
       phone: values.phone,
@@ -151,7 +152,7 @@ function ImportExportForm() {
     const createQuoteRequest: CreateDocumentType = {
       shipmentId: values.shipmentId,
       type: "EXIM_LISENCE",
-      docNumber: values.docNumber ? parseInt(values.docNumber, 10) : 0,
+      docNumber: values.docNumber ? String(values.docNumber) : "0",
       fields,
     };
 
