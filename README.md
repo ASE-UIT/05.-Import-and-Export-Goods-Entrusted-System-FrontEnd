@@ -101,17 +101,17 @@ This is an example of how to list things you need to use the software and how to
 
 ## Feature
 
-#### Quản lý thông tin khách hàng
+#### Customer information management
 
-#### Quản lý hợp đồng
+#### Contract management
 
-#### Thống kê, quản lý thông số công ty
+#### Company metrics statistics and management
 
-#### Quản lý bảng báo giá
+#### Quotation management
 
-#### Quản lý nhà cung cấp
+#### ProviderProvider management
 
-#### Quản lý hóa đơn
+#### Invoice management
 
 #### ....
 
