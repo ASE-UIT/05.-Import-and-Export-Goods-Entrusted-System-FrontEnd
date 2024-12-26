@@ -1,4 +1,3 @@
-import { airWayBillData } from "@/schema/air-waybill.schema";
 import http from "@/utils/http";
 
 const documentAction = {
@@ -17,6 +16,10 @@ const documentAction = {
   },
   async updateDocument(shipmentId: string, data: any) {
     const res = await http.patch(`/v1/document/${shipmentId}`, data);
+    return res.data;
+  },
+  async getDocumentById(id: string) {
+    const res = await http.get(`/v1/document/${id}`);
     return res.data;
   },
 };

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText } from "lucide-react";
 import Link from "next/link";
@@ -12,10 +13,6 @@ const DocumentTypeGrid = () => {
     {
       title: "Bill",
       link: "/document/bill",
-    },
-    {
-      title: "Air Waybill",
-      link: "/document/bill/air-waybill"
     },
     {
       title: "Packing List",
@@ -38,9 +35,14 @@ const DocumentTypeGrid = () => {
       link: "/document/sales-contract",
     },
     {
-      title: "Contract",
-      link: "/document/contract",
+      title: "Contracts Customer Forwarder",
+      link: "/document/contract/customer_forwarder",
     },
+    {
+      title: "Contracts Forwarder Provider",
+      link: "/document/contract/forwarder-provider",
+    },
+
   ];
 
   return (
