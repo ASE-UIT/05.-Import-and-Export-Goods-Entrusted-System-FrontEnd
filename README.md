@@ -25,6 +25,7 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
+        <li><a href="#built-with">Some Screen</a></li>
       </ul>
     </li>
     <li>
@@ -50,6 +51,24 @@ This project is the frontend application for an Import and Export Goods Entruste
 
 - [![Next][Next.js]][Next-url]
 - [![Tailwind CSS][Tailwind CSS Badge]][Tailwind CSS URL]
+
+### Some Screen
+
+#### Login Screen
+
+[![Product Name Screen Shot][login-page]](https://example.com)
+
+#### Chart Screen
+
+[![Product Name Screen Shot][chart-page]](https://example.com)
+
+#### Customer Screen
+
+[![Product Name Screen Shot][customer-page]](https://example.com)
+
+#### Shipment Screen
+
+[![Product Name Screen Shot][shipment-page]](https://example.com)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -107,6 +126,10 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: public/images/readme-sample.png
+[login-page]: public/images/readme/Screenshot%202024-12-26%20095100.png
+[chart-page]: public/images/readme/467845997_1352601949062648_4949094441405058304_n.png
+[customer-page]: public/images/readme/470053633_3329218790545911_7594799002622472708_n.png
+[shipment-page]: public/images/readme/471107795_476702912115742_593957864007521069_n.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
