@@ -99,7 +99,7 @@ This is an example of how to list things you need to use the software and how to
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Usage
+## Feature
 
 #### Quản lý thông tin khách hàng
 
@@ -117,7 +117,15 @@ This is an example of how to list things you need to use the software and how to
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Contributors:
+## Related Repositories
+
+- [Backend Repository](https://github.com/ASE-UIT/05.-Import-and-Export-Goods-Entrusted-System-BackEnd)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contributors:
 
 <a href="https://github.com/ASE-UIT/05.-Import-and-Export-Goods-Entrusted-System-FrontEnd/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=ASE-UIT/05.-Import-and-Export-Goods-Entrusted-System-FrontEnd" alt="contrib.rocks image" />
