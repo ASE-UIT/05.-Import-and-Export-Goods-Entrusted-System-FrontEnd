@@ -101,9 +101,19 @@ This is an example of how to list things you need to use the software and how to
 
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+#### Quản lý thông tin khách hàng
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+#### Quản lý hợp đồng
+
+#### Thống kê, quản lý thông số công ty
+
+#### Quản lý bảng báo giá
+
+#### Quản lý nhà cung cấp
+
+#### Quản lý hóa đơn
+
+#### ....
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
